@@ -1,2 +1,1 @@
-# woocommerce-plugin
-woocommerce-plugin
+# Unlimint WooCommerce plugin
