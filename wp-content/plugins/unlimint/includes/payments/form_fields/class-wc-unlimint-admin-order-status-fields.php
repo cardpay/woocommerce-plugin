@@ -2,9 +2,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
-require_once __DIR__ . '/interface-wc-unlimint-admin-formfields.php';
+require_once __DIR__ . '/class-wc-unlimint-admin-fields.php';
 
-class WC_Unlimint_Admin_Order_Status_Fields extends WC_Unlimint_Admin_Fields implements WC_Unlimint_Admin_FormFields {
+class WC_Unlimint_Admin_Order_Status_Fields extends WC_Unlimint_Admin_Fields {
 
 	public const FIELDNAME_PREFIX = 'woocommerce_unlimint_order_status_';
 
@@ -61,7 +61,17 @@ class WC_Unlimint_Admin_Order_Status_Fields extends WC_Unlimint_Admin_Fields imp
 	public const CANCELLED_WC = 'wc-cancelled';
 	public const REFUNDED_WC = 'wc-refunded';
 
-	public function get_form_fields() {
+	public function get_card_form_fields() {
+		$form_fields = $this->get_alt_form_fields();
+
+		$form_fields[ self::FIELDNAME_PREFIX . self::REFUNDED_UNLIMINT ]   = $this->get_order_status_select( self::REFUNDED_LABEL, self::REFUNDED_WC_DEFAULT );
+		$form_fields[ self::FIELDNAME_PREFIX . self::VOIDED_UNLIMINT ]     = $this->get_order_status_select( self::VOIDED_LABEL, self::VOIDED_WC_DEFAULT );
+		$form_fields[ self::FIELDNAME_PREFIX . self::TERMINATED_UNLIMINT ] = $this->get_order_status_select( self::TERMINATED_LABEL, self::TERMINATED_WC_DEFAULT );
+
+		return $form_fields;
+	}
+
+	public function get_alt_form_fields() {
 		$form_fields = [];
 
 		$form_fields[ self::FIELDNAME_PREFIX . self::NEW_UNLIMINT ]                 = $this->get_order_status_select( self::NEW_LABEL, self::NEW_WC_DEFAULT );
@@ -70,11 +80,8 @@ class WC_Unlimint_Admin_Order_Status_Fields extends WC_Unlimint_Admin_Fields imp
 		$form_fields[ self::FIELDNAME_PREFIX . self::AUTHORIZED_UNLIMINT ]          = $this->get_order_status_select( self::AUTHORIZED_LABEL, self::AUTHORIZED_WC_DEFAULT );
 		$form_fields[ self::FIELDNAME_PREFIX . self::COMPLETED_UNLIMINT ]           = $this->get_order_status_select( self::COMPLETED_LABEL, self::COMPLETED_WC_DEFAULT );
 		$form_fields[ self::FIELDNAME_PREFIX . self::CANCELED_UNLIMINT ]            = $this->get_order_status_select( self::CANCELED_LABEL, self::CANCELED_WC_DEFAULT );
-		$form_fields[ self::FIELDNAME_PREFIX . self::VOIDED_UNLIMINT ]              = $this->get_order_status_select( self::VOIDED_LABEL, self::VOIDED_WC_DEFAULT );
-		$form_fields[ self::FIELDNAME_PREFIX . self::REFUNDED_UNLIMINT ]            = $this->get_order_status_select( self::REFUNDED_LABEL, self::REFUNDED_WC_DEFAULT );
 		$form_fields[ self::FIELDNAME_PREFIX . self::CHARGED_BACK_UNLIMINT ]        = $this->get_order_status_select( self::CHARGED_BACK_LABEL, self::CHARGED_BACK_WC_DEFAULT );
 		$form_fields[ self::FIELDNAME_PREFIX . self::CHARGEBACK_RESOLVED_UNLIMINT ] = $this->get_order_status_select( self::CHARGEBACK_RESOLVED_LABEL, self::CHARGEBACK_RESOLVED_WC_DEFAULT );
-		$form_fields[ self::FIELDNAME_PREFIX . self::TERMINATED_UNLIMINT ]          = $this->get_order_status_select( self::TERMINATED_LABEL, self::TERMINATED_WC_DEFAULT );
 
 		return $form_fields;
 	}

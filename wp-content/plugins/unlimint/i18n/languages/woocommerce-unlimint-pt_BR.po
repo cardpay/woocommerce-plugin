@@ -1384,14 +1384,6 @@ msgstr "Você deve informar o CEP"
 msgid "Select the issuer with whom you want to process the payment"
 msgstr "Por favor, selecione o meio de pagamento"
 
-#: templates/order-received/show-ticket.php:21
-msgid "Great, we processed your purchase order. Complete the payment with ticket so that we finish approving it."
-msgstr "Ótimo, processamos seu pedido. Complete o pagamento com ticket para que possamos aprovar o pedido."
-
-#: templates/order-received/show-ticket.php:25
-msgid "Print ticket"
-msgstr "Imprimir boleto"
-
 #: includes/admin/notices/class-wc-unlimint-notices.php:131
 msgid "See WooCommerce"
 msgstr "Veja WooCommerce"

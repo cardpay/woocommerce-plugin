@@ -9,8 +9,10 @@ require_once __DIR__ . '/../notification/class-wc-unlimint-notification-webhook.
 require_once __DIR__ . '/class-wc-unlimint-subsections.php';
 require_once __DIR__ . '/class-wc-unlimint-callback.php';
 require_once __DIR__ . '/class-wc-unlimint-refund.php';
+require_once __DIR__ . '/class-wc-unlimint-pix-gateway.php';
+require_once __DIR__ . '/class-wc-unlimint-ticket-gateway.php';
 
-class WC_Unlimint_Payment_Abstract extends WC_Payment_Gateway {
+class WC_Unlimint_Gateway_Abstract extends WC_Payment_Gateway {
 
 	public const COMMON_CONFIGS = [
 		'_ul_public_key_test',
@@ -37,6 +39,7 @@ class WC_Unlimint_Payment_Abstract extends WC_Payment_Gateway {
 	public const ALLOWED_SECTIONS = [
 		'woo-unlimint-custom',
 		'woo-unlimint-ticket',
+		'woo-unlimint-pix',
 	];
 
 	/**
@@ -236,11 +239,6 @@ class WC_Unlimint_Payment_Abstract extends WC_Payment_Gateway {
 	 * @var string
 	 */
 	public $type_payments;
-
-	/**
-	 * @var array
-	 */
-	public $activated_payment;
 
 	/**
 	 * @var string|null
@@ -511,6 +509,12 @@ class WC_Unlimint_Payment_Abstract extends WC_Payment_Gateway {
 		}
 	}
 
+	/**
+	 * @param WC_Order $order
+	 * @param array $response
+	 *
+	 * @throws WC_Data_Exception
+	 */
 	protected function save_order_meta( $order, $response ) {
 		if ( isset( $response['payment_data'] ) ) {
 			$payment_type_field = WC_Unlimint_Constants::PAYMENT_TYPE_PAYMENT;
@@ -523,7 +527,9 @@ class WC_Unlimint_Payment_Abstract extends WC_Payment_Gateway {
 		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_PAYMENT_TYPE_FIELDNAME, $payment_type_field );
 		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_GATEWAY_FIELDNAME, get_class( $this ) );
 		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_REDIRECT_URL_FIELDNAME, $response['redirect_url'] );
-		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_PAYMENT_ID_FIELDNAME, $response[ $payment_structure ]['id'] );
+		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_INITIAL_API_TOTAL, $order->get_total() );
+
+		$order->set_transaction_id( $response[ $payment_structure ]['id'] );
 
 		$order->save();
 	}

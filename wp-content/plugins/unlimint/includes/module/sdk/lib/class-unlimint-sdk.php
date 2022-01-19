@@ -6,6 +6,7 @@ require_once __DIR__ . '/rest-client/class-rest-client-abstract.php';
 require_once __DIR__ . '/rest-client/class-unlimint-rest-client.php';
 require_once __DIR__ . '/../../../payments/form_fields/class-wc-unlimint-admin-bankcard-fields.php';
 require_once __DIR__ . '/../../../payments/form_fields/class-wc-unlimint-admin-boleto-fields.php';
+require_once __DIR__ . '/../../../payments/form_fields/class-wc-unlimint-admin-pix-fields.php';
 require_once __DIR__ . '/../../../module/config/class-wc-unlimint-constants.php';
 require_once __DIR__ . '/../../../module/class-wc-unlimint-helper.php';
 
@@ -93,7 +94,6 @@ class Unlimint_Sdk {
 		);
 
 		$response = $response_data['response'];
-
 		if ( 'bearer' !== $response['token_type'] ) {
 			return null;
 		}
@@ -329,6 +329,9 @@ class Unlimint_Sdk {
 
 			case WC_Unlimint_Ticket_Gateway::GATEWAY_ID:
 				return WC_Unlimint_Admin_Boleto_Fields::FIELDNAME_PREFIX;
+
+			case WC_Unlimint_Pix_Gateway::GATEWAY_ID:
+				return WC_Unlimint_Admin_Pix_Fields::FIELDNAME_PREFIX;
 
 			default:
 				throw new WC_Unlimint_Exception( 'Invalid payment gateway id provided' );

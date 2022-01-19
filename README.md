@@ -16,6 +16,7 @@ Unlimint WooСommerce plugin is open-source and supports:
 
  * Bank Card (Credit Card)
  * Boleto
+ * Pix
 
 ## Installation
 
@@ -46,7 +47,7 @@ This process explains how to set up and configure the WooСommerce plugin to acc
 
 #### Payment methods settings
 
-You need to enable payment methods in WooСommerce plugin (for now it's Credit Card and Boleto).
+You need to enable payment methods in WooСommerce plugin (for now it's Credit Card, Boleto, Pix).
 
 First, access the methods you want to enable by Unlimint support (it's a part of merchant onboarding process - see [here](https://www.unlimint.com/integration/))
 
@@ -78,15 +79,29 @@ In installment case with **No** option selected installments will be declined au
 
 To enable payments via **Boleto** payment method switch on **Enabled** for this payment method and do the following steps:
 
+ * Go to **Boleto - Unlimint** payment method
+	
 ![](readme_images/boleto.png)
 
- * Go to **Boleto - Unlimint** payment method
  * Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in Unlimint API v3 for this payment method (how to obtain credentials see [here](https://www.unlimint.com/integration/))
  * Test environment:
     * Set to **Yes** for Sandbox environment (for test purposes)
     * Set to **No** for Production environment
  * **Payment title** - fill in the name of the payment method, will be presented for the customer in checkout
  * **Log to file** - here is a setting about WooСommerce plugin system log, this log file contains the plugin debug information, communication errors between plugin front-end and back-end. By default, it's set to **Yes**. If it will be set to **No** - log file won't be created. 
+
+To enable payments via **Pix** payment method switch on **Enabled** for this payment method and do the following steps:
+
+ * Go to **Pix - Unlimint** payment method
+ 
+![](readme_images/pix.png)
+
+ * Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in Unlimint API v3 for this payment method (how to obtain credentials see [here](https://www.unlimint.com/integration/))
+ * Test environment:
+    * Set to **Yes** for Sandbox environment (for test purposes)
+    * Set to **No** for Production environment
+ * **Payment title** - fill in the name of the payment method, will be presented for the customer in checkout
+ * **Log to file** - here is a setting about WooСommerce plugin system log, this log file contains the plugin debug information, communication errors between plugin front-end and back-end. By default, it's set to **Yes**. If it will be set to **No** - log file won't be created.
 
 That's it! The selected payment methods are successfully enabled in the checkout.
 
@@ -95,13 +110,26 @@ That's it! The selected payment methods are successfully enabled in the checkout
 
 Mapping of the order statuses is set by default and you need to change it _only_ if you have your custom order statuses flow (not recommended to change).
 
-**Flow of the statuses** is **unique** for each supported payment method in plugin, if you change status flow for **Credit Card - Unlimint**, status flow for **Boleto - Unlimint** payment method isn't changed. 
+**Flow of the statuses** is **unique** for each supported payment method in plugin, if you change status flow for **Credit Card - Unlimint**, status flow for **Boleto - Unlimint** or "Pix - Unlimint" payment methods aren't changed. 
 
-If you need to see or change Order mapping statuses - please Go to **CreditCard - Unlimint** or **Boleto - Unlimint** sections and choose **Order status** tab.
+If you need to see or change Order mapping statuses for **CreditCard - Unlimint** - please go to **CreditCard - Unlimint** and choose **Order status** tab.
 
 ![](readme_images/order_status_1.png)
 
 ![](readme_images/order_status_2.png)
+
+If you need to see or change Order mapping statuses for **Boleto - Unlimint** - please go to **Boleto - Unlimint** and choose **Order status** tab.
+
+![](readme_images/boleto_status_1.png)
+
+![](readme_images/boleto_status_2.png)
+
+
+If you need to see or change Order mapping statuses for **Pix - Unlimint** - please go to **Pix - Unlimint** and choose **Order status** tab.
+
+![](readme_images/pix_status_1.png)
+
+![](readme_images/pix_status_2.png)
 
 
 ### Payment notification configuration

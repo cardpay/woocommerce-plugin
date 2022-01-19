@@ -83,18 +83,22 @@ class WC_Unlimint_Callback {
 		$gateway_class = $this->get_gateway_class( $callback_decoded['merchant_order']['id'] );
 		switch ( $gateway_class ) {
 			case WC_Unlimint_Constants::BANKCARD_GATEWAY:
-				$callback_secret = get_option( WC_Unlimint_Admin_BankCard_Fields::FIELDNAME_PREFIX . WC_Unlimint_Admin_Fields::FIELD_CALLBACK_SECRET );
+				$fieldname_prefix = WC_Unlimint_Admin_BankCard_Fields::FIELDNAME_PREFIX;
 				break;
 
 			case WC_Unlimint_Constants::BOLETO_GATEWAY:
-				$callback_secret = get_option( WC_Unlimint_Admin_Boleto_Fields::FIELDNAME_PREFIX . WC_Unlimint_Admin_Fields::FIELD_CALLBACK_SECRET );
+				$fieldname_prefix = WC_Unlimint_Admin_Boleto_Fields::FIELDNAME_PREFIX;
+				break;
+
+			case WC_Unlimint_Constants::PIX_GATEWAY:
+				$fieldname_prefix = WC_Unlimint_Admin_Pix_Fields::FIELDNAME_PREFIX;
 				break;
 
 			default:
-				throw new WC_Unlimint_Exception( 'Unable to detect Unlimint callback secret' );
+				throw new WC_Unlimint_Exception( 'Invalid gateway provided for Unlimint callback secret' );
 		}
 
-		return $callback_secret;
+		return get_option( $fieldname_prefix . WC_Unlimint_Admin_Fields::FIELD_CALLBACK_SECRET );
 	}
 
 	/**
@@ -136,6 +140,10 @@ class WC_Unlimint_Callback {
 
 			case WC_Unlimint_Constants::BOLETO_GATEWAY:
 				$gateway = new WC_Unlimint_Ticket_Gateway();
+				break;
+
+			case WC_Unlimint_Constants::PIX_GATEWAY:
+				$gateway = new WC_Unlimint_Pix_Gateway();
 				break;
 
 			default:

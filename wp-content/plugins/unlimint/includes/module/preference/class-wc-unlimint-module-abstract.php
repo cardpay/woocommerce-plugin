@@ -12,7 +12,7 @@ abstract class WC_Unlimint_Module_Abstract extends WC_Payment_Gateway {
 	protected $order;
 
 	/**
-	 * @var WC_Unlimint_Payment_Abstract
+	 * @var WC_Unlimint_Gateway_Abstract
 	 */
 	protected $payment;
 
@@ -82,7 +82,7 @@ abstract class WC_Unlimint_Module_Abstract extends WC_Payment_Gateway {
 	protected $installments;
 
 	/**
-	 * @param WC_Unlimint_Payment_Abstract $payment
+	 * @param WC_Unlimint_Gateway_Abstract $payment
 	 * @param WC_Order $order
 	 * @param null $post_fields
 	 *

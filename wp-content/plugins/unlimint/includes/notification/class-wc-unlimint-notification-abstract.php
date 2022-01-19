@@ -32,12 +32,12 @@ abstract class WC_Unlimint_Notification_Abstract {
 	/**
 	 * Self!
 	 *
-	 * @var WC_Unlimint_Payment_Abstract
+	 * @var WC_Unlimint_Gateway_Abstract
 	 */
 	public $payment;
 
 	/**
-	 * @param WC_Unlimint_Payment_Abstract $payment payment class.
+	 * @param WC_Unlimint_Gateway_Abstract $payment payment class.
 	 */
 	public function __construct( $payment ) {
 		$this->payment = $payment;
@@ -199,6 +199,7 @@ abstract class WC_Unlimint_Notification_Abstract {
 					break;
 
 				case WC_Unlimint_Constants::BOLETO_GATEWAY:
+				case WC_Unlimint_Constants::PIX_GATEWAY:
 					if ( 'no' === get_option( 'stock_reduce_mode', 'no' ) ) {
 						$order->payment_complete();
 						if ( 'completed' !== $payment_completed_status ) {

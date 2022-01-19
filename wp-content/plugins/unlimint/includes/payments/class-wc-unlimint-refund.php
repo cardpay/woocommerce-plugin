@@ -7,8 +7,12 @@ require_once __DIR__ . '/../module/class-wc-unlimint-helper.php';
 
 class WC_Unlimint_Refund {
 	const ERROR_BOLETO = 'Refund is not available for Boleto';
+	const ERROR_PIX = 'Refund is not available for Pix';
 	const ERROR_INSTALLMENT = 'Refund is not available for installment payment';
-	const ERROR_CARD = "Refund is available for credit card payment only";
+	const ERROR_CARD = 'Refund is available for credit card payment only';
+	const ERROR_STATUS = "Refund can be made in 'Processing' or 'Completed' order status only";
+
+	const ALLOWED_ORDER_STATUSES = [ 'processing', 'completed' ];
 
 	/**
 	 * @var WC_Unlimint_Logger
@@ -57,7 +61,7 @@ class WC_Unlimint_Refund {
 
 	private function validate_order_for_refund( $amount, $order_id ) {
 		if ( is_null( $amount ) || (float) $amount <= 0 ) {
-			throw new WC_Unlimint_Exception( "Invalid refund amount for order #$order_id");
+			throw new WC_Unlimint_Exception( "Invalid refund amount for order #$order_id" );
 		}
 
 		$order              = wc_get_order( $order_id );
@@ -68,6 +72,10 @@ class WC_Unlimint_Refund {
 			throw new WC_Unlimint_Exception( __( self::ERROR_BOLETO ) );
 		}
 
+		if ( WC_Unlimint_Constants::PIX_GATEWAY === $gateway ) {
+			throw new WC_Unlimint_Exception( __( self::ERROR_PIX ) );
+		}
+
 		if ( WC_Unlimint_Constants::BANKCARD_GATEWAY === $gateway && WC_Unlimint_Constants::PAYMENT_TYPE_RECURRING === $payment_type_field ) {
 			throw new WC_Unlimint_Exception( __( self::ERROR_INSTALLMENT ) );
 		}
@@ -75,15 +83,25 @@ class WC_Unlimint_Refund {
 		if ( WC_Unlimint_Constants::BANKCARD_GATEWAY !== $gateway || WC_Unlimint_Constants::PAYMENT_TYPE_PAYMENT !== $payment_type_field ) {
 			throw new WC_Unlimint_Exception( __( self::ERROR_CARD ) );
 		}
+
+		if ( ! method_exists( $order, 'get_status' ) ) {
+			return;
+		}
+		if ( ! in_array( $order->get_status(), self::ALLOWED_ORDER_STATUSES, true ) ) {
+			throw new WC_Unlimint_Exception( __( self::ERROR_STATUS ) );
+		}
 	}
 
 	/**
 	 * @param int $order_id
 	 * @param $amount
+	 * @param string $reason
 	 *
 	 * @return array
 	 */
 	private function get_refund_request( $order_id, $amount, $reason ) {
+		$order = wc_get_order( $order_id );
+
 		return [
 			'request'        => [
 				'id'   => uniqid( '', true ),
@@ -93,7 +111,7 @@ class WC_Unlimint_Refund {
 				'description' => ! empty( $reason ) ? $reason : "Refund for order #$order_id",
 			],
 			'payment_data'   => [
-				'id' => WC_Unlimint_Helper::get_order_meta( wc_get_order( $order_id ), WC_Unlimint_Constants::ORDER_META_PAYMENT_ID_FIELDNAME )
+				'id' => $order->get_transaction_id()
 			],
 			'refund_data'    => [
 				'amount'   => $amount,

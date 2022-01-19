@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
 class WC_Unlimint_Module_Custom extends WC_Unlimint_Module_Abstract {
 
 	/**
-	 * @param WC_Unlimint_Payment_Abstract $payment Payment.
+	 * @param WC_Unlimint_Gateway_Abstract $payment Payment.
 	 * @param WC_Order $order
 	 * @param array|null $post_fields Custom checkout.
 	 *

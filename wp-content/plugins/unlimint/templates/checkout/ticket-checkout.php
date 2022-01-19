@@ -34,6 +34,6 @@ $boletoLogoUrl = plugins_url( '../../assets/images/boleto.png', __FILE__ );
 
 <script type='text/javascript'>
     function handleUlBoletoInput() {
-        setTimeout('handleUlCpf()', 1);
+        setTimeout('handleUlBoletoCpf()', 1);
     }
 </script>

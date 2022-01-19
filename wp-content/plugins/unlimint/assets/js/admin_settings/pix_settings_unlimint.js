@@ -1,6 +1,6 @@
 window.addEventListener('load', function () {
     jQuery('#mainform').submit(function (e) {
-        const prefix = 'woocommerce_woo-unlimint-ticket_woocommerce_unlimint_boleto_';
+        const prefix = 'woocommerce_woo-unlimint-pix_woocommerce_unlimint_pix_';
         if (!jQuery(`#${prefix}terminal_code`).length) {
             return;
         }

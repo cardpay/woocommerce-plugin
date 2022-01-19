@@ -99,6 +99,7 @@ class WC_Unlimint_Configs {
 	public function set_payment_gateway( $methods = null ) {
 		$methods[] = WC_Unlimint_Constants::BANKCARD_GATEWAY;
 		$methods[] = WC_Unlimint_Constants::BOLETO_GATEWAY;
+		$methods[] = WC_Unlimint_Constants::PIX_GATEWAY;
 
 		return $methods;
 	}

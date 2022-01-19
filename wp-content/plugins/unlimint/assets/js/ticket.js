@@ -3,23 +3,27 @@
 
     $(function () {
         $('form.checkout').on('checkout_place_order_woo-unlimint-ticket', function () {
-            return handleUlCpf();
+            return handleUlBoletoCpf();
         });
     });
 }(jQuery));
 
-const handleUlCpf = function () {
-    const cpf = jQuery('#ul-cpf-ticket');
+const handleUlBoletoCpf = function () {
+    return handleUlCpf('#ul-cpf-ticket', '#boleto-cpf-error');
+}
+
+const handleUlCpf = function (cpfField, errorField) {
+    const cpf = jQuery(cpfField);
     const cpfFormatted = getUlCpfFormatted(cpf.val());
     cpf.val(cpfFormatted);
 
-    const cpfError = jQuery('#boleto-cpf-error');
+    const cpfError = jQuery(errorField);
     cpfError.hide();
-    cpf.removeClass('ul-form-control-error');
+    cpf.removeClass(errorField);
 
     const isCpfValid = isUlCpfValid(cpfFormatted);
     if (!isCpfValid) {
-        cpf.addClass('ul-form-control-error');
+        cpf.addClass(errorField);
         cpfError.focus();
         cpfError.show();
     }

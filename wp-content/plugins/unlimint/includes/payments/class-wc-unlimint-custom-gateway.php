@@ -15,7 +15,7 @@ require_once __DIR__ . '/class-wc-unlimint-refund.php';
 /**
  * Unlimint 'Credit card' ('Bank card') payment method
  */
-class WC_Unlimint_Custom_Gateway extends WC_Unlimint_Payment_Abstract {
+class WC_Unlimint_Custom_Gateway extends WC_Unlimint_Gateway_Abstract {
 
 	public const GATEWAY_ID = 'woo-unlimint-custom';
 
@@ -33,12 +33,14 @@ class WC_Unlimint_Custom_Gateway extends WC_Unlimint_Payment_Abstract {
 
 		$this->bankcard_fields = new WC_Unlimint_Admin_BankCard_Fields();
 
-		$this->description = __( 'Credit card payment method', 'unlimint' );
+		$this->description        = __( 'Credit card payment method', 'unlimint' );
 		$this->method_description = $this->description;
 
-		$this->hook         = new WC_Unlimint_Hook_Custom( $this );
+		$this->hook = new WC_Unlimint_Hook_Custom( $this );
+		$this->hook->load_hooks();
 
 		$this->register_auth_payment();
+		$this->load_settings_js( 'bankcard', 'bankcard_settings_unlimint.js' );
 	}
 
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
@@ -48,8 +50,6 @@ class WC_Unlimint_Custom_Gateway extends WC_Unlimint_Payment_Abstract {
 	private function register_auth_payment() {
 		$this->auth_payment = new WC_Unlimint_Auth_Payment();
 		add_action( 'woocommerce_order_item_add_action_buttons', [ $this->auth_payment, 'show_auth_payment_buttons' ] );
-
-		$this->auth_payment->do_payment_action();
 	}
 
 	public function get_title() {
@@ -68,12 +68,10 @@ class WC_Unlimint_Custom_Gateway extends WC_Unlimint_Payment_Abstract {
 	 * @return array
 	 */
 	public function get_form_fields() {
-		$this->load_settings_js( 'bankcard', 'bankcard_settings_unlimint.js' );
-
 		if ( ! empty( $_GET[ WC_Unlimint_Subsections::SUBSECTION_GET_PARAM ] ) ) {
 			$order_status_fields = new WC_Unlimint_Admin_Order_Status_Fields();
 
-			return $order_status_fields->get_form_fields();
+			return $order_status_fields->get_card_form_fields();
 		}
 
 		return $this->bankcard_fields->get_form_fields();
@@ -327,14 +325,6 @@ class WC_Unlimint_Custom_Gateway extends WC_Unlimint_Payment_Abstract {
 
 		if ( is_array( $api_response ) && ( array_key_exists( 'payment_data', $api_response ) || array_key_exists( 'recurring_data', $api_response ) ) ) {
 			$api_response['status'] = 'pending';
-
-			$order->add_order_note(
-				'Unlimint: ' .
-				__( 'To confirm the payment click', 'unlimint' ) .
-				' <a target="_blank" href="' . $api_response['redirect_url'] . '">' . __( 'here', 'unlimint' ) . '</a>',
-				1
-			);
-
 			$this->save_order_meta( $order, $api_response );
 
 			return $this->handle_status( $api_response, $order );

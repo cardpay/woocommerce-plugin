@@ -11,14 +11,14 @@ class WC_Unlimint_Hook_Custom extends WC_Unlimint_Hook_Abstract {
 	public function load_hooks() {
 		parent::load_hooks();
 
-		if ( ! empty( $this->payment->settings['enabled'] ) && 'yes' === $this->payment->settings['enabled'] ) {
+		if ( ! empty( $this->gateway->settings['enabled'] ) && 'yes' === $this->gateway->settings['enabled'] ) {
 			add_action( 'wp_enqueue_scripts', [ $this, 'add_checkout_scripts_custom' ] );
-			add_action( 'woocommerce_thankyou_' . $this->payment->id, [ $this, 'redirect_to_api_url' ] );
+			add_action( 'woocommerce_thankyou_' . $this->gateway->id, [ $this, 'redirect_to_api_url' ] );
 		}
 	}
 
 	public function add_checkout_scripts_custom() {
-		if ( is_checkout() && $this->payment->is_available() && ! get_query_var( 'order-received' ) ) {
+		if ( is_checkout() && $this->gateway->is_available() && ! get_query_var( 'order-received' ) ) {
 			wp_enqueue_script(
 				'unlimint-custom-checkout',
 				plugins_url( '../../assets/js/credit-card.js', plugin_dir_path( __FILE__ ) ),
@@ -31,9 +31,9 @@ class WC_Unlimint_Hook_Custom extends WC_Unlimint_Hook_Abstract {
 				'unlimint-custom-checkout',
 				'wc_unlimint_custom_params',
 				[
-					'public_key'          => $this->payment->get_public_key(),
-					'installments'        => $this->payment->get_option_ul( '_ul_installments' ),
-					'payer_email'         => esc_js( $this->payment->logged_user_email ),
+					'public_key'          => $this->gateway->get_public_key(),
+					'installments'        => $this->gateway->get_option_ul( '_ul_installments' ),
+					'payer_email'         => esc_js( $this->gateway->logged_user_email ),
 					'apply'               => __( 'Apply', 'unlimint' ),
 					'remove'              => __( 'Remove', 'unlimint' ),
 					'choose'              => __( 'To choose', 'unlimint' ),

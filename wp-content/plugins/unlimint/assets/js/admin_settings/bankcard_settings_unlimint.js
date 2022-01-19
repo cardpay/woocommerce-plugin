@@ -1,6 +1,7 @@
 window.addEventListener('load', function () {
+    /*global woocommerce_admin_meta_boxes */
     jQuery('#mainform').submit(function (e) {
-        const prefix = 'woocommerce_woo-unlimint-custom_wc_ul_bankcard_';
+        const prefix = 'woocommerce_woo-unlimint-custom_woocommerce_unlimint_bankcard_';
         if (!jQuery(`#${prefix}terminal_code`).length) {
             return;
         }
@@ -16,3 +17,83 @@ window.addEventListener('load', function () {
         }
     });
 });
+
+const ulCapturePayment = function () {
+    /*global woocommerce_admin_meta_boxes */
+    if (!window.confirm('Are you sure you want to capture the payment?')) {
+        return;
+    }
+
+    jQuery.ajax({
+        url: woocommerce_admin_meta_boxes.ajax_url,
+        data: {
+            action: 'wc_ul_capture',
+            order_id: woocommerce_admin_meta_boxes.post_id,
+            security: woocommerce_admin_meta_boxes.order_item_nonce,
+        },
+        type: 'POST',
+        success: function (response) {
+            const errorMessage = 'Payment was not captured';
+            if (!response) {
+                alert(errorMessage);
+                return;
+            }
+            const responseParsed = JSON.parse(response);
+            if (!responseParsed) {
+                alert(errorMessage);
+                return;
+            }
+
+            if (responseParsed.success) {
+                alert('Payment has been captured successfully');
+                location.reload();
+            } else {
+                if (responseParsed.data && responseParsed.data.error_message) {
+                    alert(`Payment capture has failed: ${responseParsed.data.error_message}`);
+                } else {
+                    alert(errorMessage);
+                }
+            }
+        }
+    });
+}
+
+const ulCancelPayment = function () {
+    /*global woocommerce_admin_meta_boxes */
+    if (!window.confirm('Are you sure you want to cancel the payment?')) {
+        return;
+    }
+
+    jQuery.ajax({
+        url: woocommerce_admin_meta_boxes.ajax_url,
+        data: {
+            action: 'wc_ul_cancel',
+            order_id: woocommerce_admin_meta_boxes.post_id,
+            security: woocommerce_admin_meta_boxes.order_item_nonce,
+        },
+        type: 'POST',
+        success: function (response) {
+            const errorMessage = 'Payment was not cancelled';
+            if (!response) {
+                alert(errorMessage);
+                return;
+            }
+            const responseParsed = JSON.parse(response);
+            if (!responseParsed) {
+                alert(errorMessage);
+                return;
+            }
+
+            if (responseParsed.success) {
+                alert('Payment has been cancelled successfully');
+                location.reload();
+            } else {
+                if (responseParsed.data && responseParsed.data.error_message) {
+                    alert(`Payment cancellation has failed: ${responseParsed.data.error_message}`);
+                } else {
+                    alert(errorMessage);
+                }
+            }
+        }
+    });
+}

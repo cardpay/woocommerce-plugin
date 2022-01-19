@@ -3,9 +3,8 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/class-wc-unlimint-admin-fields.php';
-require_once __DIR__ . '/interface-wc-unlimint-admin-formfields.php';
 
-class WC_Unlimint_Admin_BankCard_Fields extends WC_Unlimint_Admin_Fields implements WC_Unlimint_Admin_FormFields {
+class WC_Unlimint_Admin_BankCard_Fields extends WC_Unlimint_Admin_Fields {
 
 	public const FIELDNAME_PREFIX = 'woocommerce_unlimint_bankcard_';
 

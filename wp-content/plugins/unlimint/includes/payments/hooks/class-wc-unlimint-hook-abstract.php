@@ -8,12 +8,12 @@ require_once __DIR__ . '/../../module/class-wc-unlimint-helper.php';
 abstract class WC_Unlimint_Hook_Abstract {
 
 	/**
-	 * @var WC_Unlimint_Payment_Abstract
+	 * @var WC_Unlimint_Gateway_Abstract
 	 */
-	public $payment;
+	public $gateway;
 
 	/**
-	 * @var WC_Unlimint_Payment_Abstract
+	 * @var string
 	 */
 	public $class;
 
@@ -38,17 +38,15 @@ abstract class WC_Unlimint_Hook_Abstract {
 	public $site_id;
 
 	/**
-	 * @param WC_Unlimint_Payment_Abstract $payment Payment method.
+	 * @param WC_Unlimint_Gateway_Abstract $gateway Payment method.
 	 */
-	public function __construct( $payment ) {
-		$this->payment     = $payment;
-		$this->class       = get_class( $payment );
-		$this->ul_instance = $payment->unlimint_sdk;
-		$this->public_key  = $payment->get_public_key();
+	public function __construct( $gateway ) {
+		$this->gateway     = $gateway;
+		$this->class       = get_class( $gateway );
+		$this->ul_instance = $gateway->unlimint_sdk;
+		$this->public_key  = $gateway->get_public_key();
 		$this->test_user   = get_option( '_test_user_v1' );
 		$this->site_id     = get_option( '_site_id_v1' );
-
-		$this->load_hooks();
 	}
 
 	public function load_hooks() {
@@ -59,7 +57,7 @@ abstract class WC_Unlimint_Hook_Abstract {
 			WC_Unlimint_Constants::VERSION,
 		);
 
-		add_action( 'woocommerce_update_options_payment_gateways_' . $this->payment->id, [
+		add_action( 'woocommerce_update_options_payment_gateways_' . $this->gateway->id, [
 			$this,
 			'custom_process_admin_options'
 		] );
@@ -80,19 +78,19 @@ abstract class WC_Unlimint_Hook_Abstract {
 	 * @return bool
 	 */
 	public function custom_process_admin_options() {
-		$this->payment->init_settings();
-		$post_data = $this->payment->get_post_data();
+		$this->gateway->init_settings();
+		$post_data = $this->gateway->get_post_data();
 
-		foreach ( $this->payment->get_form_fields() as $key => $field ) {
-			$value = $this->payment->get_field_value( $key, $field, $post_data );
+		foreach ( $this->gateway->get_form_fields() as $key => $field ) {
+			$value = $this->gateway->get_field_value( $key, $field, $post_data );
 
 			update_option( $key, $value, true );
 
-			$value                           = $this->payment->get_field_value( $key, $field, $post_data );
-			$this->payment->settings[ $key ] = $value;
+			$value                           = $this->gateway->get_field_value( $key, $field, $post_data );
+			$this->gateway->settings[ $key ] = $value;
 		}
 
-		return update_option( $this->payment->get_option_key(), apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->payment->id, $this->payment->settings ) );
+		return update_option( $this->gateway->get_option_key(), apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->gateway->id, $this->gateway->settings ) );
 	}
 
 	public function notice_invalid_test_credentials() {

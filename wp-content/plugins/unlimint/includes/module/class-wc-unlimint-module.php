@@ -11,7 +11,7 @@ include_once __DIR__ . '/../payments/hooks/class-wc-unlimint-hook-ticket.php';
 include_once __DIR__ . '/preference/class-wc-unlimint-module-abstract.php';
 include_once __DIR__ . '/preference/class-wc-unlimint-module-custom.php';
 include_once __DIR__ . '/preference/class-wc-unlimint-module-ticket.php';
-include_once __DIR__ . '/../payments/class-wc-unlimint-payment-abstract.php';
+include_once __DIR__ . '/../payments/class-wc-unlimint-gateway-abstract.php';
 include_once __DIR__ . '/../payments/class-wc-unlimint-custom-gateway.php';
 include_once __DIR__ . '/../payments/class-wc-unlimint-ticket-gateway.php';
 

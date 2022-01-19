@@ -2,6 +2,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+require_once __DIR__ . '/../payments/class-wc-unlimint-auth-payment.php';
+
 class WC_Unlimint_Init {
 
 	public static function unlimint_load_plugin_textdomain() {
@@ -88,7 +90,7 @@ class WC_Unlimint_Init {
 		self::unlimint_load_plugin_textdomain();
 
 		require_once __DIR__ . '/config/class-wc-unlimint-constants.php';
-		require_once __DIR__ . '../../admin/notices/class-wc-unlimint-notices.php';
+		require_once __DIR__ . '/../admin/notices/class-wc-unlimint-notices.php';
 		WC_Unlimint_Notices::init_unlimint_notice();
 
 		// Check for PHP version and throw notice.
@@ -114,7 +116,7 @@ class WC_Unlimint_Init {
 			require_once __DIR__ . '/log/class-wc-unlimint-logger.php';
 			require_once __DIR__ . '/class-wc-unlimint-module.php';
 			require_once __DIR__ . '/class-wc-unlimint-credentials.php';
-			require_once __DIR__ . '../../admin/notices/class-wc-unlimint-review-notice.php';
+			require_once __DIR__ . '/../admin/notices/class-wc-unlimint-review-notice.php';
 
 			WC_Unlimint_Module::init_unlimint_class();
 			WC_Unlimint_Review_Notice::init_unlimint_review_notice();
@@ -125,6 +127,9 @@ class WC_Unlimint_Init {
 		}
 
 		add_action( 'woocommerce_settings_checkout', [ __CLASS__, 'ul_show_admin_notices' ] );
+
+		add_action( 'wp_ajax_wc_ul_capture', [ __CLASS__, 'ajax_ul_capture_payment' ] );
+		add_action( 'wp_ajax_wc_ul_cancel', [ __CLASS__, 'ajax_ul_cancel_payment' ] );
 	}
 
 	private static function save_default_order_statuses_mapping() {
@@ -141,5 +146,24 @@ class WC_Unlimint_Init {
 		add_option( $prefix . WC_Unlimint_Admin_Order_Status_Fields::CHARGED_BACK_UNLIMINT, WC_Unlimint_Admin_Order_Status_Fields::CHARGED_BACK_WC_DEFAULT );
 		add_option( $prefix . WC_Unlimint_Admin_Order_Status_Fields::CHARGEBACK_RESOLVED_UNLIMINT, WC_Unlimint_Admin_Order_Status_Fields::CHARGEBACK_RESOLVED_WC_DEFAULT );
 		add_option( $prefix . WC_Unlimint_Admin_Order_Status_Fields::TERMINATED_UNLIMINT, WC_Unlimint_Admin_Order_Status_Fields::TERMINATED_WC_DEFAULT );
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public static function ajax_ul_capture_payment() {
+		self::do_payment_action( 'ajax_capture' );
+	}
+
+	/**
+	 * @throws JsonException
+	 */
+	public static function ajax_ul_cancel_payment() {
+		self::do_payment_action( 'ajax_cancel' );
+	}
+
+	private static function do_payment_action( $action ) {
+		$auth_payment = new WC_Unlimint_Auth_Payment();
+		wp_die( json_encode( $auth_payment->$action(), JSON_THROW_ON_ERROR ) );
 	}
 }
