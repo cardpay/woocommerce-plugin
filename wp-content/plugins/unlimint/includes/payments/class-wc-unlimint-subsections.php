@@ -25,11 +25,11 @@ class WC_Unlimint_Subsections {
 		if ( ! empty( $_GET[ self::SUBSECTION_GET_PARAM ] ) && ( self::SUBSECTION_ID === $_GET[ self::SUBSECTION_GET_PARAM ] ) ) {
 			$section_params = 'section=' . $_GET['section'];
 			$settings_url   = admin_url( "admin.php?page=wc-settings&tab=checkout&$section_params" );
-			echo "<a href='$settings_url'>" . self::SETTINGS_SECTION_LABEL . "</a> | " . self::ORDER_STATUS_TAB_LABEL;
+			echo "<a href='$settings_url'>" . __( self::SETTINGS_SECTION_LABEL, 'unlimint' ) . "</a> | " . __( self::ORDER_STATUS_TAB_LABEL, 'unlimint' );
 		} else {
 			$section_params = 'section=' . $_GET['section'] . '&' . self::SUBSECTION_GET_PARAM . '=' . self::SUBSECTION_ID;
 			$settings_url   = admin_url( "admin.php?page=wc-settings&tab=checkout&$section_params" );
-			echo self::SETTINGS_SECTION_LABEL . " | <a href='$settings_url'>" . self::ORDER_STATUS_TAB_LABEL . "</a>";
+			echo __( self::SETTINGS_SECTION_LABEL, 'unlimint' ) . " | <a href='$settings_url'>" . __( self::ORDER_STATUS_TAB_LABEL, 'unlimint' ) . "</a>";
 		}
 	}
 }

@@ -63,11 +63,44 @@ class WC_Unlimint_Auth_Payment {
 			return;
 		}
 
-		$capture_button_label = __( 'Capture' );
-		$cancel_button_label  = __( 'Cancel' );
+		$capture_button_label = __( 'Capture', 'unlimint' );
+		$cancel_button_label  = __( 'Cancel', 'unlimint' );
 
 		echo "<button type='button' id='ul_button_capture' class='button' style='color: #000000' onclick='ulCapturePayment()'>$capture_button_label</button> ";
 		echo "<button type='button' id='ul_button_cancel' class='button' style='color: #000000' onclick='ulCancelPayment()'>$cancel_button_label</button>";
+
+		$this->echo_bankcard_translations();
+	}
+
+	private function echo_bankcard_translations() {
+		$bankcard_translations = [
+			'ARE_YOU_SURE'     => __( 'Are you sure you want to', 'unlimint' ),
+			'THE_PAYMENT'      => __( 'the payment?', 'unlimint' ),
+			'PAYMENT_WAS_NOT'  => __( 'Payment was not', 'unlimint' ),
+			'PAYMENT_HAS_BEEN' => __( 'Payment has been', 'unlimint' ),
+			'SUCCESSFULLY'     => __( 'successfully', 'unlimint' ),
+			'CANCEL'           => __( 'cancel', 'unlimint' ),
+			'CAPTURE'          => __( 'capture', 'unlimint' ),
+			'CANCELLED'        => __( 'cancelled', 'unlimint' ),
+			'CAPTURED'         => __( 'captured', 'unlimint' ),
+		];
+
+		$bankcard_alert_translations = '{';
+		foreach ( $bankcard_translations as $key => $value ) {
+			$bankcard_alert_translations .= "\"$key\":\"$value\"";
+			if ( array_key_last( $bankcard_translations ) != $key ) {
+				$bankcard_alert_translations .= ',';
+			}
+		}
+		$bankcard_alert_translations .= '}';
+
+		echo "
+			<script type='text/javascript'>
+			if (typeof BANKCARD_ALERT_TRANSLATIONS === 'undefined') {
+                var BANKCARD_ALERT_TRANSLATIONS = $bankcard_alert_translations;
+            }
+			</script>
+		";
 	}
 
 	public function do_payment_action( $payment_action ) {
@@ -117,12 +150,12 @@ class WC_Unlimint_Auth_Payment {
 	private function capture_payment( $order, $order_id ) {
 		$order_total = $order->get_total();
 		if ( $order_total <= 0 ) {
-			return $this->get_error_response( __( 'Order total amount must be more than 0 to capture the payment' ), $order_id );
+			return $this->get_error_response( __( 'Order total amount must be more than 0 to capture the payment', 'unlimint' ), $order_id );
 		}
 
 		$initial_order_amount = WC_Unlimint_Helper::get_order_meta( $order, WC_Unlimint_Constants::ORDER_META_INITIAL_API_TOTAL );
 		if ( ! is_null( $initial_order_amount ) && $order_total > (float) $initial_order_amount ) {
-			return $this->get_error_response( __( "Order total amount must not exceed the blocked amount ($initial_order_amount) to capture the payment" ), $order_id );
+			return $this->get_error_response( __( "Order total amount must not exceed the blocked amount (", 'unlimint' ) . $initial_order_amount . __( ") to capture the payment", 'unlimint' ), $order_id );
 		}
 
 		$response                   = self::ERROR_RESPONSE;

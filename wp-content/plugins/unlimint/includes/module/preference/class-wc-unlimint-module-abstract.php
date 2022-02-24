@@ -84,11 +84,11 @@ abstract class WC_Unlimint_Module_Abstract extends WC_Payment_Gateway {
 	/**
 	 * @param WC_Unlimint_Gateway_Abstract $payment
 	 * @param WC_Order $order
-	 * @param null $post_fields
+	 * @param array $post_fields
 	 *
 	 * @throws Exception Preference Init abstract exception.
 	 */
-	public function __construct( $payment, $order, $post_fields = null ) {
+	public function __construct( $payment, $order, $post_fields = [] ) {
 		$this->payment            = $payment;
 		$this->logger             = $payment->logger;
 		$this->order              = $order;
@@ -128,7 +128,8 @@ abstract class WC_Unlimint_Module_Abstract extends WC_Payment_Gateway {
 					'zip'         => $customer->get_shipping_postcode(),
 					'city'        => $customer->get_shipping_city(),
 					'phone'       => $customer->get_shipping_phone(),
-					'addr_line_1' => $customer->get_shipping_address_1()
+					'addr_line_1' => $customer->get_shipping_address_1(),
+					'addr_line_2' => $customer->get_shipping_address_2(),
 				]
 			],
 			'customer'       => [

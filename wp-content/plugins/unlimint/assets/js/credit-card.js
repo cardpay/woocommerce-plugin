@@ -35,6 +35,35 @@ const UL_MAX_CARD_EXPIRATION_YEARS = 40;
     });
 }(jQuery));
 
+const formatUlCardField = function (fieldId) {
+    const inputField = jQuery('#' + fieldId);
+    if (!inputField.length) {
+        return;
+    }
+
+    switch (fieldId) {
+        case UL_CARD_NUMBER:
+            formatUlCardNumber();
+            break;
+
+        case UL_CARD_EXPIRATION_DATE:
+            formatUlExpirationDate();
+            break;
+
+        case UL_CVC:
+            formatUlCvc();
+            break;
+
+        case UL_CPF:
+            const newCpfValue = formatUlCpf(inputField.val());
+            inputField.val(newCpfValue);
+            break;
+
+        default:
+            break;
+    }
+}
+
 const validateUlCardField = function (fieldId) {
     const inputField = jQuery('#' + fieldId);
     if (!inputField.length) {
@@ -59,12 +88,13 @@ const validateUlCardField = function (fieldId) {
 }
 
 const isUlInputFieldValid = function (fieldId, inputField) {
+    formatUlCardField(fieldId);
+
     let isFieldValid;
     const fieldValue = inputField.val();
 
     switch (fieldId) {
         case UL_CARD_NUMBER:
-            formatUlCardNumber();
             isFieldValid = isUlCreditCardNumberValid();
             break;
 
@@ -73,12 +103,10 @@ const isUlInputFieldValid = function (fieldId, inputField) {
             break;
 
         case UL_CARD_EXPIRATION_DATE:
-            formatUlExpirationDate();
             isFieldValid = isUlExpirationDateValid(fieldValue);
             break;
 
         case UL_CVC:
-            formatUlCvc();
             isFieldValid = isUlCvcValid();
             break;
 
@@ -87,9 +115,7 @@ const isUlInputFieldValid = function (fieldId, inputField) {
             break;
 
         case UL_CPF:
-            const newCpfValue = getUlCpfFormatted(fieldValue);
-            inputField.val(newCpfValue);
-            isFieldValid = isUlCpfValid(newCpfValue);
+            isFieldValid = isUlCpfValid(fieldValue);
             break;
 
         default:
@@ -150,7 +176,7 @@ const isUlCreditCardNumberValid = function () {
         },
         {
             cbType: "mir",
-            pattern: /^220[0-4][0-9]+/,
+            pattern: /^220[0-4]\d+/,
             cnLength: [16, 17, 18, 19],
         },
         {
@@ -174,7 +200,7 @@ const isUlCreditCardNumberValid = function () {
         },
         {
             cbType: "jcb",
-            pattern: /^(((352[8-9][0-9][0-9])|(35[3-8][0-9][0-9][0-9]))|((30[8-9][8-9][0-9][0-9])|309[0-4][0-9][0-9])|((309[6-9][0-9][0-9])|310[0-2][0-9][0-9])|(311[2-9][0-9][0-9])|(3120[0-9][0-9])|(315[8-9][0-9][0-9])|((333[7-9][0-9][0-9])|(334[0-9][0-9][0-9])))/,
+            pattern: /^(((352[8-9][0-9][0-9])|(35[3-8][0-9][0-9][0-9]))|((30[8-9][8-9][0-9][0-9])|309[0-4][0-9][0-9])|((309[6-9][0-9][0-9])|310[0-2][0-9][0-9])|(311[2-9][0-9][0-9])|(3120[0-9][0-9])|(315[8-9][0-9][0-9])|((333[7-9][0-9][0-9])|(334[0-9][0-9][0-9])))/,  // NOSONAR
             cnLength: [16, 17, 18, 19],
         },
         {
@@ -184,7 +210,7 @@ const isUlCreditCardNumberValid = function () {
         },
         {
             cbType: "elo",
-            pattern: /^(50(67(0[78]|1[5789]|2[012456789]|3[01234569]|4[0-7]|53|7[4-8])|9(0(0[0123478]|14|2[0-2]|3[359]|4[01235678]|5[1-9]|6[0-9]|7[0134789]|8[04789]|9[12349])|1(0[34568]|4[6-9]|83)|2(20|5[7-9]|6[0-6])|4(0[7-9]|1[0-2]|31)|7(22|6[5-9])))|4(0117[89]|3(1274|8935)|5(1416|7(393|63[12])))|6(27780|36368|5(0(0(3[12356789]|4[0-9]|5[01789]|6[01345678]|7[78])|4(0[6-9]|1[0-3]|2[2-6]|3[4-9]|8[5-9]|9[0-9])|5(0[012346789]|1[0-9]|2[0-9]|3[0-8]|7[7-9]|8[0-9]|9[0-8])|72[0-7]|9(0[1-9]|1[0-9]|2[0128]|3[89]|4[6-9]|5[045]|6[25678]|71))|16(5[2-9]|6[0-9]|7[01456789])|50(0[0-9]|1[0-9]|2[1-9]|3[0-6]|5[1-7]))))/,
+            pattern: /^(50(67(0[78]|1[5789]|2[012456789]|3[01234569]|4[0-7]|53|7[4-8])|9(0(0[0123478]|14|2[0-2]|3[359]|4[01235678]|5[1-9]|6[0-9]|7[0134789]|8[04789]|9[12349])|1(0[34568]|4[6-9]|83)|2(20|5[7-9]|6[0-6])|4(0[7-9]|1[0-2]|31)|7(22|6[5-9])))|4(0117[89]|3(1274|8935)|5(1416|7(393|63[12])))|6(27780|36368|5(0(0(3[12356789]|4[0-9]|5[01789]|6[01345678]|7[78])|4(0[6-9]|1[0-3]|2[2-6]|3[4-9]|8[5-9]|9[0-9])|5(0[012346789]|1[0-9]|2[0-9]|3[0-8]|7[7-9]|8[0-9]|9[0-8])|72[0-7]|9(0[1-9]|1[0-9]|2[0128]|3[89]|4[6-9]|5[045]|6[25678]|71))|16(5[2-9]|6[0-9]|7[01456789])|50(0[0-9]|1[0-9]|2[1-9]|3[0-6]|5[1-7]))))/, // NOSONAR
             cnLength: [13, 16, 19],
         },
         {
@@ -208,7 +234,7 @@ const isUlCreditCardNumberValid = function () {
     }
     cardNumberInputField.removeClass('ul-form-control-error');
 
-    const cardNumber = cardNumberInputField.val().replace(/[^0-9]/gi, '');
+    const cardNumber = cardNumberInputField.val().replace(/[^\d]/gi, '');
 
     let isCardNumberValid = true;
     for (let cardBrandIndex = 0; cardBrandIndex <= CARD_BRANDS.length - 1; cardBrandIndex++) {

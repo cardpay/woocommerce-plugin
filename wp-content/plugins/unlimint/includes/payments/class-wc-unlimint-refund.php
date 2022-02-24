@@ -38,14 +38,14 @@ class WC_Unlimint_Refund {
 			$error_message = $e->getMessage();
 			$this->logger->error( __FUNCTION__, $error_message );
 
-			return new WP_Error( 'wc_ul_refund_failed', "Refund for order #$order_id has failed with validation error: " . __( $error_message ) );
+			return new WP_Error( 'wc_ul_refund_failed', __( "Refund for order", "unlimint" ) . ' ' . "#$order_id" . ' ' . __( "has failed with validation error:", "unlimint" ) . ' ' . __( "$error_message", "unlimint" ) );
 		}
 
 		$request     = $this->get_refund_request( $order_id, $amount, $reason );
 		$refund_info = $this->unlimint_sdk->post( '/refunds', wp_json_encode( $request ) );
 
 		if ( isset( $refund_info['status'] ) && (int) $refund_info['status'] === 201 ) {
-			$this->logger->info( __FUNCTION__, "Successful refund for order #$order_id: " . wp_json_encode( $refund_info, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) );
+			$this->logger->info( __FUNCTION__, "c #$order_id: " . wp_json_encode( $refund_info, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) );
 
 			return true;
 		}
@@ -61,7 +61,7 @@ class WC_Unlimint_Refund {
 
 	private function validate_order_for_refund( $amount, $order_id ) {
 		if ( is_null( $amount ) || (float) $amount <= 0 ) {
-			throw new WC_Unlimint_Exception( "Invalid refund amount for order #$order_id" );
+			throw new WC_Unlimint_Exception( __( "Invalid refund amount for order", "unlimint" ) . ' ' . "#$order_id" );
 		}
 
 		$order              = wc_get_order( $order_id );

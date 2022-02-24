@@ -3,7 +3,7 @@
  * Plugin Name: Woocommerce Unlimint Payments
  * Plugin URI: https://github.com/cardpay/woocommerce-plugin
  * Description: Unlimint Woocommerce engine plugin allows merchants to make payments, installment payments and refunds using the Woocommerce platform.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Unlimint
  * Author URI: https://www.unlimint.com
  * Text Domain: woocommerce-unlimint

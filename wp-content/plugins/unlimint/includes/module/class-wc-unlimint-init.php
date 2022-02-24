@@ -3,14 +3,23 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/../payments/class-wc-unlimint-auth-payment.php';
+require_once __DIR__ . '/../payments/validator/class-wc-unlimint-alt-validator.php';
+require_once __DIR__ . '/../payments/validator/class-wc-unlimint-custom-validator.php';
 
 class WC_Unlimint_Init {
+	public const GATEWAY_ALT = [
+		WC_Unlimint_Pix_Gateway::GATEWAY_ID,
+		WC_Unlimint_Ticket_Gateway::GATEWAY_ID
+	];
 
 	public static function unlimint_load_plugin_textdomain() {
 		$text_domain = 'unlimint';
-		$locale      = apply_filters( 'plugin_locale', get_locale(), $text_domain );
+		$locale      = substr( apply_filters( 'plugin_locale', get_locale(), $text_domain ), 0, 2 );
 
-		$original_language_file = __DIR__ . '/../../i18n/languages/unlimint-' . $locale . '.mo';
+		$original_language_file = __DIR__ . "/../../i18n/languages/unlimint-$locale.mo";
+		if ( ! file_exists( $original_language_file ) ) {
+			return;
+		}
 
 		// Unload the translation for the text domain of the plugin.
 		unload_textdomain( $text_domain );
@@ -128,6 +137,8 @@ class WC_Unlimint_Init {
 
 		add_action( 'woocommerce_settings_checkout', [ __CLASS__, 'ul_show_admin_notices' ] );
 
+		add_action( 'woocommerce_checkout_process', [ __CLASS__, 'validate_form' ] );
+
 		add_action( 'wp_ajax_wc_ul_capture', [ __CLASS__, 'ajax_ul_capture_payment' ] );
 		add_action( 'wp_ajax_wc_ul_cancel', [ __CLASS__, 'ajax_ul_cancel_payment' ] );
 	}
@@ -165,5 +176,23 @@ class WC_Unlimint_Init {
 	private static function do_payment_action( $action ) {
 		$auth_payment = new WC_Unlimint_Auth_Payment();
 		wp_die( json_encode( $auth_payment->$action(), JSON_THROW_ON_ERROR ) );
+	}
+
+	public static function validate_form() {
+		if ( empty( $_POST[ WC_Unlimint_Constants::PAYMENT_METHOD ] ) ) {
+			return;
+		}
+
+		if ( $_POST[ WC_Unlimint_Constants::PAYMENT_METHOD ] === WC_Unlimint_Custom_Gateway::GATEWAY_ID ) {
+			$card_validator = new WC_Unlimint_Custom_Validator();
+			$card_validator->validate();
+
+			return;
+		}
+
+		if ( in_array( $_POST[ WC_Unlimint_Constants::PAYMENT_METHOD ], self::GATEWAY_ALT ) ) {
+			$alt_validator = new WC_Unlimint_Alt_Validator();
+			$alt_validator->validate();
+		}
 	}
 }

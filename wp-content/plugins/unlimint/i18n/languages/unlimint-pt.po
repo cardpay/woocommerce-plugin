@@ -1,0 +1,486 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Unlimint payments for WooCommerce 6.1.1\n"
+"POT-Creation-Date: 2022-02-21\n"
+"PO-Revision-Date: 2022-02-21 10:33+0300\n"
+"Language: pt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Domain: unlimint\n"
+
+msgid "Are you sure you want to"
+msgstr "Tem certeza de que deseja"
+
+msgid "the payment?"
+msgstr "o pagamento?"
+
+msgid "Payment was not"
+msgstr "O pagamento não foi"
+
+msgid "Payment has been"
+msgstr "O pagamento foi"
+
+msgid "successfully"
+msgstr "com sucesso"
+
+msgid "Payment was not captured: "
+msgstr "O pagamento não foi capturado: "
+
+msgid "Payment was not cancelled: "
+msgstr "O pagamento não foi cancelado: "
+
+msgid "Invalid CPF"
+msgstr "CPF inválido"
+
+msgid "Update your credentials with the Terminal Password and Terminal code, you need them to continue receiving payments!"
+msgstr "Atualize suas credenciais com a Senha do Terminal e o código do Terminal, você precisa delas para continuar recebendo pagamentos!"
+
+msgid "The store should have HTTPS in order to use Unlimint payment methods"
+msgstr "A loja deve utilizar HTTPS para usar os métodos de pagamento Unlimitt"
+
+msgid "Unlimint payments for WooCommerce requires PHP version 5.6 or later. Please update your PHP version."
+msgstr "Pagamentos Unlimints para WooCommerce requerem PHP versão 5.6 ou posterior. Por favor, atualize sua versão do PHP."
+
+msgid "PHP Extension CURL is not installed."
+msgstr "A extensão PHP CURL não está instalada."
+
+msgid "<b>Terminal Password</b> test credential is invalid. Review the field to perform tests in your store."
+msgstr "A credencial de teste <b>Senha do Terminal</b> é inválida. Revise o campo para realizar testes em sua loja."
+
+msgid "<b>Terminal Password</b> test credential is blank. Review the field to perform tests in your store."
+msgstr "A credencial de teste <b>Senha do Terminal</b> está em branco. Revise o campo para realizar testes em sua loja."
+
+msgid "CPF is not provided"
+msgstr "O CPF não foi fornecido"
+
+msgid "POST bank card fields are not set"
+msgstr "Os campos do cartão bancário POST não foram definidos"
+
+msgid "cURL extension not found. You need to enable cURL in your php.ini or another configuration you have."
+msgstr "Extensão cURL não encontrada. Você precisa habilitar o cURL em seu php.ini ou outra configuração que você tenha."
+
+msgid "No HTTP METHOD specified"
+msgstr "Nenhum método HTTP especificado"
+
+msgid "No URI specified"
+msgstr "Nenhum URI especificado"
+
+msgid "Invalid payment gateway id provided"
+msgstr "ID de gateway de pagamento fornecido é inválido"
+
+msgid "The store should have HTTPS in order to use Unlimint payment methods."
+msgstr "A loja deve ter HTTPS para usar os métodos de pagamento Unlimitt."
+
+msgid "Set up"
+msgstr "Configurar"
+
+msgid "The payment method is not valid or not available."
+msgstr "A forma de pagamento não é válida ou não está disponível."
+
+msgid "The transaction amount cannot be processed by Unlimint."
+msgstr "O valor da transação não pode ser processado pela Unlimitt."
+
+msgid "Possible causes: Currency not supported; Amounts below the minimum or above the maximum allowed."
+msgstr "Possíveis causas: Moeda não suportada; Valores abaixo do mínimo ou acima do máximo permitido."
+
+msgid "The users are not valid."
+msgstr "Os usuários não são válidos."
+
+msgid "Possible causes: Buyer and seller have the same account in Unlimint; The transaction involving production and test users."
+msgstr "Possíveis causas: Comprador e vendedor possuem a mesma conta na Unlimitt; A transação envolvendo usuários de produção e teste."
+
+msgid "Unauthorized use of production credentials."
+msgstr "Uso não autorizado de credenciais de produção."
+
+msgid "Possible causes: Use permission in use for the credential of the seller."
+msgstr "Possíveis causas: Permissão de uso em uso para a credencial do vendedor."
+
+msgid "Order error"
+msgstr "Erro na ordem"
+
+msgid "Order is invalid"
+msgstr "O pedido é inválido"
+
+msgid "External Reference not found"
+msgstr "Referência externa não encontrada"
+
+msgid "Payment approved."
+msgstr "Pagamento aprovado."
+
+msgid "Waiting for the payment"
+msgstr "Aguardando o pagamento"
+
+msgid "Payment is pending review."
+msgstr "O pagamento está pendente de revisão."
+
+msgid "Payment was declined. The customer can try again."
+msgstr "O pagamento foi recusado. O cliente pode tentar novamente."
+
+msgid "Payment was returned to the customer."
+msgstr "O pagamento foi devolvido ao cliente."
+
+msgid "Payment was canceled."
+msgstr "O pagamento foi cancelado."
+
+msgid "The payment is in mediation or the purchase was unknown by the customer."
+msgstr "O pagamento está em mediação ou a compra era desconhecida pelo cliente."
+
+msgid "Unlimint: The payment %1$s was notified by Unlimint with status %2$s."
+msgstr "Unlimint: O pagamento %1$s foi notificado por Unlimint com status %2$s."
+
+msgid "Notification IPN is successful"
+msgstr "A notificação IPN foi bem-sucedida"
+
+msgid "Wrong params in Request IPN"
+msgstr "Parâmetros errados na solicitação de IPN"
+
+msgid "Payment type"
+msgstr "Tipo de pagamento"
+
+msgid "Buyer email"
+msgstr "E-mail do comprador"
+
+msgid "Payment method"
+msgstr "Forma de pagamento"
+
+msgid "If set to 'No', the amount will not be captured but only blocked. With 'No' option selected payments will be captured automatically in 7 days from the time of creating the preauthorized transaction. In installment case with 'No' option selected installments will be declined automatically in 7 days from the time of creating the preauthorized transaction."
+msgstr "Se definido como 'Não', o valor não será capturado, mas apenas bloqueado. Com a opção 'Não' selecionada, os pagamentos serão capturados automaticamente em 7 dias a partir do momento da criação da transação pré-autorizada. No caso de parcelamento com opção 'Não', as parcelas selecionadas serão recusadas automaticamente em 7 dias a partir do momento da criação da transação pré-autorizada."
+
+msgid "Get your credentials, visit the unlimint.com"
+msgstr "Obtenha suas credenciais, visite o unlimint.com"
+
+msgid "In test mode, the data is sent to the sandbox."
+msgstr "No modo de teste, os dados são enviados para o sandbox."
+
+msgid "Order status when payment is new"
+msgstr "Status do pedido quando o pagamento é novo"
+
+msgid "Order status when payment is in process"
+msgstr "Status do pedido quando o pagamento está em andamento"
+
+msgid "Order status when payment is declined"
+msgstr "Status do pedido quando o pagamento é recusado"
+
+msgid "Order status when payment is authorized"
+msgstr "Status do pedido quando o pagamento é autorizado"
+
+msgid "Order status when payment is completed"
+msgstr "Status do pedido quando o pagamento for concluído"
+
+msgid "Order status when payment is cancelled"
+msgstr "Status do pedido quando o pagamento é cancelado"
+
+msgid "Order status when payment is voided"
+msgstr "Status do pedido quando o pagamento é anulado"
+
+msgid "Order status when payment is refunded"
+msgstr "Status do pedido quando o pagamento é reembolsado"
+
+msgid "Order status when payment is charged back"
+msgstr "Status do pedido quando o pagamento é estornado"
+
+msgid "Order status when chargeback is resolved"
+msgstr "Status do pedido quando o estorno é resolvido"
+
+msgid "Order status when payment is terminated"
+msgstr "Status do pedido quando o pagamento é encerrado"
+
+msgid "Apply"
+msgstr "Aplicar"
+
+msgid "Remove"
+msgstr "Remover"
+
+msgid "To choose"
+msgstr "Escolher"
+
+msgid "Other bank"
+msgstr "Outro banco"
+
+msgid "<strong>Billing: First Name</strong>, valid value is up to 256 characters."
+msgstr "<strong>Cobrança: Nome</strong>, valor válido é de até 256 caracteres."
+
+msgid "<strong>Billing: Last Name</strong>, valid value is up to 256 characters."
+msgstr "<strong>Cobrança: Nome</strong>, valor válido é de até 256 caracteres."
+
+msgid "<strong>Shipping: First Name</strong>, valid value is up to 256 characters."
+msgstr "<strong>Frete: Nome</strong>, valor válido é de até 256 caracteres."
+
+msgid "<strong>Shipping: Last Name</strong>, valid value is up to 256 characters."
+msgstr "<strong>Frete: Sobrenome</strong>, valor válido é de até 256 caracteres."
+
+msgid "<strong>Billing: Street / Address</strong>, valid value is up to 50 characters."
+msgstr "<strong>Cobrança: Rua / Endereço</strong>, valor válido até 50 caracteres."
+
+msgid "<strong>Billing: Street 2 / Address 2</strong>, valid value is up to 50 characters."
+msgstr "<strong>Cobrança: Rua 2 / Endereço 2</strong>, valor válido até 50 caracteres."
+
+msgid "<strong>Billing: Town / City</strong>, valid value is up to 50 characters."
+msgstr "<strong>Cobrança: Bairro / Cidade</strong>, valor válido é de até 50 caracteres."
+
+msgid "<strong>Billing: State / Country</strong>, valid value is up to 50 characters."
+msgstr "<strong>Cobrança: Estado / País</strong>, valor válido até 50 caracteres."
+
+msgid "<strong>Billing: Postcode / ZIP</strong>, valid value is up to 12 characters."
+msgstr "<strong>Cobrança: CEP / CEP</strong>, valor válido até 12 caracteres."
+
+msgid "<strong>Billing: Phone</strong>, valid value is from 8 to 18 characters."
+msgstr "<strong>Cobrança: Telefone</strong>, valor válido de 8 a 18 caracteres."
+
+msgid "<strong>Shipping: Street / Address</strong>, valid value is up to 50 characters."
+msgstr "<strong>Envio: Rua / Endereço</strong>, valor válido até 50 caracteres."
+
+msgid "<strong>Shipping: Street 2 / Address 2</strong>, valid value is up to 50 characters."
+msgstr "<strong>Envio: Rua 2 / Endereço 2</strong>, valor válido até 50 caracteres."
+
+msgid "<strong>Shipping: Town / City</strong>, valid value is up to 50 characters."
+msgstr "<strong>Envio: Bairro / Cidade</strong>, valor válido é de até 50 caracteres."
+
+msgid "<strong>Shipping: State / Country</strong>, valid value is up to 50 characters."
+msgstr "<strong>Envio: Estado / País</strong>, valor válido até 50 caracteres."
+
+msgid "<strong>Shipping: Postcode / ZIP</strong>, valid value is up to 12 characters."
+msgstr "<strong>Envio: CEP / CEP</strong>, valor válido até 12 caracteres."
+
+msgid "CVC length must be 3 or 4"
+msgstr "O comprimento do CVC deve ser 3 ou 4"
+
+msgid "Pix payment method"
+msgstr "Método de pagamento Pix"
+
+msgid "Boleto payment method"
+msgstr "Forma de pagamento por Boleto"
+
+msgid "Unlimint - A problem was occurred when processing your payment. Please, try again."
+msgstr "Unlimint - Ocorreu um problema ao processar seu pagamento. Por favor, tente novamente."
+
+msgid "A problem was occurred when processing your payment. Are you sure you have correctly filled all information in the payment form?"
+msgstr "Ocorreu um problema ao processar seu pagamento. Tem certeza de que preencheu corretamente todas as informações do formulário de pagamento?"
+
+msgid "capture"
+msgstr "capturar"
+
+msgid "cancel"
+msgstr "cancelar"
+
+msgid "COMPLETE"
+msgstr "COMPLETO"
+
+msgid "REVERSE"
+msgstr "REVERSÃO"
+
+msgid "Capture"
+msgstr "Capturar"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Order total amount must be more than 0 to capture the payment"
+msgstr "O valor total do pedido deve ser maior que 0 para capturar o pagamento"
+
+msgid "Order total amount must not exceed the blocked amount ("
+msgstr "O valor total do pedido não deve exceder o valor bloqueado ("
+
+msgid ") to capture the payment"
+msgstr ") para capturar o pagamento"
+
+msgid "Unlimint callback signature is not set"
+msgstr "A assinatura de retorno de chamada Unlimint não está definida"
+
+msgid "Invalid Unlimint callback"
+msgstr "Retorno de chamada Unlimint inválido"
+
+msgid "Invalid gateway provided for Unlimint callback secret"
+msgstr "Gateway inválido fornecido para segredo de retorno de chamada Unlimint"
+
+msgid "Unable to get new order status from Unlimint callback"
+msgstr "Não é possível obter o novo status do pedido do retorno de chamada Unlimitt"
+
+msgid "Credit card payment method"
+msgstr "Forma de pagamento com cartão de crédito"
+
+msgid "Checkout of payments with credit cards %s"
+msgstr "Checkout de pagamentos com cartões de crédito %s"
+
+msgid "Accept payments instantly and maximize the conversion of your business"
+msgstr "Aceite pagamentos instantaneamente e maximize a conversão do seu negócio"
+
+msgid "Turn your online store into a secure and easy-to-use payment gateway for your customers. With personalized checkout your customers pay without leaving your store!"
+msgstr "Transforme sua loja online em um gateway de pagamento seguro e fácil de usar para seus clientes. Com o checkout personalizado seus clientes pagam sem sair da sua loja!"
+
+msgid "That’s it, payment accepted!"
+msgstr "É isso, pagamento aceito!"
+
+msgid "We are processing your payment. In less than an hour we will send you the result by email."
+msgstr "Estamos processando seu pagamento. Em menos de uma hora enviaremos o resultado por e-mail."
+
+msgid "We are processing your payment. In less than 2 days we will send you by email if the payment has been approved or if additional information is needed."
+msgstr "Estamos processando seu pagamento. Em menos de 2 dias enviaremos por e-mail se o pagamento foi aprovado ou se são necessárias informações adicionais."
+
+msgid "Check the card number."
+msgstr "Verifique o número do cartão."
+
+msgid "Check the expiration date."
+msgstr "Verifique a data de validade."
+
+msgid "Check the information provided."
+msgstr "Verifique as informações fornecidas."
+
+msgid "Check the informed security code."
+msgstr "Verifique o código de segurança informado."
+
+msgid "Your payment cannot be processed."
+msgstr "Seu pagamento não pode ser processado."
+
+msgid "You must authorize payments for your orders."
+msgstr "Você deve autorizar os pagamentos de seus pedidos."
+
+msgid "Contact your card issuer to activate it. The phone is on the back of your card."
+msgstr "Entre em contato com o emissor do seu Cartão de Crédito o telefone encontra no verso do seu cartão."
+
+msgid "You have already made a payment of this amount. If you have to pay again, use another card or other method of payment."
+msgstr "Você já efetuou um pagamento neste mesmo valor. Se você tiver que pagar novamente, use outro cartão ou outro método de pagamento."
+
+msgid "Your payment was declined. Please select another payment method. It is recommended in cash."
+msgstr "Seu pagamento foi recusado. Selecione outro método de pagamento. É recomendado efetuar oo pagamento em dinheiro."
+
+msgid "Your payment does not have sufficient funds."
+msgstr "Você não tem fundos suficientes oara efetuar seu pagamento"
+
+msgid "Payment cannot process the selected fee."
+msgstr "O pagamento não pode processar a taxa selecionada."
+
+msgid "You have reached the limit of allowed attempts. Choose another card or other payment method."
+msgstr "Você atingiu o limite de tentativas permitidas. Escolha outro cartão ou outra forma de pagamento."
+
+msgid "This payment method cannot process your payment."
+msgstr "Este método de pagamento não pode processar seu pagamento."
+
+msgid "See your order form"
+msgstr "Veja seu formulário de pedido"
+
+msgid "Your payment was declined. You can try again."
+msgstr "Seu pagamento foi recusado. Você pode tentar novamente."
+
+msgid "Refund is not available for Boleto"
+msgstr "O reembolso não está disponível para Boleto"
+
+msgid "Refund is not available for Pix"
+msgstr "O reembolso não está disponível para Pix"
+
+msgid "Refund is not available for installment payment"
+msgstr "O reembolso não está disponível para pagamento parcelado"
+
+msgid "Refund is available for credit card payment only"
+msgstr "O reembolso está disponível apenas para pagamento com cartão de crédito"
+
+msgid "Refund can be made in 'Processing' or 'Completed' order status only"
+msgstr "O reembolso pode ser feito apenas no status de pedido 'Processando' ou 'Concluído'"
+
+msgid "Refund for order"
+msgstr "Reembolso para pedido"
+
+msgid "has failed with validation error:"
+msgstr "falhou com erro de validação:"
+
+msgid "Settings"
+msgstr "Configurações"
+
+msgid "Order Status"
+msgstr "Status do pedido"
+
+msgid "Credit cards"
+msgstr "Cartões de crédito"
+
+msgid "Debit card"
+msgstr "Cartão de débito"
+
+msgid "Payments in cash"
+msgstr "Pagamentos em dinheiro"
+
+msgid "We take you to our site to complete the payment"
+msgstr "Levamos você ao nosso site para concluir o pagamento"
+
+msgid "Credit card number"
+msgstr "Número do Cartão de Crédito"
+
+msgid "Invalid credit card number"
+msgstr "Número de cartão de crédito inválido"
+
+msgid "Cardholder name"
+msgstr "Nome do Titular"
+
+msgid "Invalid cardholder name"
+msgstr "Nome do titular do cartão inválido"
+
+msgid "Expiration date"
+msgstr "Data de validade"
+
+msgid "Invalid expiration date"
+msgstr "Data de validade inválida"
+
+msgid "CVC"
+msgstr "CVC"
+
+msgid "Invalid CVC"
+msgstr "CVC inválido"
+
+msgid "Installments"
+msgstr "Parcelas"
+
+msgid "Select number of installments"
+msgstr "Selecione o número de parcelas"
+
+msgid "Please select number of installments"
+msgstr "Selecione por favor o número de parcelas"
+
+msgid "CPF"
+msgstr "CPF"
+
+msgid "Terminal Code"
+msgstr "Código Do Terminal"
+
+msgid "Terminal Password"
+msgstr "Senha Do Terminal"
+
+msgid "Callback Secret"
+msgstr "Segredo De Callback"
+
+msgid "Test Environment"
+msgstr "Ambiente De Ensaio"
+
+msgid "Payment Title"
+msgstr "Título Do Pagamento"
+
+msgid "Log to File"
+msgstr "Registar num ficheiro"
+
+msgid "No"
+msgstr "Não"
+
+msgid "Yes"
+msgstr "Sim"
+
+msgid "Capture Payment"
+msgstr "Pagamento De Captura"
+
+msgid "Installment Enabled"
+msgstr "Instalação Activa"
+
+msgid "Ask CPF"
+msgstr "Perguntar ao CPF"
+
+msgid "Dynamic Descriptor"
+msgstr "Descritor Dinâmico"
+
+msgid "captured"
+msgstr "capturado"
+
+msgid "cancelled"
+msgstr "cancelado"
+
+msgid "Invalid refund amount for order"
+msgstr "Valor do reembolso inválido para o pedido"

@@ -16,8 +16,9 @@ $pixLogoUrl = plugins_url( '../../assets/images/pix.png', __FILE__ );
                                 <label for='ul-cpf-pix' id='ul-cpf-label'
                                        class='ul-label-form title-cpf'><?php echo esc_html__( 'CPF', 'unlimint' ); ?> <em>*</em></label>
                                 <input type='text' class='ul-form-control'
+                                       onkeyup="formatUlBoletoCpf(this.id);" onfocusout="validateUlPixInput();"
                                        id='ul-cpf-pix' data-checkout='ul-cpf-pix' name='unlimint_pix[cpf]'
-                                       onkeyup='handleUlPixInput();' autocomplete='off' maxlength='14'
+                                       autocomplete='off' maxlength='14'
                                        placeholder='XXX.XXX.XXX-XX'><br/>
                                 <span class='ul-error' data-main='#ul-cpf-pix'
                                       id='pix-cpf-error'><?php echo esc_html__( 'Invalid CPF', 'unlimint' ); ?></span><br/>
@@ -32,7 +33,7 @@ $pixLogoUrl = plugins_url( '../../assets/images/pix.png', __FILE__ );
 </div>
 
 <script type='text/javascript'>
-    function handleUlPixInput() {
-        setTimeout('handleUlPixCpf()', 1);
+    function validateUlPixInput() {
+        setTimeout(validateUlPixCpf(), 1);
     }
 </script>

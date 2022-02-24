@@ -19,7 +19,7 @@ if ( isset( $installment_options['currency'] ) ) {
                         <div class="ul-col-md-12" style="position: relative;">
                             <label for="ul-card-number"
                                    class="ul-label-form"><?php echo esc_html__( 'Credit card number', 'unlimint' ); ?> <em>*</em></label>
-                            <input type="text" onkeyup="handleUlCardFieldsInput(this);"
+                            <input type="text" onkeyup="formatUlCardField(this.id);" onfocusout="validateUlCardFieldInput(this);"
                                    class="ul-form-control ul-mt-5"
                                    autocomplete="off" minlength="13" maxlength="19"
                                    name="unlimint_custom[cardNumber]" id="ul-card-number" data-checkout="cardNumber"/>
@@ -34,7 +34,7 @@ if ( isset( $installment_options['currency'] ) ) {
                             <label for="ul-card-holder-name"
                                    class="ul-label-form"><?php echo esc_html__( 'Cardholder name', 'unlimint' ); ?> <em>*</em></label>
                             <input type="text" class="ul-form-control ul-mt-5" autocomplete="off" maxlength="50"
-                                   onkeyup="handleUlCardFieldsInput(this);"
+                                   onkeyup="formatUlCardField(this.id);" onfocusout="validateUlCardFieldInput(this);"
                                    id="ul-card-holder-name" data-checkout="ul-card-holder-name"
                                    name="unlimint_custom[cardholderName]"/>
 
@@ -48,7 +48,7 @@ if ( isset( $installment_options['currency'] ) ) {
                         <div class="ul-col-md-6 ul-pr-15">
                             <label for="ul-card-expiration-date"
                                    class="ul-label-form"><?php echo esc_html__( 'Expiration date', 'unlimint' ); ?> <em>*</em></label>
-                            <input type="text" onkeyup="handleUlCardFieldsInput(this);"
+                            <input type="text" onkeyup="formatUlCardField(this.id);" onfocusout="validateUlCardFieldInput(this);"
                                    class="ul-form-control ul-mt-5" autocomplete="off" placeholder="MM/YYYY"
                                    maxlength="7" name="unlimint_custom[cardExpirationDate]"
                                    id="ul-card-expiration-date" data-checkout="cardExpirationDate"
@@ -61,7 +61,7 @@ if ( isset( $installment_options['currency'] ) ) {
                             <label for="ul-cvc"
                                    class="ul-label-form"><?php echo esc_html__( 'CVC', 'unlimint' ); ?>
                                 <em>*</em></label>
-                            <input type="password" onkeyup="handleUlCardFieldsInput(this);"
+                            <input type="password" onkeyup="formatUlCardField(this.id);" onfocusout="validateUlCardFieldInput(this);"
                                    class="ul-form-control ul-mt-5" autocomplete="off" minlength="3"
                                    maxlength="4" name="unlimint_custom[cvc]" id="ul-cvc" data-checkout="cvc"/>
                             <span class="ul-error ul-mt-5" id="ul-cvc-error"
@@ -78,7 +78,7 @@ if ( isset( $installment_options['currency'] ) ) {
                                             <?php echo esc_html__( 'Installments', 'unlimint' ); ?> <em>*</em></label>
 
                                         <select class="ul-form-control ul-pointer ul-mt-5" id="ul-installments"
-                                                onkeyup="handleUlCardFieldsInput(this)"
+                                                onchange="if (this.selectedIndex) validateUlCardFieldInput(this);"
                                                 data-checkout="installments" name="unlimint_custom[installments]">
                                             <?php
                                             if ( ! empty( $currency_symbol ) && isset( $installment_options['options'] ) ) {
@@ -112,9 +112,10 @@ if ( isset( $installment_options['currency'] ) ) {
                                 <div class="ul-col-md-8" id="box-cpf">
                                     <label for="ul-cpf" id="ul-cpf-label"
                                            class="ul-label-form title-cpf"><?php echo esc_html__( 'CPF', 'unlimint' ); ?> <em>*</em></label>
-                                    <input type="text" class="ul-form-control" id="ul-cpf"
+                                    <input type="text" onkeyup="formatUlCardField(this.id);" onfocusout="validateUlCardFieldInput(this);" 
+                                           class="ul-form-control" id="ul-cpf"
                                            data-checkout="ul-cpf" name="unlimint_custom[cpf]"
-                                           onkeyup="handleUlCardFieldsInput(this);" autocomplete="off" maxlength="14"
+                                           autocomplete="off" maxlength="14"
                                            placeholder="XXX.XXX.XXX-XX">
                                     <span class="ul-error ul-mt-5" id="ul-cpf-error"
                                           data-main="#ul-cpf-error"><?php echo esc_html__( 'Invalid CPF', 'unlimint' ); ?></span><br/>
@@ -132,7 +133,7 @@ if ( isset( $installment_options['currency'] ) ) {
 </div>
 
 <script type='text/javascript'>
-    function handleUlCardFieldsInput(field) {
+    function validateUlCardFieldInput(field) {
         setTimeout(validateUlCardField(field.id), 1);
     }
 </script>

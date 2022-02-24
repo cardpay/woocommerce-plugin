@@ -182,11 +182,10 @@ class WC_Unlimint_Module extends WC_Unlimint_Configs {
 	 * Show row meta on the plugin screen.
 	 *
 	 * @param mixed $links Plugin Row Meta.
-	 * @param mixed $file Plugin Base file.
 	 *
 	 * @return array
 	 */
-	public function ul_plugin_row_meta( $links, $file ) {
+	public function ul_plugin_row_meta( $links ) {
 		return (array) $links;
 	}
 

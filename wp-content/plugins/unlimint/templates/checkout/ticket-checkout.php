@@ -16,9 +16,10 @@ $boletoLogoUrl = plugins_url( '../../assets/images/boleto.png', __FILE__ );
                                 <label for='ul-cpf-ticket' id='ul-cpf-label'
                                        class='ul-label-form title-cpf'><?php echo esc_html__( 'CPF', 'unlimint' ); ?> <em>*</em></label>
                                 <input type='text'
+                                       onkeyup="formatUlBoletoCpf(this.id);" onfocusout="validateUlBoletoInput();"
                                        class='ul-form-control'
                                        id='ul-cpf-ticket' data-checkout='ul-cpf-ticket' name='unlimint_ticket[cpf]'
-                                       onkeyup='handleUlBoletoInput();' autocomplete='off' maxlength='14'
+                                       autocomplete='off' maxlength='14'
                                        placeholder='XXX.XXX.XXX-XX'><br/>
                                 <span class='ul-error' data-main='#ul-cpf-ticket'
                                       id='boleto-cpf-error'><?php echo esc_html__( 'Invalid CPF', 'unlimint' ); ?></span><br/>
@@ -33,7 +34,7 @@ $boletoLogoUrl = plugins_url( '../../assets/images/boleto.png', __FILE__ );
 </div>
 
 <script type='text/javascript'>
-    function handleUlBoletoInput() {
-        setTimeout('handleUlBoletoCpf()', 1);
+    function validateUlBoletoInput() {
+        setTimeout(validateUlBoletoCpf(), 1);
     }
 </script>

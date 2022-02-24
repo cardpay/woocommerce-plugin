@@ -893,12 +893,12 @@
 }
 
 .card-brand-amex {
-    background: url(../images/card_brands_sprite.png) no-repeat -50px -5px;
+    background: url(../images/amex.png);
     position: absolute;
     right: 4px;
     top: 45px;
-    width: 41px;
-    height: 29px;
+    width: 27px;
+    height: 27px;
 }
 
 .card-brand-dinersclub {

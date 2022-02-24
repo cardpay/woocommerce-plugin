@@ -3,11 +3,11 @@
 
     $(function () {
         $('form.checkout').on('checkout_place_order_woo-unlimint-pix', function () {
-            return handleUlPixCpf();
+            return validateUlPixCpf();
         });
     });
 }(jQuery));
 
-const handleUlPixCpf = function () {
-    return handleUlCpf('#ul-cpf-pix', '#pix-cpf-error');
+const validateUlPixCpf = function () {
+    return validateUlCpf('ul-cpf-pix', 'pix-cpf-error');
 }

@@ -3,27 +3,37 @@
 
     $(function () {
         $('form.checkout').on('checkout_place_order_woo-unlimint-ticket', function () {
-            return handleUlBoletoCpf();
+            return validateUlBoletoCpf();
         });
     });
 }(jQuery));
 
-const handleUlBoletoCpf = function () {
-    return handleUlCpf('#ul-cpf-ticket', '#boleto-cpf-error');
+const formatUlBoletoCpf = function (cpfFieldId) {
+    const cpfField = jQuery(`#${cpfFieldId}`);
+    if (!cpfField.length) {
+        return cpfField.val();
+    }
+
+    const cpfFormatted = formatUlCpf(cpfField.val());
+    cpfField.val(cpfFormatted);
+    return cpfFormatted;
 }
 
-const handleUlCpf = function (cpfField, errorField) {
-    const cpf = jQuery(cpfField);
-    const cpfFormatted = getUlCpfFormatted(cpf.val());
-    cpf.val(cpfFormatted);
+const validateUlBoletoCpf = function () {
+    return validateUlCpf('ul-cpf-ticket', 'boleto-cpf-error');
+}
 
-    const cpfError = jQuery(errorField);
+const validateUlCpf = function (cpfFieldId, errorField) {
+    const cpfField = jQuery(`#${cpfFieldId}`);
+    cpfField.removeClass(UL_ERROR_CLASS);
+
+    const cpfError = jQuery(`#${errorField}`);
     cpfError.hide();
-    cpf.removeClass(errorField);
 
+    const cpfFormatted = formatUlBoletoCpf(cpfFieldId);
     const isCpfValid = isUlCpfValid(cpfFormatted);
     if (!isCpfValid) {
-        cpf.addClass(errorField);
+        cpfField.addClass(UL_ERROR_CLASS);
         cpfError.focus();
         cpfError.show();
     }

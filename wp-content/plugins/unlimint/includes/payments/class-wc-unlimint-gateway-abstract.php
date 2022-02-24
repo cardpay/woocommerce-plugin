@@ -11,6 +11,7 @@ require_once __DIR__ . '/class-wc-unlimint-callback.php';
 require_once __DIR__ . '/class-wc-unlimint-refund.php';
 require_once __DIR__ . '/class-wc-unlimint-pix-gateway.php';
 require_once __DIR__ . '/class-wc-unlimint-ticket-gateway.php';
+require_once __DIR__ . '/class-wc-unlimint-files-registrar.php';
 
 class WC_Unlimint_Gateway_Abstract extends WC_Payment_Gateway {
 
@@ -42,10 +43,10 @@ class WC_Unlimint_Gateway_Abstract extends WC_Payment_Gateway {
 		'woo-unlimint-pix',
 	];
 
-	/**
-	 * @var array
-	 */
-	public $field_forms_order;
+	protected const RESPONSE_FOR_FAIL = [
+		'result'   => 'fail',
+		'redirect' => '',
+	];
 
 	/**
 	 * @var string
@@ -91,11 +92,6 @@ class WC_Unlimint_Gateway_Abstract extends WC_Payment_Gateway {
 	 * @var string
 	 */
 	public $success_url;
-
-	/**
-	 * @var string
-	 */
-	public $failure_url;
 
 	/**
 	 * @var string
@@ -261,6 +257,11 @@ class WC_Unlimint_Gateway_Abstract extends WC_Payment_Gateway {
 	protected $subsections;
 
 	/**
+	 * @var WC_Unlimint_Files_Registrar
+	 */
+	protected $files_registrar;
+
+	/**
 	 * @throws WC_Unlimint_Exception
 	 */
 	public function __construct() {
@@ -287,7 +288,6 @@ class WC_Unlimint_Gateway_Abstract extends WC_Payment_Gateway {
 		$this->application_id       = $this->get_application_id();
 		$this->logged_user_email    = ( 0 !== wp_get_current_user()->ID ) ? wp_get_current_user()->user_email : null;
 		$this->notification         = new WC_Unlimint_Notification_Webhook( $this );
-		$this->field_forms_order    = $this->get_fields_sequence();
 		$this->unlimint_sdk         = new Unlimint_Sdk( $this->id );
 
 		$this->subsections = new WC_Unlimint_Subsections();
@@ -302,25 +302,11 @@ class WC_Unlimint_Gateway_Abstract extends WC_Payment_Gateway {
 
 		$this->refund = new WC_Unlimint_Refund( $this->id );
 
-		$this->load_common_settings_js();
+		$this->files_registrar = new WC_Unlimint_Files_Registrar();
+		$this->files_registrar->register_common_settings_js();
+		$this->files_registrar->register_css();
+
 		$this->init_settings();
-	}
-
-	private function load_common_settings_js() {
-		$this->load_settings_js( 'common', 'common_settings_unlimint.js' );
-	}
-
-	protected function load_settings_js( $handler_id, $file ) {
-		if ( ! is_admin() || empty( $handler_id ) || empty( $file ) ) {
-			return;
-		}
-
-		wp_enqueue_script(
-			"unlimint-$handler_id-config-script",
-			plugins_url( "../assets/js/admin_settings/$file", plugin_dir_path( __FILE__ ) ),
-			[],
-			WC_Unlimint_Constants::VERSION
-		);
 	}
 
 	public function get_gateway_title( $option_name = '' ) {
@@ -334,17 +320,6 @@ class WC_Unlimint_Gateway_Abstract extends WC_Payment_Gateway {
 		}
 
 		return $this->get_method_title();
-	}
-
-	/**
-	 * @return mixed|string
-	 */
-	public function get_access_token() {
-		if ( ! $this->is_production_mode() ) {
-			return $this->ul_access_token_test;
-		}
-
-		return $this->ul_access_token_prod;
 	}
 
 	/**
@@ -532,5 +507,69 @@ class WC_Unlimint_Gateway_Abstract extends WC_Payment_Gateway {
 		$order->set_transaction_id( $response[ $payment_structure ]['id'] );
 
 		$order->save();
+	}
+
+	/**
+	 * @param array $api_request
+	 * @param array $post_fields
+	 *
+	 * @return mixed
+	 */
+	protected function call_api( $api_request, $post_fields ) {
+		$this->logger->info( __FUNCTION__, 'call API' );
+
+		$numberOfInstallments = 0;
+		if ( isset( $post_fields['unlimint_custom']['installments'] ) ) {
+			$numberOfInstallments = (int) $post_fields['unlimint_custom']['installments'];
+		}
+		if ( $numberOfInstallments > 1 ) {
+			$api_response = $this->unlimint_sdk->post( '/installments', wp_json_encode( $api_request ) );
+		} else {
+			$api_response = $this->unlimint_sdk->post( '/payments', wp_json_encode( $api_request ) );
+		}
+
+		if ( (int) $api_response['status'] < 200 || (int) $api_response['status'] >= 300 ) {
+			$this->logger->error( __FUNCTION__, 'Payment creation failed with an error: ' . $api_response['response']['message'] );
+
+			return $api_response['response']['message'];
+		}
+
+		if ( is_wp_error( $api_response ) ) {
+			$this->logger->error( __FUNCTION__, 'WordPress error, payment creation failed with an error: ' . $api_response['response']['message'] );
+
+			return $api_response['response']['message'];
+		}
+
+		$this->logger->info( __FUNCTION__, 'payment link generated with success from Unlimint, with structure as follow: ' . wp_json_encode( $api_response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) );
+
+		return $api_response['response'];
+	}
+
+	/**
+	 * @param array $api_response
+	 * @param WC_Order $order
+	 *
+	 * @return array|string[]|void
+	 * @throws WC_Data_Exception
+	 */
+	protected function handle_api_response( $api_response, $order ) {
+		if ( is_array( $api_response ) && ( array_key_exists( 'payment_data', $api_response ) || array_key_exists( 'recurring_data', $api_response ) ) ) {
+			$api_response['status'] = 'pending';
+			$this->save_order_meta( $order, $api_response );
+
+			return [
+				'result'   => 'success',
+				'redirect' => $order->get_checkout_order_received_url(),
+			];
+		}
+
+		$this->logger->error( __FUNCTION__, 'A problem was occurred when processing your payment. Are you sure you have correctly filled all information in the checkout form? ' );
+
+		wc_add_notice(
+			'<p>' . __( 'A problem was occurred when processing your payment. Are you sure you have correctly filled all information in the payment form?', 'unlimint' ) . '</p>',
+			'error'
+		);
+
+		return self::RESPONSE_FOR_FAIL;
 	}
 }

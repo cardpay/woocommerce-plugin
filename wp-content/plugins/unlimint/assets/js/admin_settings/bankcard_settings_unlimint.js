@@ -19,61 +19,30 @@ window.addEventListener('load', function () {
 });
 
 const ulCapturePayment = function () {
-    /*global woocommerce_admin_meta_boxes */
-    if (!window.confirm('Are you sure you want to capture the payment?')) {
-        return;
-    }
-
-    jQuery.ajax({
-        url: woocommerce_admin_meta_boxes.ajax_url,
-        data: {
-            action: 'wc_ul_capture',
-            order_id: woocommerce_admin_meta_boxes.post_id,
-            security: woocommerce_admin_meta_boxes.order_item_nonce,
-        },
-        type: 'POST',
-        success: function (response) {
-            const errorMessage = 'Payment was not captured';
-            if (!response) {
-                alert(errorMessage);
-                return;
-            }
-            const responseParsed = JSON.parse(response);
-            if (!responseParsed) {
-                alert(errorMessage);
-                return;
-            }
-
-            if (responseParsed.success) {
-                alert('Payment has been captured successfully');
-                location.reload();
-            } else {
-                if (responseParsed.data && responseParsed.data.error_message) {
-                    alert(`Payment capture has failed: ${responseParsed.data.error_message}`);
-                } else {
-                    alert(errorMessage);
-                }
-            }
-        }
-    });
+    ulProcessPayment('capture', BANKCARD_ALERT_TRANSLATIONS['CAPTURED'], BANKCARD_ALERT_TRANSLATIONS['CAPTURE']);
 }
 
 const ulCancelPayment = function () {
+    ulProcessPayment('cancel', BANKCARD_ALERT_TRANSLATIONS['CANCELLED'], BANKCARD_ALERT_TRANSLATIONS['CANCEL']);
+}
+
+const ulProcessPayment = function (action, status_message, action_message) {
     /*global woocommerce_admin_meta_boxes */
-    if (!window.confirm('Are you sure you want to cancel the payment?')) {
+    if (!window.confirm(BANKCARD_ALERT_TRANSLATIONS['ARE_YOU_SURE'] + ' ' + action_message + ' ' + BANKCARD_ALERT_TRANSLATIONS['THE_PAYMENT'])) {
         return;
     }
 
     jQuery.ajax({
         url: woocommerce_admin_meta_boxes.ajax_url,
         data: {
-            action: 'wc_ul_cancel',
+            action: `wc_ul_${action}`,
             order_id: woocommerce_admin_meta_boxes.post_id,
             security: woocommerce_admin_meta_boxes.order_item_nonce,
         },
         type: 'POST',
         success: function (response) {
-            const errorMessage = 'Payment was not cancelled';
+            const alertPaymentWasNot = BANKCARD_ALERT_TRANSLATIONS['PAYMENT_WAS_NOT'];
+            const errorMessage = alertPaymentWasNot + ' ' + status_message;
             if (!response) {
                 alert(errorMessage);
                 return;
@@ -85,11 +54,11 @@ const ulCancelPayment = function () {
             }
 
             if (responseParsed.success) {
-                alert('Payment has been cancelled successfully');
+                alert(BANKCARD_ALERT_TRANSLATIONS['PAYMENT_HAS_BEEN'] + ' ' + status_message + ' ' + BANKCARD_ALERT_TRANSLATIONS['SUCCESSFULLY']);
                 location.reload();
             } else {
                 if (responseParsed.data && responseParsed.data.error_message) {
-                    alert(`Payment cancellation has failed: ${responseParsed.data.error_message}`);
+                    alert(alertPaymentWasNot + ' ' + status_message + ': ' + responseParsed.data.error_message);
                 } else {
                     alert(errorMessage);
                 }
