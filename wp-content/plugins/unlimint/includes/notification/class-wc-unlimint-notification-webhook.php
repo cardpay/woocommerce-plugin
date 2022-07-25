@@ -6,6 +6,7 @@ require_once __DIR__ . '/../module/config/class-wc-unlimint-constants.php';
 require_once __DIR__ . '/../module/class-wc-unlimint-helper.php';
 
 class WC_Unlimint_Notification_Webhook extends WC_Unlimint_Notification_Abstract {
+	private const PAYMENT_DATA = 'payment_data';
 
 	/**
 	 * Return Actions
@@ -67,8 +68,7 @@ class WC_Unlimint_Notification_Webhook extends WC_Unlimint_Notification_Abstract
 		if ( ! empty( $data ) ) {
 			$data = json_decode( $data, true );
 
-			if ( isset( $data['callback_time'] ) &&
-			     ( isset( $data['payment_data'] ) || isset( $data['recurring_data'] ) ) ) {
+			if ( isset( $data['callback_time'] ) && isset( $data[ self::PAYMENT_DATA ] ) ) {
 				$err = false;
 				do_action( 'valid_unlimint_ipn_request', $data );
 				$this->set_response( 200, 'OK', 'Notification IPN is successful' );
@@ -108,14 +108,12 @@ class WC_Unlimint_Notification_Webhook extends WC_Unlimint_Notification_Abstract
 	 * @return mixed|string
 	 */
 	public function process_status_ul_business( $data, $order ) {
-		$payment_type = isset( $data['payment_data'] ) ? 'payment_data' : 'recurring_data';
-
-		$status       = isset( $data[ $payment_type ]['status'] ) ? $data[ $payment_type ]['status'] : 'PENDING';
-		$total_paid   = isset( $data[ $payment_type ]['amount'] ) ? $data[ $payment_type ]['amount'] : 0.00;
-		$total_refund = isset( $data['refund_data']['amount'] ) ? $data['refund_data']['amount'] : 0.00;
+		$status       = $data[ self::PAYMENT_DATA ]['status'] ?? 'PENDING';
+		$total_paid   = $data[ self::PAYMENT_DATA ]['amount'] ?? 0.00;
+		$total_refund = $data['refund_data']['amount'] ?? 0.00;
 
 		// Updates the type of gateway.
-		WC_Unlimint_Helper::set_order_meta( $order, __( 'Payment type', 'unlimint' ), $payment_type );
+		WC_Unlimint_Helper::set_order_meta( $order, __( 'Payment type', 'unlimint' ), self::PAYMENT_DATA );
 		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_GATEWAY_FIELDNAME, get_class( $this ) );
 
 		if ( ! empty( $data['payer']['email'] ) ) {

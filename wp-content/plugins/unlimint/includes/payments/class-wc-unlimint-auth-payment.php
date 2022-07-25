@@ -20,6 +20,7 @@ class WC_Unlimint_Auth_Payment {
 
 	private const ERROR_RESPONSE = [ 'success' => false ];
 	private const SUCCESSFUL_RESPONSE = [ 'success' => true ];
+	private const PAYMENT_DATA = 'payment_data';
 
 	/**
 	 * @var WC_Unlimint_Logger
@@ -195,36 +196,26 @@ class WC_Unlimint_Auth_Payment {
 		$payment_type_field = WC_Unlimint_Helper::get_order_meta( $order, WC_Unlimint_Constants::ORDER_META_PAYMENT_TYPE_FIELDNAME );
 		$payment_id         = $order->get_transaction_id();
 
-		switch ( $payment_type_field ) {
-			case WC_Unlimint_Constants::PAYMENT_TYPE_PAYMENT:
-				$api_structure = 'payment_data';
-				$api_request   = $this->get_api_request_for_update( $api_structure, $status_to, $amount );
-				$endpoint      = "/payments/$payment_id";
-				break;
+		if ( $payment_type_field === WC_Unlimint_Constants::PAYMENT_TYPE_PAYMENT ) {
+			$api_request = $this->get_api_request_for_update( self::PAYMENT_DATA, $status_to, $amount );
+			$endpoint    = "/payments/$payment_id";
+		} else {
+			$this->logger->error( __FUNCTION__, "Invalid payment type: '$payment_type_field' for order #$order_id" );
 
-			case WC_Unlimint_Constants::PAYMENT_TYPE_RECURRING:
-				$api_structure = 'recurring_data';
-				$api_request   = $this->get_api_request_for_update( $api_structure, $status_to, $amount );
-				$endpoint      = "/installments/$payment_id";
-				break;
-
-			default:
-				$this->logger->error( __FUNCTION__, "Invalid payment type: '$payment_type_field' for order #$order_id" );
-
-				return false;
+			return false;
 		}
 
 		$api_response = $this->unlimint_sdk->patch( $endpoint, wp_json_encode( $api_request ) );
 		if ( ! is_array( $api_response )
 		     || empty( $api_response )
 		     || (int) $api_response['status'] !== 200
-		     || ! isset( $api_response['response'][ $api_structure ]['status'] ) ) {
+		     || ! isset( $api_response['response'][ self::PAYMENT_DATA ]['status'] ) ) {
 			$this->logger->error( __FUNCTION__, "Unable to update Unlimint transaction '$payment_id' for order #$order_id" );
 
 			return false;
 		}
 
-		return $this->is_payment_status_updated( $payment_type_field, $api_response['response'][ $api_structure ], $status_to );
+		return $this->is_payment_status_updated( $payment_type_field, $api_response['response'][ self::PAYMENT_DATA ], $status_to );
 	}
 
 	/**
@@ -235,7 +226,7 @@ class WC_Unlimint_Auth_Payment {
 	 * @return bool
 	 */
 	private function is_payment_status_updated( $payment_type_field, $api_structure, $status_to ) {
-		$status = isset( $api_structure['status'] ) ? $api_structure['status'] : '';
+		$status = $api_structure['status'] ?? '';
 
 		$is_payment_status_updated = false;
 
@@ -243,8 +234,6 @@ class WC_Unlimint_Auth_Payment {
 			case self::COMPLETE_STATUS_TO:
 				if ( WC_Unlimint_Constants::PAYMENT_TYPE_PAYMENT === $payment_type_field && WC_Unlimint_Constants::TRANSACTION_STATUS_COMPLETED === $status ) {
 					$is_payment_status_updated = true;
-				} else if ( WC_Unlimint_Constants::PAYMENT_TYPE_RECURRING === $payment_type_field ) {
-					$is_payment_status_updated = isset( $api_structure['is_executed'] ) && ( 1 === (int) $api_structure['is_executed'] );
 				}
 				break;
 

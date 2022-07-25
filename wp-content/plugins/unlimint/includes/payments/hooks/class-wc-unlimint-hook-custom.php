@@ -18,7 +18,7 @@ class WC_Unlimint_Hook_Custom extends WC_Unlimint_Hook_Abstract {
 	}
 
 	public function add_checkout_scripts_custom() {
-		if ( is_checkout() && $this->gateway->is_available() && ! get_query_var( 'order-received' ) ) {
+		if ( is_checkout() && $this->gateway->is_available() && (! get_query_var( 'order-received' )) ) {
 			wp_enqueue_script(
 				'unlimint-custom-checkout',
 				plugins_url( '../../assets/js/credit-card.js', plugin_dir_path( __FILE__ ) ),
@@ -31,17 +31,17 @@ class WC_Unlimint_Hook_Custom extends WC_Unlimint_Hook_Abstract {
 				'unlimint-custom-checkout',
 				'wc_unlimint_custom_params',
 				[
-					'public_key'          => $this->gateway->get_public_key(),
-					'installments'        => $this->gateway->get_option_ul( '_ul_installments' ),
-					'payer_email'         => esc_js( $this->gateway->logged_user_email ),
-					'apply'               => __( 'Apply', 'unlimint' ),
-					'remove'              => __( 'Remove', 'unlimint' ),
-					'choose'              => __( 'To choose', 'unlimint' ),
-					'other_bank'          => __( 'Other bank', 'unlimint' ),
-					'loading'             => plugins_url( self::ASSETS_IMAGES, plugin_dir_path( __FILE__ ) ) . 'loading.gif',
-					'check'               => plugins_url( self::ASSETS_IMAGES, plugin_dir_path( __FILE__ ) ) . 'check.png',
-					'error'               => plugins_url( self::ASSETS_IMAGES, plugin_dir_path( __FILE__ ) ) . 'error.png',
-					'plugin_version'      => WC_Unlimint_Constants::VERSION,
+					'public_key'     => $this->gateway->get_public_key(),
+					'installments'   => $this->gateway->get_option_ul( '_ul_installments' ),
+					'payer_email'    => esc_js( $this->gateway->logged_user_email ),
+					'apply'          => __( 'Apply', 'unlimint' ),
+					'remove'         => __( 'Remove', 'unlimint' ),
+					'choose'         => __( 'To choose', 'unlimint' ),
+					'other_bank'     => __( 'Other bank', 'unlimint' ),
+					'loading'        => plugins_url( self::ASSETS_IMAGES, plugin_dir_path( __FILE__ ) ) . 'loading.gif',
+					'check'          => plugins_url( self::ASSETS_IMAGES, plugin_dir_path( __FILE__ ) ) . 'check.png',
+					'error'          => plugins_url( self::ASSETS_IMAGES, plugin_dir_path( __FILE__ ) ) . 'error.png',
+					'plugin_version' => WC_Unlimint_Constants::VERSION,
 				]
 			);
 		}

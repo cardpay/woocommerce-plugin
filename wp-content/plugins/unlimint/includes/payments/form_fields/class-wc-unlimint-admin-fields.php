@@ -3,7 +3,6 @@
 defined( 'ABSPATH' ) || exit;
 
 class WC_Unlimint_Admin_Fields {
-	public const FIELD_TITLE = 'title';
 	public const FIELD_TERMINAL_CODE = 'terminal_code';
 	public const FIELD_TERMINAL_PASSWORD = 'terminal_password';
 	public const FIELD_CALLBACK_SECRET = 'callback_secret';
@@ -29,9 +28,10 @@ class WC_Unlimint_Admin_Fields {
 	 */
 	public function field_terminal_code() {
 		return [
-			'title'   => __( 'Terminal Code', 'unlimint' ),
-			'type'    => 'text',
-			'default' => '',
+			'title'       => __( 'Terminal Code', 'unlimint' ),
+			'type'        => 'text',
+			'description' => __( 'If "Api access mode" setting is changed - then "Terminal Code" value need to be checked and changed (if needed).', 'unlimint' ),
+			'default'     => '',
 		];
 	}
 
@@ -42,7 +42,7 @@ class WC_Unlimint_Admin_Fields {
 		return [
 			'title'       => __( 'Terminal Password', 'unlimint' ),
 			'type'        => 'password',
-			'description' => __( 'Get your credentials, visit the unlimint.com', 'unlimint' ),
+			'description' => __( 'Get your credentials, visit the <a href="https://unlimint.com" target=_blank>unlimint.com</a>. If "Api access mode" setting is changed - then "Terminal Password" value need to be checked and changed (if needed)', 'unlimint' ),
 			'default'     => '',
 		];
 	}
@@ -51,6 +51,7 @@ class WC_Unlimint_Admin_Fields {
 		return [
 			'title'   => __( 'Callback Secret', 'unlimint' ),
 			'type'    => 'password',
+			'description' => 'If "Api access mode" setting is changed - then "Callback Secret" value need to be checked and changed (if needed).',
 			'default' => '',
 		];
 	}
@@ -62,7 +63,7 @@ class WC_Unlimint_Admin_Fields {
 		return [
 			'title'       => __( 'Test Environment', 'unlimint' ),
 			'type'        => 'select',
-			'description' => __( 'In test mode, the data is sent to the sandbox.', 'unlimint' ),
+			'description' => __( 'In test mode, the data is sent to the sandbox only. Test and prod credentials (terminal code, terminal password, secret) are different', 'unlimint' ),
 			'default'     => 'yes',
 			'options'     => [
 				'no'  => __( 'No', 'unlimint' ),

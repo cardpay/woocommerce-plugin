@@ -6,6 +6,7 @@ require_once __DIR__ . '/class-wc-unlimint-module.php';
 require_once __DIR__ . '/log/class-wc-unlimint-logger.php';
 
 class WC_Unlimint_Installments {
+	private const INSTALLMENTS_MIN = 1;
 
 	/**
 	 * @var Unlimint_Sdk
@@ -42,56 +43,46 @@ class WC_Unlimint_Installments {
 			$total_amount = $cart->get_total( 'raw' );
 		}
 
-		$params = [
-			'request_id'   => uniqid( '', true ),
-			'total_amount' => $total_amount,
-			'currency'     => get_woocommerce_currency()
+		return [
+			'currency' => get_woocommerce_currency_symbol(),
+			'options'  => $this->build_installment_options( $total_amount )
 		];
-
-		$response = $this->sdk->get( '/installments/options_calculator', $params );
-
-		$installment_options = [];
-		if ( empty( $response ) ) {
-			$this->logger->error( __METHOD__, 'Empty response, unable to get installment options' );
-		} else if ( ! isset( $response['response']['options'] ) ) {
-			$this->logger->error( __METHOD__, 'No options in response, unable to get installment options' );
-		} else {
-			$installment_options = [
-				'currency' => get_woocommerce_currency_symbol(),
-				'options'  => $this->build_installment_options( $response, $total_amount )
-			];
-		}
-
-		return $installment_options;
 	}
 
-	private function build_installment_options( $response, $total_amount ) {
-		$options_response = $response['response']['options'];
+	private function build_installment_options( $total_amount ) {
+		if ( get_option( WC_Unlimint_Admin_BankCard_Fields::FIELDNAME_PREFIX . WC_Unlimint_Admin_BankCard_Fields::FIELD_INSTALLMENT_ENABLED ) === 'no' ) {
+			return [];
+		}
 
-		$options = [];
-		foreach ( $options_response as $option ) {
-			if ( ! isset( $option['installments'], $option['amount'] ) ) {
-				continue;
+		$options                        = [];
+		$getMaximumAcceptedInstallments = (int) get_option(
+			WC_Unlimint_Admin_BankCard_Fields::FIELDNAME_PREFIX .
+			WC_Unlimint_Admin_BankCard_Fields::FIELD_MAXIMUM_ACCEPTED_INSTALLMENTS );
+
+
+		if ( get_option( WC_Unlimint_Admin_BankCard_Fields::FIELDNAME_PREFIX . WC_Unlimint_Admin_BankCard_Fields::FIELD_INSTALLMENT_TYPE ) === 'IF' ) {
+			$maximumAcceptedInstallmentsForIf = [ 1, 3, 6, 9, 12, 18 ];
+			for ( $installments = self::INSTALLMENTS_MIN; $installments <= $getMaximumAcceptedInstallments; $installments ++ ) {
+				if ( in_array( $installments, $maximumAcceptedInstallmentsForIf ) ) {
+					$options[] = [
+						'installments' => $installments,
+						'amount'       => $this->format_amount( $total_amount / $installments )
+					];
+				}
 			}
 
-			$installments = $option['installments'];
-			$amount       = $option['amount'];
+			return $options;
+		}
 
+
+		for ( $installments = self::INSTALLMENTS_MIN; $installments <= $getMaximumAcceptedInstallments; $installments ++ ) {
 			$options[] = [
 				'installments' => $installments,
-				'amount'       => $this->format_amount( $amount )
+				'amount'       => $this->format_amount( $total_amount / $installments )
 			];
 		}
 
-		return array_merge(
-			[
-				[
-					'installments' => 1,
-					'amount'       => $this->format_amount( $total_amount )
-				]
-			],
-			$options
-		);
+		return $options;
 	}
 
 	private function format_amount( $amount ) {

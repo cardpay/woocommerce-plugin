@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) || exit;
 $boletoLogoUrl = plugins_url( '../../assets/images/boleto.png', __FILE__ );
 ?>
 
-<div class='ul-panel-custom-checkout'>
+<div class='ul-panel-custom-checkout' title="Unlimint Payment Page">
     <div class='ul-row-checkout'>
         <div class='ul-col-md-12'>
             <div class='frame-tarjetas'>

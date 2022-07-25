@@ -48,6 +48,17 @@ class WC_Unlimint_Custom_Gateway extends WC_Unlimint_Gateway_Abstract {
 		$this->files_registrar->register_settings_js( 'bankcard', 'bankcard_settings_unlimint.js' );
 	}
 
+	public function can_refund_order( $order ) {
+		global $wpdb;
+		$field_installment_type       = $wpdb->get_var( "SELECT meta_value FROM wp_postmeta WHERE post_id = " . $_REQUEST['post'] . " AND meta_key = '_ul_field_installment_type'" );
+		$field_count_installment_type = $wpdb->get_var( "SELECT meta_value FROM wp_postmeta WHERE post_id = " . $_REQUEST['post'] . " AND meta_key = '_ul_field_count_installment_type'" );
+		if ( $field_installment_type == 'IF' || ( $field_installment_type == 'MF_HOLD' && $field_count_installment_type == 1 ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
 		return $this->refund->process_refund( $order_id, $amount, $reason );
 	}
@@ -91,6 +102,7 @@ class WC_Unlimint_Custom_Gateway extends WC_Unlimint_Gateway_Abstract {
 		$fieldname_prefix         = WC_Unlimint_Admin_BankCard_Fields::FIELDNAME_PREFIX;
 		$are_installments_enabled = ( 'yes' === get_option( $fieldname_prefix . WC_Unlimint_Admin_BankCard_Fields::FIELD_INSTALLMENT_ENABLED ) );
 		$is_cpf_required          = ( 'yes' === get_option( $fieldname_prefix . WC_Unlimint_Admin_BankCard_Fields::FIELD_ASK_CPF ) );
+		$is_payment_page_required = ( 'payment_page' === get_option( $fieldname_prefix . WC_Unlimint_Admin_BankCard_Fields::FIELD_API_ACCESS_MODE ) );
 
 		$parameters = [
 			'amount'                   => $this->get_order_total(),
@@ -102,6 +114,7 @@ class WC_Unlimint_Custom_Gateway extends WC_Unlimint_Gateway_Abstract {
 			'installment_options'      => $installments_instance->get_installment_options(),
 			'are_installments_enabled' => $are_installments_enabled,
 			'is_cpf_required'          => $is_cpf_required,
+			'is_payment_page_required' => $is_payment_page_required,
 		];
 
 		wc_get_template( 'checkout/custom-checkout.php', $parameters, 'woo/unlimint/module/', WC_Unlimint_Module::get_templates_path() );
@@ -115,8 +128,12 @@ class WC_Unlimint_Custom_Gateway extends WC_Unlimint_Gateway_Abstract {
 	 */
 	public function process_payment( $order_id ) {
 		$this->log_post_data();
+		$is_payment_page_required = ( 'payment_page' === get_option( WC_Unlimint_Admin_BankCard_Fields::FIELDNAME_PREFIX . WC_Unlimint_Admin_BankCard_Fields::FIELD_API_ACCESS_MODE ) );
+		$are_installments_enabled = ( 'yes' === get_option( WC_Unlimint_Admin_BankCard_Fields::FIELDNAME_PREFIX . WC_Unlimint_Admin_BankCard_Fields::FIELD_INSTALLMENT_ENABLED ) );
 
-		if ( ! isset( $_POST['unlimint_custom'] ) ) {
+		$post_can_be_empty = ( $is_payment_page_required || ! $are_installments_enabled );
+
+		if ( ( ! isset( $_POST['unlimint_custom'] ) ) && ! $post_can_be_empty ) {
 			$this->logger->error( __FUNCTION__, 'A problem was occurred when processing your payment. Please, try again.' );
 			wc_add_notice( '<p>' . __( 'Unlimint - A problem was occurred when processing your payment. Please, try again.', 'unlimint' ) . '</p>', 'error' );
 
@@ -125,9 +142,10 @@ class WC_Unlimint_Custom_Gateway extends WC_Unlimint_Gateway_Abstract {
 
 		$order = wc_get_order( $order_id );
 
-		$module_custom = new WC_Unlimint_Module_Custom( $this, $order, $_POST );
+		$module_custom = new WC_Unlimint_Module_Custom( $this, $order, $_POST, $post_can_be_empty );
 		$api_request   = $module_custom->get_api_request();
-		$api_response  = $this->call_api( $api_request, $_POST );
+
+		$api_response = $this->call_api( $api_request, $_POST );
 
 		return $this->handle_api_response( $api_response, $order );
 	}

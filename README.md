@@ -1,18 +1,35 @@
 # Unlimint WooСommerce plugin
 
-## Overview
+ * [Overview](#Overview)
+   * [Requirements](#Requirements)
+   * [Supported payment methods](#Supported_payment_methods)
+ * [Installation](#Installation)
+ * [Configuration](#Configuration)
+   * [Basic settings](#Basic_settings)
+     * [Payment methods settings](#Payment_methods_settings)
+     * [Order status tab settings (mapping of the order statuses)](#Order_status_tab)
+   * [Payment notification configuration](#Payment_notification_configuration)     
+ * [Supported post-payment operations](#Supported_post-payment_operations)
+   * [Cancellation (void) / Capture of the payment](#Cancellation_capture)
+     * [Capture of the payment](#Capture_of_the_payment)
+     * [Cancel (void) the payment](#Cancel_payment)
+   * [Refund (online refund)](#Refund_the_payment)
+   * [Refund offline](#Refund_offline)
 
+
+## Overview
+<a name="Overview"></a>
 **Unlimint WooСommerce** engine plugin allows merchants to make payments, installment payments and refunds using the WooСommerce platform, as well as preauthorized payments plugin supports cancellation (void), capture of the payment or installment payment, payment refund.
 
 ### Requirements
-
+<a name="Requirements"></a>
 **Unlimint WooСommerce** plugin is open-source and supports:
 
  * The WooСommerce engine (version 5.9.0)
  * PHP 7.4 or greater, all other requirements regarding official [WooСommerce recommendations](https://woocommerce.com/document/server-requirements/)
 
 ### Supported payment methods
-
+<a name="Supported_payment_methods"></a>
 **Unlimint WooСommerce** plugin supports the following payment methods:
 
  * Bank Card (Credit Card)
@@ -20,7 +37,7 @@
  * Pix
 
 ## Installation
-
+<a name="Installation"></a>
 Installation process explains how to install the WooСommerce plugin:
 
 1. Download the latest version of WooСommerce plugin from Unlimint's Github [repository](https://github.com/cardpay/woocommerce-plugin).
@@ -34,11 +51,11 @@ Installation process explains how to install the WooСommerce plugin:
 **Unlimint WooСommerce** plugin was successfully installed and activated.
 
 ## Configuration
-
+<a name="Configuration"></a>
 Configuration process explains how to set up and configure the WooСommerce plugin to accept payments in supported payment methods.
 
 ### Basic settings
-
+<a name="Basic_settings"></a>
 Begin with the following basic settings:
 
 1. Log in to Admin panel of the **Unlimint WooСommerce** plugin (using admin credentials).
@@ -48,7 +65,7 @@ Begin with the following basic settings:
 ![](readme_images/payments_methods.png)
 
 #### Payment methods settings
-
+<a name="Payment_methods_settings"></a>
 It is necessary to enable payment methods in the WooСommerce plugin (Bank Card (Credit Card), Boleto, Pix).
 
 First, access the requested methods and enable them by **Unlimint support** (a part of merchant onboarding process - see [here](https://www.unlimint.com/integration/)).
@@ -61,6 +78,7 @@ To enable payments via **Credit Card - Unlimint**, switch on **Enabled** for thi
 
 ![](readme_images/credit_card_2.png)
 
+ * Set **API access mode** in order to select the use of **Payment page** or process payments directly by **Gateway**.
  * Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in Unlimint APIv3 for this payment method (how to obtain credentials see [here](https://www.unlimint.com/integration/)).
  * Test environment:
     * Set to **Yes** for Sandbox environment (for test purposes).
@@ -74,9 +92,13 @@ With **No** option selected, payments will be captured automatically in 7 days f
  
 In installment case with **No** option selected installments will be declined automatically in 7 days from the time of creating the preauthorized transaction.
 
- * **Installment enabled:** - this setting enables installment payments possibility.
-   * Set to **Yes** - installment payments are enabled, number of installments are available for selection in payment form, it's possible to split payment to 2-12 installments, each installment in 30 days period.
+ * **Installment enabled** - this setting enables installment payments possibility.
+   * Set to **Yes** - installment payments are enabled, number of installments are available for selection in payment form.
    * Set to **No** - installment payments are disabled.
+ * **Installment Type** - this setting allows to select between avaiable installment types. Choose the required installment type between **Merchant financed** or **Issuer financed**. Both selections are available only for **API access mode** - **Gateway** parameter, while **Payment page** selection allows only **Issuer financed** type of installment.
+ * **Minimum total amount** - allows to set the amount of order with installments with the pre-set currrency paramenter.
+ * **Maximum accepted installments** - allows to split payment into 2-12 installments for **Merchant financed** type or 3, 6, 9, 12 and 18 installments for **Issuer financed** type. Each installment in 30 days period. This parameter is accessible both for **Merchant financed** and **Issuer financed** types.
+ * **Payment Title** - allows to set the payment title.
  * **Ask CPF** - set to **Yes** if **CPF (Brazilian Tax Id)** is required for the customer in checkout.
  * **Dynamic Descriptor** - short description of the service or product, see `dynamic_descriptor` API field in [API documentation](https://integration.unlimint.com/#PaymentRequestPaymentData).
  * **Log to file** - WooСommerce plugin system log setting, this log file contains the plugin debug information, communication errors between plugin front-end and back-end.
@@ -110,7 +132,7 @@ To enable payments via **Pix** payment method, switch on **Enabled** for this pa
 The selected payment methods are successfully enabled in the checkout.
 
 #### Order status tab settings (mapping of the order statuses)
-
+<a name="Order_status_tab"></a>
 Mapping of the order statuses is set by default and must be changed _only_ if Merchants have custom order statuses flow (not recommended to change).
 
 **Flow of the statuses** is **unique** for each supported payment method in plugin. If Merchants change the status flow for **Credit Card - Unlimint**, the status flow for the **Boleto - Unlimint** or **Pix - Unlimint** payment methods is not changed.
@@ -134,7 +156,7 @@ Refer to the **Order status** tab in order to see or change the Order mapping st
 ![](readme_images/pix_status_2.png)
 
 ### Payment notification configuration
-
+<a name="Payment_notification_configuration"></a>
 This process explains how to set up Order statuses for payment notifications:
 
 1. Log in to the Unlimint’s [Merchant account](https://sandbox.cardpay.com/ma) with Merchant credentials (obtaining of merchant credentials is a part of merchant onboarding process - see details [here](https://www.unlimint.com/integration/)).
@@ -148,21 +170,21 @@ where _<wordpress_domain>_ is website domain.
 The notification statuses have been successfully configured.
 
 ## Supported post-payment operations
-
+<a name="Supported_post-payment_operations"></a>
 Unlimint WooСommerce plugin supports the following post-payment operations:
 
  * Cancellation (void) / Capture of the preauthorized payment.
  * Refund (online and offline) of the payment.
  
 ### Cancellation (void) / Capture of the payment
-
+<a name="Cancellation_capture"></a>
 Cancellation (void) / capture of the payment only works for **Credit card** payment method.
 It's available only for orders which were processed by a certain payment method configuration (**Capture payment** is set to **No**). 
 
 If **Capture payment** is set to **Yes** - an order will be completed without any user actions in WooСommerce Admin Panel.
 
 #### Capture of the payment
-
+<a name="Capture_of_the_payment"></a>
 For Capture of the preathorized payment, navigate to **Orders** and choose the **Order** in **On Hold** status for capture payment.
 
 
@@ -183,7 +205,7 @@ The status of the order is changed to **Processing**.
 
 
 #### Cancel (void) the payment
-
+<a name="Cancel_payment"></a>
 For cancel (void) the payment, navigate to **Orders** and choose the **Order** for cancel (void) payment.
 
 ![](readme_images/order_on_hold_2.png)
@@ -198,8 +220,8 @@ Order status is changed to **Cancelled**.
 
 
 ### Refund (online refund)
-
-**Refund** operation is supported only for payments (not installment payments) with payment method **Credit Card**.
+<a name="Refund_the_payment"></a>
+**Refund** operation is supported only for payments and for installment payments (only with "Issuer financed" installment type in plugin settings and with **Credit Card** payment method).
 
 For creating a **Refund online** navigate to **Orders** and choose any **Order** in status **Processing**.
 
@@ -221,7 +243,7 @@ After successful full refund, the status of the order is changed to **Refunded**
 
 
 ### Refund offline
-
+<a name="Refund_offline"></a>
 **Refund offline** is the operation when refund is created offline and amount of order should be returned manually in offline with cash only.
 
 **Refund offline** is possible for all supported payment methods in WooСommerce plugin.

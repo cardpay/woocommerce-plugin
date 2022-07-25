@@ -101,9 +101,8 @@ abstract class WC_Unlimint_Module_Abstract extends WC_Payment_Gateway {
 		$this->site_data          = null;
 		$this->order              = $order;
 		$this->post_fields        = $post_fields;
-
-		$this->order_total       = 0;
-		$this->selected_shipping = $order->get_shipping_method();
+		$this->order_total        = 0;
+		$this->selected_shipping  = $order->get_shipping_method();
 	}
 
 	/**
@@ -140,13 +139,17 @@ abstract class WC_Unlimint_Module_Abstract extends WC_Payment_Gateway {
 			'return_urls'    => [
 				'decline_url'   => $this->build_return_url( $notification_url, 'decline', $order_id ),
 				'inprocess_url' => $this->build_return_url( $notification_url, 'inprocess', $order_id ),
-				'success_url'   => $this->build_return_url( $notification_url, 'success', $order_id )
+				'success_url'   => $this->build_return_url( $notification_url, 'success', $order_id ),
+				'cancel_url'    => $this->build_return_url( $notification_url, 'cancel', $order_id )
 			]
 		];
 
 		$items = $this->get_items();
 		if ( ! empty( $items ) ) {
 			$common_api_request['merchant_order']['items'] = $items;
+			for ( $i = 0; $i < count( $items ); $i ++ ) {
+				$common_api_request['merchant_order']['items'][ $i ]['price'] = $items[ $i ]['price'] / $items[ $i ]['count'];
+			}
 		}
 
 		return $common_api_request;

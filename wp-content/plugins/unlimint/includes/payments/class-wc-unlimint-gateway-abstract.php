@@ -491,20 +491,22 @@ class WC_Unlimint_Gateway_Abstract extends WC_Payment_Gateway {
 	 * @throws WC_Data_Exception
 	 */
 	protected function save_order_meta( $order, $response ) {
-		if ( isset( $response['payment_data'] ) ) {
-			$payment_type_field = WC_Unlimint_Constants::PAYMENT_TYPE_PAYMENT;
-			$payment_structure  = 'payment_data';
-		} else {
-			$payment_type_field = WC_Unlimint_Constants::PAYMENT_TYPE_RECURRING;
-			$payment_structure  = 'recurring_data';
-		}
+		$card_post_fields        = $_POST['unlimint_custom'];
+		$installments_order_meta = (int) $card_post_fields[ WC_Unlimint_Module_Custom::INSTALLMENTS ];
 
-		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_PAYMENT_TYPE_FIELDNAME, $payment_type_field );
+		if ( $installments_order_meta > 1 ) {
+			WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_PAYMENT_TYPE_FIELDNAME, WC_Unlimint_Constants::PAYMENT_TYPE_INSTALLMENT );
+		} else {
+			WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_PAYMENT_TYPE_FIELDNAME, WC_Unlimint_Constants::PAYMENT_TYPE_PAYMENT );
+		}
+		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_FIELD_INSTALLMENT_TYPE, get_option( WC_Unlimint_Admin_BankCard_Fields::FIELDNAME_PREFIX . WC_Unlimint_Admin_BankCard_Fields::FIELD_INSTALLMENT_TYPE ) );
+
 		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_GATEWAY_FIELDNAME, get_class( $this ) );
+		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_COUNT_INSTALLMENT, $installments_order_meta );
 		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_REDIRECT_URL_FIELDNAME, $response['redirect_url'] );
 		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_INITIAL_API_TOTAL, $order->get_total() );
 
-		$order->set_transaction_id( $response[ $payment_structure ]['id'] );
+		$order->set_transaction_id( $response['payment_data']['id'] );
 
 		$order->save();
 	}
@@ -518,24 +520,14 @@ class WC_Unlimint_Gateway_Abstract extends WC_Payment_Gateway {
 	protected function call_api( $api_request, $post_fields ) {
 		$this->logger->info( __FUNCTION__, 'call API' );
 
-		$numberOfInstallments = 0;
-		if ( isset( $post_fields['unlimint_custom']['installments'] ) ) {
-			$numberOfInstallments = (int) $post_fields['unlimint_custom']['installments'];
-		}
-		if ( $numberOfInstallments > 1 ) {
-			$api_response = $this->unlimint_sdk->post( '/installments', wp_json_encode( $api_request ) );
-		} else {
-			$api_response = $this->unlimint_sdk->post( '/payments', wp_json_encode( $api_request ) );
+		$api_response = $this->unlimint_sdk->post( '/payments', wp_json_encode( $api_request ) );
+
+		if ( $api_request['payment_method'] == "BANKCARD" && $api_response['response']['redirect_url'] ) {
+			return $api_response['response'];
 		}
 
-		if ( (int) $api_response['status'] < 200 || (int) $api_response['status'] >= 300 ) {
+		if ( (int) $api_response['status'] < 200 || (int) $api_response['status'] >= 300 || is_wp_error( $api_response )) {
 			$this->logger->error( __FUNCTION__, 'Payment creation failed with an error: ' . $api_response['response']['message'] );
-
-			return $api_response['response']['message'];
-		}
-
-		if ( is_wp_error( $api_response ) ) {
-			$this->logger->error( __FUNCTION__, 'WordPress error, payment creation failed with an error: ' . $api_response['response']['message'] );
 
 			return $api_response['response']['message'];
 		}
@@ -553,20 +545,21 @@ class WC_Unlimint_Gateway_Abstract extends WC_Payment_Gateway {
 	 * @throws WC_Data_Exception
 	 */
 	protected function handle_api_response( $api_response, $order ) {
-		if ( is_array( $api_response ) && ( array_key_exists( 'payment_data', $api_response ) || array_key_exists( 'recurring_data', $api_response ) ) ) {
+		if ( is_array( $api_response ) ) {
 			$api_response['status'] = 'pending';
 			$this->save_order_meta( $order, $api_response );
+			$redirect = $api_response['redirect_url'] ?? $order->get_checkout_order_received_url();
 
 			return [
 				'result'   => 'success',
-				'redirect' => $order->get_checkout_order_received_url(),
+				'redirect' => $redirect,
 			];
 		}
 
-		$this->logger->error( __FUNCTION__, 'A problem was occurred when processing your payment. Are you sure you have correctly filled all information in the checkout form? ' );
+		$this->logger->error( __FUNCTION__, 'There is a technical issue with the payment, please try place order again' );
 
 		wc_add_notice(
-			'<p>' . __( 'A problem was occurred when processing your payment. Are you sure you have correctly filled all information in the payment form?', 'unlimint' ) . '</p>',
+			'<p>' . __( 'There is a technical issue with the payment, please try place order again', 'unlimint' ) . '</p>',
 			'error'
 		);
 

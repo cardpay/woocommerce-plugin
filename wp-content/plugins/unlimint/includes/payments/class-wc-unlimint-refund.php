@@ -76,10 +76,6 @@ class WC_Unlimint_Refund {
 			throw new WC_Unlimint_Exception( __( self::ERROR_PIX ) );
 		}
 
-		if ( WC_Unlimint_Constants::BANKCARD_GATEWAY === $gateway && WC_Unlimint_Constants::PAYMENT_TYPE_RECURRING === $payment_type_field ) {
-			throw new WC_Unlimint_Exception( __( self::ERROR_INSTALLMENT ) );
-		}
-
 		if ( WC_Unlimint_Constants::BANKCARD_GATEWAY !== $gateway || WC_Unlimint_Constants::PAYMENT_TYPE_PAYMENT !== $payment_type_field ) {
 			throw new WC_Unlimint_Exception( __( self::ERROR_CARD ) );
 		}

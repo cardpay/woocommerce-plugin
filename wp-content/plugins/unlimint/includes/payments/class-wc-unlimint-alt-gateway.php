@@ -50,12 +50,10 @@ class WC_Unlimint_Alt_Gateway extends WC_Unlimint_Gateway_Abstract {
 
 		$this->files_registrar = new WC_Unlimint_Files_Registrar();
 		$this->files_registrar->register_settings_js( $gateway_name_lowercase, $gateway_name_lowercase . '_settings_unlimint.js' );
-
-		$this->refund = new WC_Unlimint_Refund( $this->id );
 	}
 
-	public function process_refund( $order_id, $amount = null, $reason = '' ) {
-		return $this->refund->process_refund( $order_id, $amount, $reason );
+	public function can_refund_order( $order ) {
+		return false;
 	}
 
 	public function get_title() {
