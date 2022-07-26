@@ -22,7 +22,7 @@ if ( $display_form === 'none' ) {
 ?>
     <div id="unlimint_modal_bg" class="closed">
         <div id="unlimint_modal_page" name="unlimint_modal_page">
-            <iframe id="unimint_modal_iframe" width="100%" height="100%"></iframe>
+            <iframe id="unimint_modal_iframe" width="100%" height="100%" title="unimint_modal_iframe"></iframe>
         </div>
     </div>
     <div class="ul-panel-custom-checkout" style="display: <?php echo $display_form; ?>">

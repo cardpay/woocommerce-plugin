@@ -6,10 +6,14 @@ window.addEventListener('load', function () {
     const askCpf = document.getElementById(prefix + 'ask_cpf');
     const installmentSettingsFields = ['minimum_total_amount', 'maximum_accepted_installments', 'installment_type'];
 
-    toggleSettings(selPaymentPage, askCpf);
-    selectInstallmentType(selInstType, prefix);
-    selectPaymentPage(selInstType, selPaymentPage, prefix, askCpf);
-    processInstallmentSettings(selInstEnabled, prefix, installmentSettingsFields);
+    const href = window.location.search;
+    const sliceUnlimintCusom = href.slice(-19);
+    if (sliceUnlimintCusom === 'woo-unlimint-custom') {
+        toggleSettings(selPaymentPage, askCpf);
+        selectInstallmentType(selInstType, prefix);
+        selectPaymentPage(selInstType, selPaymentPage, prefix, askCpf);
+        processInstallmentSettings(selInstEnabled, prefix, installmentSettingsFields);
+    }
 
     jQuery(selInstEnabled).change(function () {
         processInstallmentSettings(selInstEnabled, prefix, installmentSettingsFields);
@@ -36,7 +40,7 @@ window.addEventListener('load', function () {
 const processInstallmentSettings = function (selInstEnabled, prefix, fields) {
     const show = (jQuery(selInstEnabled).val() === 'yes');
     jQuery(fields).each(function () {
-        const el = jQuery('#' + prefix) + this.parent().parent().parent();
+        const el = jQuery(`#${prefix}${this}`).parent().parent().parent();
         if (show) {
             el.show('slow');
         } else {
@@ -52,7 +56,8 @@ const selectPaymentPage = function (selInstType, selPaymentPage, prefix, askCpf)
         alert('API access mode is changed, please check Terminal code, terminal password, callback secret values. '
             + 'After changing of the API mode in plugin also must be changed API access mode in Unlimint. '
             + 'Please consult about it with Unlimint support.');
-        let select = `#${prefix}installment_type`;
+
+        const select = `#${prefix}installment_type`;
         if (selPaymentPage.value === 'gateway') {
             jQuery(select).append('<option value="MF_HOLD">Merchant financed</option>');
         } else {
@@ -101,8 +106,8 @@ const selectPpAndInstType = function (prefix, instType) {
             ['12', 12],
         ];
 
-    for (const i of countMaximumAcceptedInstallmentsFor) {
-        maximumAcceptedInstallments.append(`<option value="${countMaximumAcceptedInstallmentsFor[i][0]}">${countMaximumAcceptedInstallmentsFor[i][1]}</option>`);
+    for (let i = 0; i < countMaximumAcceptedInstallmentsFor.length; i++) {
+        maximumAcceptedInstallments.append('<option value="' + countMaximumAcceptedInstallmentsFor[i][0] + '">' + countMaximumAcceptedInstallmentsFor[i][1] + '</option>');
     }
 }
 

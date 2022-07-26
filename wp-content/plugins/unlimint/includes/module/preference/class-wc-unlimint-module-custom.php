@@ -32,9 +32,9 @@ class WC_Unlimint_Module_Custom extends WC_Unlimint_Module_Abstract {
 
 		$fieldname_prefix = WC_Unlimint_Admin_BankCard_Fields::FIELDNAME_PREFIX;
 
-		$are_installments_enabled    = ( 'yes' === get_option( $fieldname_prefix . WC_Unlimint_Admin_BankCard_Fields::FIELD_INSTALLMENT_ENABLED ) );
-		$installments                = (int) $card_post_fields[ self::INSTALLMENTS ];
-		$installment_type = get_option( $fieldname_prefix . WC_Unlimint_Admin_BankCard_Fields::FIELD_INSTALLMENT_TYPE );
+		$are_installments_enabled = ( 'yes' === get_option( $fieldname_prefix . WC_Unlimint_Admin_BankCard_Fields::FIELD_INSTALLMENT_ENABLED ) );
+		$installments             = (int) $card_post_fields[ self::INSTALLMENTS ];
+		$installment_type         = get_option( $fieldname_prefix . WC_Unlimint_Admin_BankCard_Fields::FIELD_INSTALLMENT_TYPE );
 		if ( $are_installments_enabled && isset( $card_post_fields[ self::INSTALLMENTS ] ) ) {
 			$api_request[ self::PAYMENT_DATA ] = [
 				'installment_type' => $installment_type,

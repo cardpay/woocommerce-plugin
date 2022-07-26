@@ -494,11 +494,7 @@ class WC_Unlimint_Gateway_Abstract extends WC_Payment_Gateway {
 		$card_post_fields        = $_POST['unlimint_custom'];
 		$installments_order_meta = (int) $card_post_fields[ WC_Unlimint_Module_Custom::INSTALLMENTS ];
 
-		if ( $installments_order_meta > 1 ) {
-			WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_PAYMENT_TYPE_FIELDNAME, WC_Unlimint_Constants::PAYMENT_TYPE_INSTALLMENT );
-		} else {
-			WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_PAYMENT_TYPE_FIELDNAME, WC_Unlimint_Constants::PAYMENT_TYPE_PAYMENT );
-		}
+		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_PAYMENT_TYPE_FIELDNAME, WC_Unlimint_Constants::PAYMENT_TYPE_PAYMENT );
 		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_FIELD_INSTALLMENT_TYPE, get_option( WC_Unlimint_Admin_BankCard_Fields::FIELDNAME_PREFIX . WC_Unlimint_Admin_BankCard_Fields::FIELD_INSTALLMENT_TYPE ) );
 
 		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_GATEWAY_FIELDNAME, get_class( $this ) );
@@ -526,7 +522,7 @@ class WC_Unlimint_Gateway_Abstract extends WC_Payment_Gateway {
 			return $api_response['response'];
 		}
 
-		if ( (int) $api_response['status'] < 200 || (int) $api_response['status'] >= 300 || is_wp_error( $api_response )) {
+		if ( (int) $api_response['status'] < 200 || (int) $api_response['status'] >= 300 || is_wp_error( $api_response ) ) {
 			$this->logger->error( __FUNCTION__, 'Payment creation failed with an error: ' . $api_response['response']['message'] );
 
 			return $api_response['response']['message'];

@@ -49,9 +49,9 @@ class WC_Unlimint_Custom_Gateway extends WC_Unlimint_Gateway_Abstract {
 	}
 
 	public function can_refund_order( $order ) {
-		global $wpdb;
-		$field_installment_type       = $wpdb->get_var( "SELECT meta_value FROM wp_postmeta WHERE post_id = " . $_REQUEST['post'] . " AND meta_key = '_ul_field_installment_type'" );
-		$field_count_installment_type = $wpdb->get_var( "SELECT meta_value FROM wp_postmeta WHERE post_id = " . $_REQUEST['post'] . " AND meta_key = '_ul_field_count_installment_type'" );
+		$field_installment_type       = $order->get_meta( '_ul_field_installment_type' );
+		$field_count_installment_type = $order->get_meta( '_ul_field_count_installment_type' );
+
 		if ( $field_installment_type == 'IF' || ( $field_installment_type == 'MF_HOLD' && $field_count_installment_type == 1 ) ) {
 			return true;
 		}

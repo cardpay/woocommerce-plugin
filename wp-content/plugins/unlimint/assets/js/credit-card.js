@@ -409,21 +409,28 @@ const unlimintIframeProcessor = {
         jQuery('body').css('overflow', 'hidden');
         jQuery('#unimint_modal_iframe').attr('src', url);
     },
-    onSuccessSubmit: function(e) {
+    onSuccessSubmit: function (e) {
         unlimintIframeProcessor.afterSubmit();
         formCheckout.removeClass('processing');
         try {
             if ('success' !== e.result) {
-                throw 'failure' === e.result ? "Result failure" : "Invalid response";
+                if ('failure' === e.result) {
+                    throw new Error('Result failure');
+                } else {
+                    throw new Error('Invalid response');
+                }
             }
+
             -1 === e.redirect.indexOf('https://') || -1 === e.redirect.indexOf("http://")
                 ? this.redirectFunc(e.redirect)
                 : this.redirectFunc(decodeURI(e.redirect))
         } catch (t) {
             if (!0 === e.reload) {
-                return window.location.reload();
+                window.location.reload();
+                return;
             }
-            let messages = (('array' === typeof e['messages']) &&  e['messages'].length > 0) ? e['messages'] : [];
+
+            const messages = (('array' === typeof e['messages']) && e['messages'].length > 0) ? e['messages'] : [];
             !0 === (e.refresh && g(document.body).trigger('update_checkout') && messages.length === 0)
                 ? this.submit_error(messages)
                 : this.submit_error(`<div class="woocommerce-error">${wc_checkout_params.i18n_checkout_error}</div>`);
@@ -432,7 +439,7 @@ const unlimintIframeProcessor = {
     formSubmit: function () {
         const obj = this;
         if (formCheckout.hasClass('processing') || !checkForm.check()) {
-            return false;
+            return;
         }
         obj.beforeSubmit();
 
@@ -449,7 +456,6 @@ const unlimintIframeProcessor = {
                 obj.submit_error(`<div class="woocommerce-error">${o}</div>`)
             }
         });
-        return false;
     },
     setModalSize: function () {
         const backWindow = jQuery('#unlimint_modal_page');
