@@ -32,14 +32,15 @@ class WC_Unlimint_Custom_Gateway extends WC_Unlimint_Gateway_Abstract {
 	public function __construct() {
 		$this->id = self::GATEWAY_ID;
 
-		parent::__construct();
-
 		$this->bankcard_fields = new WC_Unlimint_Admin_BankCard_Fields();
 
 		$this->description        = __( 'Credit card payment method', 'unlimint' );
 		$this->method_description = $this->description;
 
 		$this->hook = new WC_Unlimint_Hook_Custom( $this );
+
+		parent::__construct();
+
 		$this->hook->load_hooks();
 
 		$this->register_auth_payment();

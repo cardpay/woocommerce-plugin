@@ -149,8 +149,8 @@ msgstr "Forma de pagamento"
 msgid "If set to 'No', the amount will not be captured but only blocked. With 'No' option selected payments will be captured automatically in 7 days from the time of creating the preauthorized transaction. In installment case with 'No' option selected installments will be declined automatically in 7 days from the time of creating the preauthorized transaction."
 msgstr "Se definido como 'Não', o valor não será capturado, mas apenas bloqueado. Com a opção 'Não' selecionada, os pagamentos serão capturados automaticamente em 7 dias a partir do momento da criação da transação pré-autorizada. No caso de parcelamento com opção 'Não', as parcelas selecionadas serão recusadas automaticamente em 7 dias a partir do momento da criação da transação pré-autorizada."
 
-msgid "Get your credentials, visit the unlimint.com"
-msgstr "Obtenha suas credenciais, visite o unlimint.com"
+msgid "Get your credentials, visit the"
+msgstr "Obtenha suas credenciais, visite o"
 
 msgid "In test mode, the data is sent to the sandbox."
 msgstr "No modo de teste, os dados são enviados para o sandbox."
@@ -465,10 +465,10 @@ msgid "Yes"
 msgstr "Sim"
 
 msgid "Capture Payment"
-msgstr "Pagamento De Captura"
+msgstr "Capturar pagamento"
 
 msgid "Installment Enabled"
-msgstr "Instalação Activa"
+msgstr "Parcelamento habilitado"
 
 msgid "Ask CPF"
 msgstr "Perguntar ao CPF"
@@ -484,3 +484,90 @@ msgstr "cancelado"
 
 msgid "Invalid refund amount for order"
 msgstr "Valor do reembolso inválido para o pedido"
+
+msgid "API access mode"
+msgstr "Modo de acesso à API"
+
+msgid "Payment page"
+msgstr "Página de pagamento"
+
+msgid "Gateway"
+msgstr "Porta de entrada"
+
+msgid "If 'Payment page' mode is selected - payment page by Unlimint in iFrame is used for customer data collecting."
+msgstr "Se o modo 'Página de pagamento' for selecionado - a página de pagamento por Unlimint no iFrame é usada para coleta de dados do cliente."
+
+msgid "If 'Gateway' mode is selected - embedded payment form in plugin is used for customer data collecting."
+msgstr "Se o modo 'Porta de entrada' for selecionado - o formulário de pagamento incorporado no plug-in é usado para coleta de dados do cliente."
+
+msgid "If 'Api access mode' setting is changed - then 'Terminal Password' value need to be checked and changed (if needed)."
+msgstr "Se a configuração 'Modo de acesso à API' for alterada - o valor 'Senha Do Terminal' precisará ser verificado e alterado (se necessário)"
+
+msgid "If 'Api access mode' setting is changed - then 'Callback Secret' value need to be checked and changed (if needed)."
+msgstr "Se a configuração 'Modo de acesso à API' for alterada - o valor 'Segredo De Callback' precisará ser verificado e alterado (se necessário)."
+
+msgid "Installment Type"
+msgstr "Tipo de parcela"
+
+msgid "Issuer financed"
+msgstr "Financiado pelo emissor"
+
+msgid "Merchant financed"
+msgstr "Comerciante financiado"
+
+msgid "Minimum total amount"
+msgstr "Valor total mínimo"
+
+msgid "Maximum accepted installments"
+msgstr "Máximo de parcelas aceitas"
+
+msgid "Minimum amount of the order with installments must be greater than"
+msgstr "O valor mínimo do pedido com parcelas deve ser maior que"
+
+msgid "API access mode is changed, please check Terminal code, terminal password, callback secret values. After changing of the API mode in plugin also must be changed API access mode in Unlimint. Please consult about it with Unlimint support."
+msgstr "O modo de acesso da API foi alterado, verifique o código do terminal, a senha do terminal, os valores secretos de retorno de chamada. Após a alteração do modo de API no plugin, também deve ser alterado o modo de acesso API na Unlimint. Por favor, consulte sobre como efetuar as mudanças junto ao suporte Unlimitt."
+
+msgid "Total amount of order with installments, should be more than value of this setting."
+msgstr "Valor total do pedido com parcelas, deve ser maior que o valor desta configuração."
+
+msgid "Maximum accepted intallments,"
+msgstr "Máximo de parcelas aceitas,"
+
+msgid "For 'Merchant Financed' installments can be single value from interval 1-12, for example 2, 3, 6, 8, 12."
+msgstr "Para parcelas 'financiadas pelo comerciante' podem ser de valor único do intervalo 1-12, por exemplo 2, 3, 6, 8, 12."
+
+msgid "For 'Issuer financed' Installment type valid values are 3, 6, 9, 12, 18."
+msgstr "Para o tipo de parcelamento 'Financiado pelo emissor' os valores válidos são 3, 6, 9, 12, 18."
+
+msgid "Should be selected only if 'Installment enabled' setting is switched on. Here can be choosed Installment type used in trade plugin."
+msgstr "Deve ser selecionado somente se a configuração 'Parcelamento habilitado' estiver ativada. Aqui pode ser escolhido o tipo de parcelamento usado no plugin de negociação."
+
+msgid "More details about installment types you can read"
+msgstr "Mais detalhes sobre os tipos de parcelas, consulte"
+
+msgid "Issuer financed installments"
+msgstr "IF (financiadas pelo emissor) Parcelas"
+
+msgid "MF HOLD Installments"
+msgstr "Parcelas MF HOLD (financiado pelo comerciante)"
+
+msgid "There is a technical issue with the payment, please try place order again"
+msgstr "Hay un problema técnico con el pago, intente realizar el pedido nuevamente"
+
+msgid "In test mode, the data is sent to the sandbox only. Test and prod credentials (terminal code, terminal password, secret) are different"
+msgstr "No ambiente de teste, os dados são enviados apenas para o sandbox. As credenciais de teste e prod (código do terminal, senha do terminal, segredo de retorno de chamada) são diferentes."
+
+msgid "If set to 'No', the amount will not be captured but only blocked. With 'No' option selected payments will be captured automatically in 7 days from the time of creating the preauthorized transaction."
+msgstr "Se definido como Não, o valor não será capturado, mas apenas bloqueado. Sem ter uma opção selecionada, os pagamentos serão capturados automaticamente em 7 dias a partir do momento da criação da transação pré-autorizada."
+
+msgid "In installment case with 'No' option selected installments will be declined automatically"
+msgstr "No caso de parcelamento sem a opção selecionada, as parcelas serão recusadas automaticamente"
+
+msgid "in 7 days from the time of creating the preauthorized transaction."
+msgstr "em 7 dias a partir do momento da criação da transação pré-autorizada."
+
+msgid "If set to Yes then installment payment field will be presented on payment form and installment payments can be possible for processing"
+msgstr "Se definido como Sim, O campo de pagamento parcelado será apresentado no formulário de pagamento e os pagamentos parcelados podem ser possíveis para processamento"
+
+msgid "If 'Api access mode' setting is changed - then 'Terminal Code' value need to be checked and changed (if needed)."
+msgstr "Se a configuração do ' modo de acesso à Api 'for alterada - o valor do' Código do Terminal ' precisará ser verificado e alterado (se necessário)."

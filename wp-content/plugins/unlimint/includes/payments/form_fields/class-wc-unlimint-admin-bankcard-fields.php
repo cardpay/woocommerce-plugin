@@ -63,7 +63,7 @@ class WC_Unlimint_Admin_BankCard_Fields extends WC_Unlimint_Admin_Fields {
 		return [
 			'title'       => __( 'Capture Payment', 'unlimint' ),
 			'type'        => 'select',
-			'description' => __( 'If set to "No", the amount will not be captured but only blocked. With "No" option selected payments will be captured automatically in 7 days from the time of creating the preauthorized transaction.', 'unlimint' ) . "<br>" . __( 'In installment case with "No" option selected installments will be declined automatically in 7 days from the time of creating the preauthorized transaction.', 'unlimint' ),
+			'description' => __( "If set to 'No', the amount will not be captured but only blocked. With 'No' option selected payments will be captured automatically in 7 days from the time of creating the preauthorized transaction.", 'unlimint' ) . "<br>" . __( "In installment case with 'No' option selected installments will be declined automatically", 'unlimint' ) . __( "in 7 days from the time of creating the preauthorized transaction.", 'unlimint' ),
 			'default'     => 'yes',
 			'options'     => [
 				'no'  => __( 'No', 'unlimint' ),
@@ -79,7 +79,7 @@ class WC_Unlimint_Admin_BankCard_Fields extends WC_Unlimint_Admin_Fields {
 		return [
 			'title'       => __( 'Installment Enabled', 'unlimint' ),
 			'type'        => 'select',
-			'description' => 'If set to Yes then installment payment field will be presented on payment form and installment payments can be possible for processing',
+			'description' => __( 'If set to Yes then installment payment field will be presented on payment form and installment payments can be possible for processing', 'unlimint' ),
 			'default'     => 'no',
 			'options'     => [
 				'no'  => __( 'No', 'unlimint' ),
@@ -98,7 +98,7 @@ class WC_Unlimint_Admin_BankCard_Fields extends WC_Unlimint_Admin_Fields {
 		return [
 			'title'       => __( 'Installment Type', 'unlimint' ),
 			'type'        => 'select',
-			'description' => __( 'Should be selected only if "Installment enabled" setting is switched on. Here can be choosed Installment type used in trade plugin.', 'unlimint' ) . "<br>" . __( 'More details about installment types you can read', 'unlimint' ) . ' ' . '<a href="https://integration.unlimint.com/#Issuer-financed-(IF)">' . $nameIF . ', ' . $nameMF,
+			'description' => __( "Should be selected only if 'Installment enabled' setting is switched on. Here can be choosed Installment type used in trade plugin.", 'unlimint' ) . "<br>" . __( 'More details about installment types you can read', 'unlimint' ) . ' ' . '<a href="https://integration.unlimint.com/#Issuer-financed-(IF)">' . $nameIF . ', ' . $nameMF,
 			'default'     => 'no',
 			'options'     => [
 				'IF'      => __( 'Issuer financed', 'unlimint' ),
@@ -169,12 +169,11 @@ class WC_Unlimint_Admin_BankCard_Fields extends WC_Unlimint_Admin_Fields {
 	}
 
 	protected function getMaximumAcceptedInstallmentsDescription() {
-		return __(
-			       'Maximum accepted intallments,', 'unlimint' )
+		return __( 'Maximum accepted intallments,', 'unlimint' )
 		       . '<br>'
-		       . __( 'For "Merchant Financed" installments can be single value from interval 1-12, for example 2, 3, 6, 8, 12.', 'unlimint' )
+		       . __( "For 'Merchant Financed' installments can be single value from interval 1-12, for example 2, 3, 6, 8, 12.", 'unlimint' )
 		       . '<br>'
-		       . __( 'For "Issuer financed" Installment type valid values are 3, 6, 9, 12, 18.', 'unlimint' );
+		       . __( "For 'Issuer financed' Installment type valid values are 3, 6, 9, 12, 18.", 'unlimint' );
 	}
 
 	/**
@@ -211,13 +210,33 @@ class WC_Unlimint_Admin_BankCard_Fields extends WC_Unlimint_Admin_Fields {
 	}
 
 	public function field_api_access_mode() {
+		$bankcard_translations_change_mode = [
+			'API_ACCESS_MODE' => __( 'API access mode is changed, please check Terminal code, terminal password, callback secret values. After changing of the API mode in plugin also must be changed API access mode in Unlimint. Please consult about it with Unlimint support.', 'unlimint' ),
+		];
+		$bankcard_alert_translations       = '{';
+		foreach ( $bankcard_translations_change_mode as $key => $value ) {
+			$bankcard_alert_translations .= "\"$key\":\"$value\"";
+			if ( array_key_last( $bankcard_translations_change_mode ) != $key ) {
+				$bankcard_alert_translations .= ',';
+			}
+		}
+		$bankcard_alert_translations .= '}';
+
+		echo "
+			<script type='text/javascript'>
+			if (typeof BANKCARD_ALERT_TRANSLATIONS_CHANGE_MODE === 'undefined') {
+                var BANKCARD_ALERT_TRANSLATIONS_CHANGE_MODE = $bankcard_alert_translations;
+            }
+			</script>
+		";
+
 		return [
 			'title'       => __( 'API access mode', 'unlimint' ),
 			'type'        => 'select',
 			'description' => __(
-				                 'If "Payment page" mode is selected - payment page by Unlimint in iFrame is used for customer data collecting.', 'unlimint' )
+				                 "If 'Payment page' mode is selected - payment page by Unlimint in iFrame is used for customer data collecting.", 'unlimint' )
 			                 . '<br>'
-			                 . __( 'If "Gateway" mode is selected - embedded payment form in plugin is used for customer data collecting.', 'unlimint' ),
+			                 . __( "If 'Gateway' mode is selected - embedded payment form in plugin is used for customer data collecting.", 'unlimint' ),
 			'default'     => 'Payment page',
 			'options'     => [
 				'payment_page' => __( 'Payment page', 'unlimint' ),

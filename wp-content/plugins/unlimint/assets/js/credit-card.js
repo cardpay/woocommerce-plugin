@@ -82,6 +82,7 @@ const validateUlCardField = function (fieldId) {
     inputFieldError.hide();
 
     let isCardFieldValid = true;
+
     if (!isUlInputFieldValid(fieldId, inputField)) {
         inputField.addClass(UL_ERROR_CLASS);
         inputFieldError.show();
@@ -292,7 +293,7 @@ const formatUlExpirationDate = function () {
     const date = jQuery('#ul-card-expiration-date');
 
     const dateFormatted = date.val().replace(/\D/g, '')
-        .replace(/(\d{2})(\d)/, "$1/$2")
+        .replace(/^(0\d|1[0-2])\/?(\d{2})$/, "$1/$2")
         .replace(/(\d{2})(\d{2})$/, "$1$2");
 
     date.val(dateFormatted);
@@ -305,11 +306,11 @@ const isUlExpirationDateValid = function (expirationDate) {
 
     const expirationValues = expirationDate.split('/');
     const expirationMonth = parseInt(expirationValues[0]);
-    const expirationYear = parseInt(expirationValues[1]);
-
     if (expirationMonth < 1 || expirationMonth > 12) {
         return false;
     }
+
+    const expirationYear = parseInt(20 + expirationValues[1]);
 
     const currentTime = new Date()
     const currentYear = currentTime.getFullYear();

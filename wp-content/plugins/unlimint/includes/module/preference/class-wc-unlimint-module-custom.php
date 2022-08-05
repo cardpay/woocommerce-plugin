@@ -75,7 +75,7 @@ class WC_Unlimint_Module_Custom extends WC_Unlimint_Module_Abstract {
 				'card'            => [
 					'pan'           => str_replace( ' ', '', $card_post_fields['cardNumber'] ),
 					'holder'        => $card_post_fields['cardholderName'],
-					'expiration'    => $card_post_fields['cardExpirationDate'],
+					'expiration'    => substr_replace( $card_post_fields['cardExpirationDate'], '20', 3, 0 ),
 					'security_code' => $card_post_fields['cvc'],
 				],
 				'billing_address' => [

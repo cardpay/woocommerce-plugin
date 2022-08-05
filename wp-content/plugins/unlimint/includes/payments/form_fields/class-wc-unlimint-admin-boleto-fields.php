@@ -27,23 +27,24 @@ class WC_Unlimint_Admin_Boleto_Fields extends WC_Unlimint_Alt_Admin_Fields {
 		return self::FIELDNAME_PREFIX;
 	}
 
-    public function field_terminal_code()
-    {
-        $result = parent::field_terminal_code();
-        unset($result['description']);
-        return $result;
-    }
+	public function field_terminal_code() {
+		$result = parent::field_terminal_code();
+		unset( $result['description'] );
 
-    public function field_terminal_password()
-    {
-        $result = parent::field_terminal_password();
-        $result['description'] = __('Get your credentials, visit the <a href="https://unlimint.com" target=_blank>unlimint.com</a>');
-        return $result;
-    }
+		return $result;
+	}
 
-    public function field_callback_secret() {
-        $result = parent::field_callback_secret();
-        unset($result['description']);
-        return $result;
-    }
+	public function field_terminal_password() {
+		$result                = parent::field_terminal_password();
+		$result['description'] = __( 'Get your credentials, visit the', 'unlimint' ) . ' ' . '<a href="https://unlimint.com" target=_blank>unlimint.com</a>';
+
+		return $result;
+	}
+
+	public function field_callback_secret() {
+		$result = parent::field_callback_secret();
+		unset( $result['description'] );
+
+		return $result;
+	}
 }

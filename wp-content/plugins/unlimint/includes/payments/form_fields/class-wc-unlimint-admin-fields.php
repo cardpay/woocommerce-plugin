@@ -30,7 +30,7 @@ class WC_Unlimint_Admin_Fields {
 		return [
 			'title'       => __( 'Terminal Code', 'unlimint' ),
 			'type'        => 'text',
-			'description' => __( 'If "Api access mode" setting is changed - then "Terminal Code" value need to be checked and changed (if needed).', 'unlimint' ),
+			'description' => __( "If 'Api access mode' setting is changed - then 'Terminal Code' value need to be checked and changed (if needed).", 'unlimint' ),
 			'default'     => '',
 		];
 	}
@@ -42,17 +42,17 @@ class WC_Unlimint_Admin_Fields {
 		return [
 			'title'       => __( 'Terminal Password', 'unlimint' ),
 			'type'        => 'password',
-			'description' => __( 'Get your credentials, visit the <a href="https://unlimint.com" target=_blank>unlimint.com</a>. If "Api access mode" setting is changed - then "Terminal Password" value need to be checked and changed (if needed)', 'unlimint' ),
+			'description' => __( 'Get your credentials, visit the', 'unlimint' ) . ' ' . '<a href="https://unlimint.com" target=_blank>unlimint.com</a>.' . ' ' . __( "If 'Api access mode' setting is changed - then 'Terminal Password' value need to be checked and changed (if needed).", 'unlimint' ),
 			'default'     => '',
 		];
 	}
 
 	public function field_callback_secret() {
 		return [
-			'title'   => __( 'Callback Secret', 'unlimint' ),
-			'type'    => 'password',
-			'description' => 'If "Api access mode" setting is changed - then "Callback Secret" value need to be checked and changed (if needed).',
-			'default' => '',
+			'title'       => __( 'Callback Secret', 'unlimint' ),
+			'type'        => 'password',
+			'description' => __( "If 'Api access mode' setting is changed - then 'Callback Secret' value need to be checked and changed (if needed).", 'unlimint' ),
+			'default'     => '',
 		];
 	}
 

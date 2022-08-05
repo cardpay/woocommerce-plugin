@@ -53,9 +53,7 @@ const selectPaymentPage = function (selInstType, selPaymentPage, prefix, askCpf)
     selPaymentPage.addEventListener('change', function () {
         toggleSettings(selPaymentPage, askCpf);
 
-        alert('API access mode is changed, please check Terminal code, terminal password, callback secret values. '
-            + 'After changing of the API mode in plugin also must be changed API access mode in Unlimint. '
-            + 'Please consult about it with Unlimint support.');
+        alert(BANKCARD_ALERT_TRANSLATIONS_CHANGE_MODE['API_ACCESS_MODE']);
 
         const select = `#${prefix}installment_type`;
         if (selPaymentPage.value === 'gateway') {
