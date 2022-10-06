@@ -83,7 +83,7 @@ class WC_Unlimint_Module_Custom extends WC_Unlimint_Module_Abstract {
 					'state'       => $customer->get_billing_state(),
 					'zip'         => $customer->get_billing_postcode(),
 					'city'        => $customer->get_billing_city(),
-					'phone'       => $customer->get_billing_phone(),
+					'phone'       => preg_replace( '/[^\d]/', '', $customer->get_billing_phone() ),
 					'addr_line_1' => $customer->get_billing_address_1(),
 					'addr_line_2' => $customer->get_billing_address_2(),
 				],

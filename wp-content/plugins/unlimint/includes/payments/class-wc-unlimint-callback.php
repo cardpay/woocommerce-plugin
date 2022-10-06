@@ -112,7 +112,7 @@ class WC_Unlimint_Callback {
 		$callback_decoded = $this->decode_callback( $callback );
 		$order_id         = $callback_decoded['merchant_order']['id'];
 		$transaction_type = $this->get_transaction_type( $callback_decoded );
-		$transaction_id = $this->get_transaction_id( $callback_decoded, $transaction_type );
+		$transaction_id   = $this->get_transaction_id( $callback_decoded, $transaction_type );
 		$new_order_status = $this->get_new_order_status( $callback_decoded, $transaction_type );
 
 		$this->logger->info( __FUNCTION__, "Unlimint new status for order #$order_id: $new_order_status" );
@@ -122,9 +122,9 @@ class WC_Unlimint_Callback {
 		$status_change_info      = $order->set_status( $new_order_status_option );
 
 		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_CALLBACK_STATUS_FIELDNAME, $new_order_status_option );
-        if ($transaction_id && !$order->get_transaction_id) {
-            $order->set_transaction_id($transaction_id);
-        }
+		if ( $transaction_id && ! $order->get_transaction_id() ) {
+			$order->set_transaction_id( $transaction_id );
+		}
 		$order->save();
 
 		$old_status     = $status_change_info['from'];
@@ -184,12 +184,10 @@ class WC_Unlimint_Callback {
 	}
 
 	private function get_transaction_id( $callback_decoded, $transaction_type ) {
-        return $callback_decoded[$transaction_type]['id'] ?? '';
-    }
+		return $callback_decoded[ $transaction_type ]['id'] ?? '';
+	}
 
 	private function get_transaction_type( $callback_decoded ) {
-		$transaction_type = null;
-
 		if ( isset( $callback_decoded[ self::REFUND_DATA_TRANSACTION_TYPE ] ) ) {
 			$transaction_type = self::REFUND_DATA_TRANSACTION_TYPE;
 		} else {

@@ -14,15 +14,18 @@ $pixLogoUrl = plugins_url( '../../assets/images/pix.png', __FILE__ );
                         <div class='ul-row-checkout'>
                             <div class='ul-col-md-8' id='box-cpf'>
                                 <label for='ul-cpf-pix' id='ul-cpf-label'
-                                       class='ul-label-form title-cpf'><?php echo esc_html__( 'CPF', 'unlimint' ); ?> <em>*</em></label>
+                                       class='ul-label-form title-cpf'><?php echo esc_html__( 'CPF', 'unlimint' ); ?>
+                                    <em>*</em></label>
                                 <input type='text' class='ul-form-control'
                                        onkeyup="formatUlBoletoCpf(this.id);" onfocusout="validateUlPixInput();"
                                        id='ul-cpf-pix' data-checkout='ul-cpf-pix' name='unlimint_pix[cpf]'
                                        autocomplete='off' maxlength='14'
                                        placeholder='XXX.XXX.XXX-XX'><br/>
-                                <span class='ul-error' data-main='#ul-cpf-pix'
-                                      id='pix-cpf-error'><?php echo esc_html__( 'Invalid CPF', 'unlimint' ); ?></span><br/>
-                                <img src='<?php echo $pixLogoUrl ?>' width='99' height='35' alt='Pix' />
+                                <span class="ul-error ul-mt-5" id="ul-cpf-pix-error"
+                                      data-main="#ul-cpf-error"><?php echo esc_html__( 'CPF is invalid', 'unlimint' ); ?></span>
+                                <span class="ul-error ul-mt-5" id="ul-cpf-pix-error-second"
+                                      data-main="#ul-cpf-error"><?php echo esc_html__( 'Please fill out a CPF', 'unlimint' ); ?></span><br>
+                                <img src='<?php echo $pixLogoUrl ?>' width='99' height='35' alt='Pix'/>
                             </div>
                         </div>
                     </div>

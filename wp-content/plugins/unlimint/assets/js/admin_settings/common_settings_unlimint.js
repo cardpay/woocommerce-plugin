@@ -10,16 +10,26 @@ const validateUlAdminField = function (fieldName, maxLength, errorField, positiv
         const fieldValue = adminField.val();
         if (!fieldValue || fieldValue.trim().length === 0) {
             showUlAdminError(errorMessageId, `Empty ${errorField}`);
+            highlightUlAdminError(fieldName);
             return false;
         }
 
         if (fieldValue.length > maxLength || (positiveInteger && (isNaN(fieldValue) || parseInt(fieldValue) < 0))) {
             showUlAdminError(errorMessageId, `Invalid ${errorField}`);
+            highlightUlAdminError(fieldName);
             return false;
         }
     }
-
+    hideUlAdminError(fieldName);
     return true;
+}
+
+const hideUlAdminError = function (id) {
+    jQuery(`#${id}`).parent().parent().parent().removeClass('ul_error');
+}
+
+const highlightUlAdminError = function (id) {
+    jQuery(`#${id}`).parent().parent().parent().addClass('ul_error');
 }
 
 const showUlAdminError = function (errorMessageId, errorMessage) {

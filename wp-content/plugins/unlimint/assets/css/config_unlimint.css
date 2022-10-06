@@ -396,3 +396,11 @@
 .ul_subtitle_mt {
     margin-top: 0 !important;
 }
+
+.ul_error input{
+    border:1px solid #F00;
+    color:#F00;
+}
+.ul_error th, .ul_error p{
+    color:#F00;
+}

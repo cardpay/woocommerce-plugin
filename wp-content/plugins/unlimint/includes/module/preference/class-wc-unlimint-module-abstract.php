@@ -134,7 +134,7 @@ abstract class WC_Unlimint_Module_Abstract extends WC_Payment_Gateway {
 			'customer'       => [
 				'id'    => $this->order->get_user_id(),
 				'email' => $this->order->get_billing_email(),
-				'phone' => $this->order->get_billing_phone(),
+				'phone' => preg_replace( '/[^\d]/', '', $this->order->get_billing_phone() ),
 			],
 			'return_urls'    => [
 				'decline_url'   => $this->build_return_url( $notification_url, 'decline', $order_id ),

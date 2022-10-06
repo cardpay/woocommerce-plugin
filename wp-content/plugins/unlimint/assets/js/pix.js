@@ -9,5 +9,5 @@
 }(jQuery));
 
 const validateUlPixCpf = function () {
-    return validateUlCpf('ul-cpf-pix', 'pix-cpf-error');
+    return validateUlCpf('ul-cpf-pix');
 }

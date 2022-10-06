@@ -32,9 +32,6 @@ msgstr "O pagamento não foi capturado: "
 msgid "Payment was not cancelled: "
 msgstr "O pagamento não foi cancelado: "
 
-msgid "Invalid CPF"
-msgstr "CPF inválido"
-
 msgid "Update your credentials with the Terminal Password and Terminal code, you need them to continue receiving payments!"
 msgstr "Atualize suas credenciais com a Senha do Terminal e o código do Terminal, você precisa delas para continuar recebendo pagamentos!"
 
@@ -146,8 +143,8 @@ msgstr "E-mail do comprador"
 msgid "Payment method"
 msgstr "Forma de pagamento"
 
-msgid "If set to 'No', the amount will not be captured but only blocked. With 'No' option selected payments will be captured automatically in 7 days from the time of creating the preauthorized transaction. In installment case with 'No' option selected installments will be declined automatically in 7 days from the time of creating the preauthorized transaction."
-msgstr "Se definido como 'Não', o valor não será capturado, mas apenas bloqueado. Com a opção 'Não' selecionada, os pagamentos serão capturados automaticamente em 7 dias a partir do momento da criação da transação pré-autorizada. No caso de parcelamento com opção 'Não', as parcelas selecionadas serão recusadas automaticamente em 7 dias a partir do momento da criação da transação pré-autorizada."
+msgid "Setting is for regular payments and Merchant Financed installments. If set to \"No\", the amount will not be captured but only blocked. By default with \"No\" option selected payments will be voided automatically in 7 days from the time of creating the preauthorized transaction.<br>If you want payments to be captured automatically in 7 days (instead of being voided), please contact your account manager."
+msgstr "A configuração é para pagamentos regulares e parcelas financiadas pela comerciante. Se definido como \"Não\", o valor não será capturado (cobrança efetivada), mas apenas bloqueado (pré-autorização).<br>Por padrão, com a opção \"Não\", os pagamentos selecionados serão anulados automaticamente em 7 dias a partir do momento da criação da transação pré-autorizada.<br>Se você quiser que os pagamentos sejam capturados automaticamente em 7 dias (em vez de serem anulados), entre em contato com seu gerente de conta."
 
 msgid "Get your credentials, visit the"
 msgstr "Obtenha suas credenciais, visite o"
@@ -244,6 +241,12 @@ msgstr "<strong>Envio: Estado / País</strong>, valor válido até 50 caracteres
 
 msgid "<strong>Shipping: Postcode / ZIP</strong>, valid value is up to 12 characters."
 msgstr "<strong>Envio: CEP / CEP</strong>, valor válido até 12 caracteres."
+
+msgid "<strong>Shipping: ZIP / Postal code</strong> must be 8 characters."
+msgstr "<strong>Envio: CEP / código postal deve ter 8 caracteres"
+
+msgid "<strong>Billing: ZIP / Postal code</strong> must be 8 characters."
+msgstr "<strong>Cobrança: CEP / código postal deve ter 8 caracteres"
 
 msgid "CVC length must be 3 or 4"
 msgstr "O comprimento do CVC deve ser 3 ou 4"
@@ -377,8 +380,8 @@ msgstr "O reembolso não está disponível para pagamento parcelado"
 msgid "Refund is available for credit card payment only"
 msgstr "O reembolso está disponível apenas para pagamento com cartão de crédito"
 
-msgid "Refund can be made in 'Processing' or 'Completed' order status only"
-msgstr "O reembolso pode ser feito apenas no status de pedido 'Processando' ou 'Concluído'"
+msgid "Refund can be made in \"Processing\" or \"Completed\" order status only"
+msgstr "O reembolso pode ser feito apenas no status de pedido \"Processando\" ou \"Concluído\""
 
 msgid "Refund for order"
 msgstr "Reembolso para pedido"
@@ -407,20 +410,47 @@ msgstr "Levamos você ao nosso site para concluir o pagamento"
 msgid "Credit card number"
 msgstr "Número do Cartão de Crédito"
 
+msgid "Card number"
+msgstr "Número do Cartão"
+
+msgid "Please fill out card number"
+msgstr "Por favor, preencha o número do cartão"
+
+msgid "Please fill out an expiration date"
+msgstr "Por favor, preencha uma data de validade"
+
+msgid "Please fill out a CVV2/CVC2"
+msgstr "Por favor, preencha um CVV2/CVC2"
+
+msgid "Please fill out a CPF"
+msgstr "Por favor, preencha um CPF"
+
+msgid "CPF is invalid"
+msgstr "CPF é inválido"
+
 msgid "Invalid credit card number"
 msgstr "Número de cartão de crédito inválido"
 
+msgid "This CVV2/CVC2 is not valid"
+msgstr "Este CVV2/CVC2 não é válido"
+
 msgid "Cardholder name"
 msgstr "Nome do Titular"
+
+msgid "Invalid expiration date"
+msgstr "Data de validade inválida"
+
+msgid "Please fill out card holder name"
+msgstr "Por favor, preencha o nome do titular do cartão"
+
+msgid "Card number is not valid"
+msgstr "O número do cartão não é válido"
 
 msgid "Invalid cardholder name"
 msgstr "Nome do titular do cartão inválido"
 
 msgid "Expiration date"
 msgstr "Data de validade"
-
-msgid "Invalid expiration date"
-msgstr "Data de validade inválida"
 
 msgid "CVC"
 msgstr "CVC"
@@ -494,17 +524,17 @@ msgstr "Página de pagamento"
 msgid "Gateway"
 msgstr "Porta de entrada"
 
-msgid "If 'Payment page' mode is selected - payment page by Unlimint in iFrame is used for customer data collecting."
-msgstr "Se o modo 'Página de pagamento' for selecionado - a página de pagamento por Unlimint no iFrame é usada para coleta de dados do cliente."
+msgid "If \"Payment page\" mode is selected - payment page by Unlimint in iFrame is used for customer data collecting."
+msgstr "Se o modo \"Página de pagamento\" for selecionado - a página de pagamento por Unlimint no iFrame é usada para coleta de dados do cliente."
 
-msgid "If 'Gateway' mode is selected - embedded payment form in plugin is used for customer data collecting."
-msgstr "Se o modo 'Porta de entrada' for selecionado - o formulário de pagamento incorporado no plug-in é usado para coleta de dados do cliente."
+msgid "If \"Gateway\" mode is selected - embedded payment form in plugin is used for customer data collecting."
+msgstr "Se o modo \"Porta de entrada\" for selecionado - o formulário de pagamento incorporado no plug-in é usado para coleta de dados do cliente."
 
-msgid "If 'Api access mode' setting is changed - then 'Terminal Password' value need to be checked and changed (if needed)."
-msgstr "Se a configuração 'Modo de acesso à API' for alterada - o valor 'Senha Do Terminal' precisará ser verificado e alterado (se necessário)"
+msgid "If \"Api access mode\" setting is changed - then \"Terminal Password\" value need to be checked and changed (if needed)."
+msgstr "Se a configuração \"Modo de acesso à API\" for alterada - o valor \"Senha Do Terminal\" precisará ser verificado e alterado (se necessário)"
 
-msgid "If 'Api access mode' setting is changed - then 'Callback Secret' value need to be checked and changed (if needed)."
-msgstr "Se a configuração 'Modo de acesso à API' for alterada - o valor 'Segredo De Callback' precisará ser verificado e alterado (se necessário)."
+msgid "If \"Api access mode\" setting is changed - then \"Callback Secret\" value need to be checked and changed (if needed)."
+msgstr "Se a configuração \"Modo de acesso à API\" for alterada - o valor \"Segredo De Callback\" precisará ser verificado e alterado (se necessário)."
 
 msgid "Installment Type"
 msgstr "Tipo de parcela"
@@ -513,7 +543,7 @@ msgid "Issuer financed"
 msgstr "Financiado pelo emissor"
 
 msgid "Merchant financed"
-msgstr "Comerciante financiado"
+msgstr "Financiado pelo comerciante"
 
 msgid "Minimum total amount"
 msgstr "Valor total mínimo"
@@ -533,14 +563,14 @@ msgstr "Valor total do pedido com parcelas, deve ser maior que o valor desta con
 msgid "Maximum accepted intallments,"
 msgstr "Máximo de parcelas aceitas,"
 
-msgid "For 'Merchant Financed' installments can be single value from interval 1-12, for example 2, 3, 6, 8, 12."
-msgstr "Para parcelas 'financiadas pelo comerciante' podem ser de valor único do intervalo 1-12, por exemplo 2, 3, 6, 8, 12."
+msgid "For \"Merchant Financed\" installments can be single value from interval 1-12, for example 2, 3, 6, 8, 12."
+msgstr "Para parcelas \"financiadas pelo comerciante\" podem ser de valor único do intervalo 1-12, por exemplo 2, 3, 6, 8, 12."
 
-msgid "For 'Issuer financed' Installment type valid values are 3, 6, 9, 12, 18."
-msgstr "Para o tipo de parcelamento 'Financiado pelo emissor' os valores válidos são 3, 6, 9, 12, 18."
+msgid "For \"Issuer financed\" Installment type valid values are 3, 6, 9, 12, 18."
+msgstr "Para o tipo de parcelamento \"Financiado pelo emissor\" os valores válidos são 3, 6, 9, 12, 18."
 
-msgid "Should be selected only if 'Installment enabled' setting is switched on. Here can be choosed Installment type used in trade plugin."
-msgstr "Deve ser selecionado somente se a configuração 'Parcelamento habilitado' estiver ativada. Aqui pode ser escolhido o tipo de parcelamento usado no plugin de negociação."
+msgid "Should be selected only if \"Installment enabled\" setting is switched on. Here can be choosed Installment type used in trade plugin."
+msgstr "Deve ser selecionado somente se a configuração \"Parcelamento habilitado\" estiver ativada. Aqui pode ser escolhido o tipo de parcelamento usado no plugin de negociação."
 
 msgid "More details about installment types you can read"
 msgstr "Mais detalhes sobre os tipos de parcelas, consulte"
@@ -552,15 +582,15 @@ msgid "MF HOLD Installments"
 msgstr "Parcelas MF HOLD (financiado pelo comerciante)"
 
 msgid "There is a technical issue with the payment, please try place order again"
-msgstr "Hay un problema técnico con el pago, intente realizar el pedido nuevamente"
+msgstr "Há um problema técnico com o pagamento, tente fazer o pedido novamente"
 
 msgid "In test mode, the data is sent to the sandbox only. Test and prod credentials (terminal code, terminal password, secret) are different"
 msgstr "No ambiente de teste, os dados são enviados apenas para o sandbox. As credenciais de teste e prod (código do terminal, senha do terminal, segredo de retorno de chamada) são diferentes."
 
-msgid "If set to 'No', the amount will not be captured but only blocked. With 'No' option selected payments will be captured automatically in 7 days from the time of creating the preauthorized transaction."
+msgid "If set to \"No\", the amount will not be captured but only blocked. With \"No\" option selected payments will be captured automatically in 7 days from the time of creating the preauthorized transaction."
 msgstr "Se definido como Não, o valor não será capturado, mas apenas bloqueado. Sem ter uma opção selecionada, os pagamentos serão capturados automaticamente em 7 dias a partir do momento da criação da transação pré-autorizada."
 
-msgid "In installment case with 'No' option selected installments will be declined automatically"
+msgid "In installment case with \"No\" option selected installments will be declined automatically"
 msgstr "No caso de parcelamento sem a opção selecionada, as parcelas serão recusadas automaticamente"
 
 msgid "in 7 days from the time of creating the preauthorized transaction."
@@ -569,5 +599,35 @@ msgstr "em 7 dias a partir do momento da criação da transação pré-autorizad
 msgid "If set to Yes then installment payment field will be presented on payment form and installment payments can be possible for processing"
 msgstr "Se definido como Sim, O campo de pagamento parcelado será apresentado no formulário de pagamento e os pagamentos parcelados podem ser possíveis para processamento"
 
-msgid "If 'Api access mode' setting is changed - then 'Terminal Code' value need to be checked and changed (if needed)."
-msgstr "Se a configuração do ' modo de acesso à Api 'for alterada - o valor do' Código do Terminal ' precisará ser verificado e alterado (se necessário)."
+msgid "If \"Api access mode\" setting is changed - then \"Terminal Code\" value need to be checked and changed (if needed)."
+msgstr "Se a configuração do \"Modo de acesso à Api\" for alterada - o valor do \"Código do Terminal\" precisará ser verificado e alterado (se necessário)."
+
+msgid "Minimum installment amount"
+msgstr "Valor mínimo da parcela"
+
+msgid "Allowed installments range"
+msgstr "Faixa de parcelas permitidas"
+
+msgid "For \"Merchant Financed\" installments can be filled in range of allowed values or several allowed values not in a row."
+msgstr "Para as parcelas \"Financiado pelo comerciante\" podem ser preenchidas faixas de valores permitidos ou vários valores permitidos não consecutivos."
+
+msgid "All values can be from interval 1-12, for example: Range of values 3-7 (using \"-\" as separator). Allowed values not in a row 2, 3, 6, 8, 12 (using \",\" as separator)."
+msgstr "Todos os valores podem ser do intervalo entre 1-12, por exemplo: Faixa de valores 3-7 (usando \"-\" como separador). Valores permitidos fora da linha 2, 3, 6, 8, 12 (usando \",\" como separador)."
+
+msgid "For \"Issuer financed\" Installment type can be only allowed values not in a row from the following: 3, 6, 9, 12, 18."
+msgstr "Para o tipo de prestação \"Financiado pelo emissor\" só podem ser permitidos valores não consecutivos a partir do seguinte: 3, 6, 9, 12, 18."
+
+msgid "If empty, then the default values will be used (2-12 for \"Merchant Financed\" and 3, 6, 9, 12, 18 for \"Issuer Financed\")."
+msgstr "Se estiver vazio, serão usados os valores padrão (2-12 para \"Financiado pelo comerciante\" e 3, 6, 9, 12, 18 para \"Financiado pelo emissor\")."
+
+msgid "Minimum installment amount for order with installments."
+msgstr "Valor mínimo da parcela para pedido com parcelamento."
+
+msgid "Here can be filled minimum amount of 1 installment, f.e if we have 5 installments with 20 usd amount of 1 installment, total amount of order in this case is 100 usd"
+msgstr "Aqui pode ser preenchido valor mínimo de 1 parcela, ou seja, se tivermos 5 parcelas com R$ 20 valor de 1 parcela, o valor total do pedido neste caso é de  R$ 100"
+
+msgid "ZIP / Postal code must be 8 characters"
+msgstr "CEP / código postal deve ter 8 caracteres"
+
+msgid "ZIP / Postal code"
+msgstr "CEP / Código Postal"

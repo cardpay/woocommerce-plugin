@@ -50,14 +50,25 @@ class WC_Unlimint_Custom_Gateway extends WC_Unlimint_Gateway_Abstract {
 	}
 
 	public function can_refund_order( $order ) {
+		$field_status_order = $order->get_status();
+		$status_true        = [
+			'processing',
+			'completed',
+		];
+		if ( ! in_array( $field_status_order, $status_true ) ) {
+			return false;
+		}
+
 		$field_installment_type       = $order->get_meta( '_ul_field_installment_type' );
 		$field_count_installment_type = $order->get_meta( '_ul_field_count_installment_type' );
-
 		if ( $field_installment_type == 'IF' || ( $field_installment_type == 'MF_HOLD' && $field_count_installment_type == 1 ) ) {
 			return true;
 		}
 
-		return false;
+		$are_installments_enabled = ( 'yes' === get_option( WC_Unlimint_Admin_BankCard_Fields::FIELDNAME_PREFIX . WC_Unlimint_Admin_BankCard_Fields::FIELD_INSTALLMENT_ENABLED ) );
+		if ( ! $are_installments_enabled ) {
+			return true;
+		}
 	}
 
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {

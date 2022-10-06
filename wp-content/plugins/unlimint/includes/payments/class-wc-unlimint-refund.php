@@ -83,6 +83,7 @@ class WC_Unlimint_Refund {
 		if ( ! method_exists( $order, 'get_status' ) ) {
 			return;
 		}
+
 		if ( ! in_array( $order->get_status(), self::ALLOWED_ORDER_STATUSES, true ) ) {
 			throw new WC_Unlimint_Exception( __( self::ERROR_STATUS ) );
 		}
@@ -96,7 +97,7 @@ class WC_Unlimint_Refund {
 	 * @return array
 	 */
 	private function get_refund_request( $order_id, $amount, $reason ) {
-		$order = wc_get_order( $order_id );
+		$order = wc_get_order( $order_id ); // you can get $order->get_transaction_id()
 
 		return [
 			'request'        => [

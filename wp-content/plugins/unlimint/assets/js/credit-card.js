@@ -70,16 +70,29 @@ const formatUlCardField = function (fieldId) {
 
 const validateUlCardField = function (fieldId) {
     const inputField = jQuery('#' + fieldId);
+    if (!inputField.is(':visible')) {
+        return true;
+    }
+    const inputFieldError = jQuery(`#${fieldId}-error`);
+    const inputFieldErrorSecond = jQuery(`#${fieldId}-error-second`);
+    if (inputField.val().length === 0) {
+        inputFieldError.hide();
+        inputField.addClass(UL_ERROR_CLASS);
+        inputFieldErrorSecond.show();
+        return false;
+    }
+    inputFieldErrorSecond.hide();
+
     if (!inputField.length) {
         return true;
     }
-    inputField.removeClass(UL_ERROR_CLASS);
 
-    const inputFieldError = jQuery(`#${fieldId}-error`);
+    inputField.removeClass(UL_ERROR_CLASS);
+    inputFieldError.hide();
+
     if (!inputFieldError.length) {
         return true;
     }
-    inputFieldError.hide();
 
     let isCardFieldValid = true;
 
@@ -242,9 +255,20 @@ const isUlCreditCardNumberValid = function () {
     const cardNumber = cardNumberInputField.val().replace(/[^\d]/gi, '');
 
     let isCardNumberValid = true;
+    const cardNumberError = jQuery('#ul-card-number-error');
     for (let cardBrandIndex = 0; cardBrandIndex <= CARD_BRANDS.length - 1; cardBrandIndex++) {
         const cardBrand = CARD_BRANDS[cardBrandIndex];
         if (cardBrand.pattern.test(cardNumber)) {
+            if (cardBrand.cbType === 'unionpay') {
+                if (!cardBrand.cnLength.includes(cardNumber.length) || cardNumber.length < 13 || cardNumber.length > 19) {
+                    isCardNumberValid = false;
+                    cardNumberError.show();
+                }
+
+                cardBrandSpan.addClass('card-brand-' + cardBrand.cbType);
+                return isCardNumberValid;
+            }
+
             if (!cardBrand.cnLength.includes(cardNumber.length) || !isUlLuhnAlgorithmPassed(cardNumber)) {
                 isCardNumberValid = false;
             }
@@ -259,7 +283,6 @@ const isUlCreditCardNumberValid = function () {
         isCardNumberValid = false;
     }
 
-    const cardNumberError = jQuery('#ul-card-number-error');
     cardNumberError.hide();
     if (!isCardNumberValid) {
         cardNumberError.show();

@@ -3,8 +3,9 @@
 defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/../payments/class-wc-unlimint-auth-payment.php';
-require_once __DIR__ . '/../payments/validator/class-wc-unlimint-alt-validator.php';
+require_once __DIR__ . '/../payments/validator/class-wc-unlimint-general-validator.php';
 require_once __DIR__ . '/../payments/validator/class-wc-unlimint-custom-validator.php';
+require_once __DIR__ . '/../payments/validator/class-wc-unlimint-boleto-validator.php';
 
 class WC_Unlimint_Init {
 	public const GATEWAY_ALT = [
@@ -179,20 +180,19 @@ class WC_Unlimint_Init {
 	}
 
 	public static function validate_form() {
-		if ( empty( $_POST[ WC_Unlimint_Constants::PAYMENT_METHOD ] ) ) {
-			return;
-		}
-
-		if ( $_POST[ WC_Unlimint_Constants::PAYMENT_METHOD ] === WC_Unlimint_Custom_Gateway::GATEWAY_ID ) {
-			$card_validator = new WC_Unlimint_Custom_Validator();
-			$card_validator->validate();
-
-			return;
-		}
-
-		if ( in_array( $_POST[ WC_Unlimint_Constants::PAYMENT_METHOD ], self::GATEWAY_ALT ) ) {
-			$alt_validator = new WC_Unlimint_Alt_Validator();
-			$alt_validator->validate();
-		}
+        switch ($_POST[ WC_Unlimint_Constants::PAYMENT_METHOD ]) {
+            case WC_Unlimint_Custom_Gateway::GATEWAY_ID: {
+                $validator = new WC_Unlimint_Custom_Validator();
+                break;
+            }
+            case WC_Unlimint_Ticket_Gateway::GATEWAY_ID: {
+                $validator = new WC_Unlimint_Boleto_Validator();
+                break;
+            }
+            default: {
+                $validator = new WC_Unlimint_General_Validator();
+            }
+        }
+        $validator->validate();
 	}
 }

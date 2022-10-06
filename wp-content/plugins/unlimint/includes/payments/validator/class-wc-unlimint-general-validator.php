@@ -11,7 +11,6 @@ class WC_Unlimint_General_Validator {
 		'address_2' => [ 'Street 2 / Address 2', 50 ],
 		'city'      => [ 'Town / City', 50 ],
 		'state'     => [ 'State / Country', 50 ],
-		'postcode'  => [ 'Postcode / ZIP', 12 ],
 	];
 
 	/**
@@ -30,7 +29,7 @@ class WC_Unlimint_General_Validator {
 			return;
 		}
 
-		$is_correct = preg_match( '/^[0-9]{8,18}$/', $_POST['billing_phone'] );
+		$is_correct = preg_match( '/^[\+\d]{8,18}$/', $_POST['billing_phone'] );
 		if ( ! $is_correct ) {
 			wc_add_notice( __( '<strong>Billing: Phone</strong>, valid value is from 8 to 18 characters.', 'unlimint' ), 'error' );
 		}
@@ -52,7 +51,11 @@ class WC_Unlimint_General_Validator {
 			}
 
 			if ( mb_strlen( $_POST[ $address_field ] ) > $max_length ) {
-				wc_add_notice( __( "<strong>" . ucfirst( $address_type ) . ": $error_message</strong>, valid value is up to $max_length characters.", 'unlimint' ), 'error' );
+                if ($post_key === 'postcode') {
+                    wc_add_notice(__("<strong>" . ucfirst($address_type) . ": $error_message</strong> must be $max_length characters.", 'unlimint'), 'error');
+                } else {
+                    wc_add_notice(__("<strong>" . ucfirst($address_type) . ": $error_message</strong>, valid value must be $max_length characters.", 'unlimint'), 'error');
+                }
 			}
 		}
 	}
