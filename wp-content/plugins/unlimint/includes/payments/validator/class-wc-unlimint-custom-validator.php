@@ -19,7 +19,7 @@ class WC_Unlimint_Custom_Validator extends WC_Unlimint_General_Validator {
 		}
 
 		$amount                      = WC()->cart->get_totals()['total'];
-		$getMinimalInstallmentAmount = get_option( WC_Unlimint_Admin_BankCard_Fields::FIELDNAME_PREFIX . WC_Unlimint_Admin_BankCard_Fields::FIELD_INSTALLMENT_ENABLED );
+		$getMinimalInstallmentAmount = get_option( WC_Unlimint_Admin_BankCard_Fields::FIELDNAME_PREFIX . WC_Unlimint_Admin_BankCard_Fields::FIELD_MINIMUM_INSTALLMENT_AMOUNT );
 		if ( $_POST['unlimint_custom']['installments'] > 1 && $getMinimalInstallmentAmount > $amount / $_POST['unlimint_custom']['installments'] ) {
 			wc_add_notice( '<p>' . __( "Minimum amount of the order with installments must be greater than", "unlimint" ) . ' ' . $amount . '</p>', 'error' );
 		}
