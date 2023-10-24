@@ -147,8 +147,13 @@ abstract class WC_Unlimint_Module_Abstract extends WC_Payment_Gateway {
 		$items = $this->get_items();
 		if ( ! empty( $items ) ) {
 			$common_api_request['merchant_order']['items'] = $items;
-			for ( $i = 0; $i < count( $items ); $i ++ ) {
-				$common_api_request['merchant_order']['items'][ $i ]['price'] = $items[ $i ]['price'] / $items[ $i ]['count'];
+			$order                                         = wc_get_order( $order_id );
+			$index_count_products                          = 0;
+			foreach ( $order->get_items() as $item_id => $item ) {
+				$price_item                                                                      =
+					$item->get_product()->get_price();
+				$common_api_request['merchant_order']['items'][ $index_count_products ]['price'] = $price_item;
+				$index_count_products ++;
 			}
 		}
 
