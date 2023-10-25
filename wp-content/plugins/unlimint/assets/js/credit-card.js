@@ -429,7 +429,7 @@ const unlimintIframeProcessor = {
         jQuery(document.body).trigger('checkout_error', [errorMessage]);
     },
     redirectFunc: function (url) {
-        jQuery('#unlimint_modal_bg').removeClass('closed');
+        jQuery('#unlimint_modal_bg').removeClass('closed_unlimit');
         jQuery('body').css('overflow', 'hidden');
         jQuery('#unimint_modal_iframe').attr('src', url);
     },
