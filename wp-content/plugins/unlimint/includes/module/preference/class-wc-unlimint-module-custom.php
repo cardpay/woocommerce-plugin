@@ -46,20 +46,30 @@ class WC_Unlimint_Module_Custom extends WC_Unlimint_Module_Abstract {
 		$api_request[ self::PAYMENT_DATA ]['amount']   = $this->order->get_total();
 		$api_request[ self::PAYMENT_DATA ]['currency'] = get_woocommerce_currency();
 
-		if ( $installment_type == 'IF' && $installments > 1 ) {
-			$amount                                                  = round( $api_request[ self::PAYMENT_DATA ]['amount'] / $installments, 2 );
+
+		$is_preauth = ( 'no' === get_option( $fieldname_prefix . WC_Unlimint_Admin_BankCard_Fields::FIELD_CAPTURE_PAYMENT ) );
+		if ( $is_preauth ) {
+			$api_request[ self::PAYMENT_DATA ]['preauth'] = true;
+			WC_Unlimint_Helper::set_order_meta( $this->order, WC_Unlimint_Constants::ORDER_META_PREAUTH_FIELDNAME,
+				'true' );
+		}
+
+		if ( $are_installments_enabled && $installment_type == 'IF' && $installments > 1 ) {
+			if ( $is_preauth ) {
+				unset( $api_request[ self::PAYMENT_DATA ]['preauth'] );
+			}
+			$amount                                                  = round(
+				$api_request[ self::PAYMENT_DATA ]['amount']
+				/
+				$installments,
+				2
+			);
 			$api_request[ self::PAYMENT_DATA ]['installment_amount'] = $amount;
 		}
 
 		$dynamic_descriptor = get_option( $fieldname_prefix . WC_Unlimint_Admin_BankCard_Fields::FIELD_DYNAMIC_DESCRIPTOR );
 		if ( ! empty( $dynamic_descriptor ) ) {
 			$api_request[ self::PAYMENT_DATA ]['dynamic_descriptor'] = $dynamic_descriptor;
-		}
-
-		$is_preauth = ( 'no' === get_option( $fieldname_prefix . WC_Unlimint_Admin_BankCard_Fields::FIELD_CAPTURE_PAYMENT ) );
-		if ( $is_preauth ) {
-			$api_request[ self::PAYMENT_DATA ]['preauth'] = true;
-			WC_Unlimint_Helper::set_order_meta( $this->order, WC_Unlimint_Constants::ORDER_META_PREAUTH_FIELDNAME, 'true' );
 		}
 
 		$is_cpf_required = ( 'yes' === get_option( $fieldname_prefix . WC_Unlimint_Admin_BankCard_Fields::FIELD_ASK_CPF ) );

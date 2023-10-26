@@ -20,19 +20,38 @@ class WC_Unlimint_General_Validator {
 
 	public function validate() {
 		$this->validate_address( self::BILLING );
-		$this->validate_billing_phone();
+		$this->validate_billing_and_shipping_phone();
 		$this->validate_address( self::SHIPPING );
 	}
 
-	private function validate_billing_phone() {
-		if ( empty( $_POST['billing_phone'] ) ) {
-			return;
+	public function validate_billing_and_shipping_phone() {
+		$fields = [ 'billing_phone' => 'Billing' ];
+
+		if ( ! empty( $_POST['shipping_phone'] ) ) {
+			$fields['shipping_phone'] = 'Shipping';
 		}
 
-		$is_correct = preg_match( '/^[\+\d]{8,18}$/', $_POST['billing_phone'] );
-		if ( ! $is_correct ) {
-			wc_add_notice( __( '<strong>Billing: Phone</strong>, valid value is from 8 to 18 characters.', 'unlimint' ), 'error' );
+		foreach ( $fields as $field => $address ) {
+			if ( ! empty( $_POST[ $field ] ) ) {
+				$cleanedPhone    = $this->clean_phone( $_POST[ $field ] );
+				$_POST[ $field ] = $cleanedPhone;
+				if ( strlen( $cleanedPhone ) < 8 || strlen( $cleanedPhone ) > 18 ) {
+					wc_add_notice(
+						__( '<strong>' . $address . ': Phone</strong>, valid value is from 8 to 18 characters.',
+							'unlimit' ),
+						'error'
+					);
+
+					return false;
+				}
+			}
 		}
+
+		return $cleanedPhone;
+	}
+
+	private function clean_phone( $phone ) {
+		return preg_replace( "/[^\d]+/", "", $phone );
 	}
 
 	private function validate_address( $address_type ) {
@@ -51,11 +70,13 @@ class WC_Unlimint_General_Validator {
 			}
 
 			if ( mb_strlen( $_POST[ $address_field ] ) > $max_length ) {
-                if ($post_key === 'postcode') {
-                    wc_add_notice(__("<strong>" . ucfirst($address_type) . ": $error_message</strong> must be $max_length characters.", 'unlimint'), 'error');
-                } else {
-                    wc_add_notice(__("<strong>" . ucfirst($address_type) . ": $error_message</strong>, valid value must be $max_length characters.", 'unlimint'), 'error');
-                }
+				if ( $post_key === 'postcode' ) {
+					wc_add_notice( __( "<strong>" . ucfirst( $address_type ) . ": $error_message</strong> must be $max_length characters.",
+						'unlimint' ), 'error' );
+				} else {
+					wc_add_notice( __( "<strong>" . ucfirst( $address_type ) . ": $error_message</strong>, valid value must be $max_length characters.",
+						'unlimint' ), 'error' );
+				}
 			}
 		}
 	}
