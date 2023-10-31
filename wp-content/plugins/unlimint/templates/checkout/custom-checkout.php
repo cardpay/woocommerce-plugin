@@ -20,7 +20,7 @@ if ( $display_form === 'none' ) {
 	<?php
 }
 ?>
-    <div id="unlimint_modal_bg" class="closed_unlimit">
+    <div id="unlimint_modal_bg" class="closed_unlimint">
         <div id="unlimint_modal_page" name="unlimint_modal_page">
             <iframe id="unimint_modal_iframe" width="100%" height="100%" title="unimint_modal_iframe"></iframe>
         </div>

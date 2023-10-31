@@ -54,10 +54,15 @@ class WC_Unlimint_Callback {
 		$callback_signature  = $_SERVER[ self::SIGNATURE_HEADER ];
 		$generated_signature = hash( 'sha512', $callback . $callback_secret );
 
+		$callback_decoded = $this->decode_callback( $callback );
+
 		$is_valid_signature = true;
 		if ( $generated_signature !== $callback_signature ) {
-			$this->logger->error( __FUNCTION__, 'Unlimint callback signature does not match' );
+			$order_id   = isset( $callback_decoded['merchant_order']['id'] ) ? $callback_decoded['merchant_order']['id'] : 'N/A';
+			$payment_id = isset( $callback_decoded['payment_id'] ) ? $callback_decoded['payment_id'] : 'N/A';
 
+			$this->logger->error( __FUNCTION__, 'Unlimint callback signature does not match for order #' .
+			                                    $order_id . ' and payment #' . $payment_id );
 			$is_valid_signature = false;
 		}
 
@@ -110,7 +115,8 @@ class WC_Unlimint_Callback {
 		}
 
 		$callback_decoded = $this->decode_callback( $callback );
-		$order_id         = $callback_decoded['merchant_order']['id'];
+		$order_id         =
+			isset( $callback_decoded['merchant_order']['id'] ) ? $callback_decoded['merchant_order']['id'] : 'N/A';
 		$transaction_type = $this->get_transaction_type( $callback_decoded );
 		$transaction_id   = $this->get_transaction_id( $callback_decoded, $transaction_type );
 		$new_order_status = $this->get_new_order_status( $callback_decoded, $transaction_type );
@@ -118,10 +124,19 @@ class WC_Unlimint_Callback {
 		$this->logger->info( __FUNCTION__, "Unlimint new status for order #$order_id: $new_order_status" );
 
 		$new_order_status_option = $this->get_new_order_status_option( $order_id, $new_order_status );
-		$order                   = wc_get_order( $order_id );
-		$status_change_info      = $order->set_status( $new_order_status_option );
+		$this->logger->info( __FUNCTION__, 'Unlimint callback: Order #' .
+		                                   $order_id . ' status was updated to: ' . $new_order_status );
 
-		WC_Unlimint_Helper::set_order_meta( $order, WC_Unlimint_Constants::ORDER_META_CALLBACK_STATUS_FIELDNAME, $new_order_status_option );
+		$order = wc_get_order( $order_id );
+		$this->logger->info( __FUNCTION__, "Before updating order status for order #$order_id" );
+		$status_change_info = $order->set_status( $new_order_status_option );
+
+		if ( ! $status_change_info ) {
+			$this->logger->error( __FUNCTION__, 'Failed to update order status for order #' . $order_id );
+		}
+
+		WC_Unlimint_Helper::set_order_meta( $order,
+			WC_Unlimint_Constants::ORDER_META_CALLBACK_STATUS_FIELDNAME, $new_order_status_option );
 		if ( $transaction_id && ! $order->get_transaction_id() ) {
 			$order->set_transaction_id( $transaction_id );
 		}
@@ -130,7 +145,8 @@ class WC_Unlimint_Callback {
 		$old_status     = $status_change_info['from'];
 		$new_status_set = $status_change_info['to'];
 
-		$this->logger->info( __FUNCTION__, "Unlimint callback was processed, order #$order_id, old status: $old_status, new status: $new_status_set" );
+		$this->logger->info( __FUNCTION__,
+			"Unlimint callback was processed, order #$order_id, old status: $old_status, new status: $new_status_set" );
 	}
 
 	private function get_new_order_status_option( $order_id, $new_order_status ) {
@@ -174,7 +190,10 @@ class WC_Unlimint_Callback {
 
 		$is_valid_callback = true;
 		$transaction_type  = $this->get_transaction_type( $callback_decoded );
-		if ( empty( $callback_decoded[ $transaction_type ] ) || empty( $callback_decoded[ $transaction_type ][ self::STATUS_FIELD ] ) ) {
+		if (
+			empty( $callback_decoded[ $transaction_type ] ) ||
+			empty( $callback_decoded[ $transaction_type ][ self::STATUS_FIELD ] )
+		) {
 			$this->logger->error( __FUNCTION__, "Unlimint callback for order #$order_id: order status is not set" );
 
 			$is_valid_callback = false;

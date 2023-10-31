@@ -936,7 +936,7 @@
     width: 40px;
     height: 20px;
 }
-.closed_unlimit {
+.closed_unlimint {
     display: none;
 }
 #unlimint_modal_bg {
@@ -948,7 +948,7 @@
     width: 100vw;
     height: 100vh;
 }
-#unlimint_modal_bg .closed_unlimit {
+#unlimint_modal_bg .closed_unlimint {
     display:none;
 }
 #unlimint_modal_close {
