@@ -1,9 +1,0 @@
-{
-  "name": "unlimint-woocommerce",
-  "description": "Unlimint WooCommerce plugin",
-  "version": "1.0.2",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/cardpay/woocommerce-plugin"
-  }
-}

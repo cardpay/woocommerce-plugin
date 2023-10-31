@@ -7,11 +7,11 @@
 /wp-content/languages/
 /wp-content/index.php
 /wp-content/plugins/*
-!/wp-content/plugins/unlimint
-/wp-content/plugins/unlimint/vendor/
-/wp-content/plugins/unlimint/node_modules/
-/wp-content/plugins/unlimint/composer.lock
-/wp-content/plugins/unlimint/package-lock.json
+!/wp-content/plugins/unlimit
+/wp-content/plugins/unlimit/vendor/
+/wp-content/plugins/unlimit/node_modules/
+/wp-content/plugins/unlimit/composer.lock
+/wp-content/plugins/unlimit/package-lock.json
 /index.php
 /license.txt
 /readme.html

@@ -1,0 +1,40 @@
+.payment_options .radio-inline {
+    float: left;
+    width: 100% !important;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    padding: 0;
+    margin-right: 10px;
+}
+
+.payment_options {
+    float: left;
+    width: auto;
+}
+
+.unlimit_input {
+    height: 40px;
+    border: 1px solid #dedede;
+    padding: 8px;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.payment_options label {
+    font-size: 17px;
+    padding: 5px 0;
+}
+
+.form-row {
+    float: left;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.form-row label {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
