@@ -40,17 +40,4 @@ class WC_Unlimit_Sepa_Gateway extends WC_Unlimit_Alt_Gateway {
 	public static function get_id() {
 		return self::GATEWAY_ID;
 	}
-
-	public function process_payment( $order_id ) {
-		$this->logger->info( __FUNCTION__,
-			'Alternative payment method, POST data: ' . wp_json_encode( $_POST, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE )
-		);
-
-		$order = wc_get_order( $order_id );
-
-		$api_request  = $this->get_module( $order, $_POST )->get_api_request();
-		$api_response = $this->call_api( $api_request );
-
-		return $this->handle_api_response( $api_response, $order );
-	}
 }

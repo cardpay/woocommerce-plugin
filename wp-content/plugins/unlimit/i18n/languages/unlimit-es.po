@@ -735,3 +735,9 @@ msgstr "<strong>Teléfono de facturación</strong>, el tamaño debe estar entre 
 
 msgid "<strong>Billing: Phone</strong>, the phone number cannot start with a hyphen or space."
 msgstr "<strong>Teléfono de facturación</strong>, el número de teléfono no puede comenzar con un guion o espacio."
+
+msgid "A problem occurred when processing your payment. Please try again."
+msgstr "Se ha producido un problema al procesar su pago. Por favor, inténtelo de nuevo."
+
+msgid "Order was unsuccessful"
+msgstr "El pedido no se realizó con éxito."

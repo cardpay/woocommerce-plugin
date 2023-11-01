@@ -744,3 +744,9 @@ msgstr "<strong>Telefone da Fatura</strong>, o tamanho deve estar entre 8 e 18 c
 
 msgid "<strong>Billing: Phone</strong>, the phone number cannot start with a hyphen or space."
 msgstr "<strong>Telefone da Fatura</strong>, o número de telefone não pode começar com hífen ou espaço."
+
+msgid "A problem occurred when processing your payment. Please, try again."
+msgstr "Ocorreu um problema ao processar o seu pagamento. Por favor, tente novamente."
+
+msgid "Order was unsuccessful"
+msgstr "O pedido não foi bem-sucedido."

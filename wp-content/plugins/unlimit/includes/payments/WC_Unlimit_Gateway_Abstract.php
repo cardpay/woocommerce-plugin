@@ -566,6 +566,8 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 			$this->save_order_meta( $order, $api_response );
 			$redirect = $api_response['redirect_url'] ?? $order->get_checkout_order_received_url();
 
+			WC()->cart->empty_cart();
+
 			return [
 				'result'   => 'success',
 				'redirect' => $redirect,

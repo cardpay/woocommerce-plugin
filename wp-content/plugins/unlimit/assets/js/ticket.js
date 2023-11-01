@@ -21,7 +21,35 @@ const formatUlBoletoCpf = function (cpfFieldId) {
 }
 
 const validateUlBoletoCpf = function () {
-    return validateUlCpf('ul-cpf-ticket');
+    const zip = validateUlBoletoZip();
+    const cpf = validateUlCpf('ul-cpf-ticket');
+    return zip && cpf;
+}
+
+const checkZip = function (id) {
+    const zipField = jQuery('#' + id);
+    zipField.removeClass('ul-form-control-error');
+    if (!zipField.is(':visible')) {
+        return true;
+    }
+    const zip = zipField.val().replace(/\D/g, '');
+    if (zip.length !== 8) {
+        zipField.addClass('ul-form-control-error');
+        return false;
+    }
+    return true;
+}
+
+const validateUlBoletoZip = function () {
+    const shippingCheck = checkZip('shipping_postcode');
+    const billingCheck = checkZip('billing_postcode');
+    if (!shippingCheck) {
+        alert(getShippingZipErrorMessage());
+    }
+    if (!billingCheck) {
+        alert(getBillingZipErrorMessage());
+    }
+    return shippingCheck && billingCheck;
 }
 
 const validateUlCpf = function (cpfFieldId) {

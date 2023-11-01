@@ -26,11 +26,22 @@ class WC_Unlimit_Callback {
 	public function process_callback() {
 		$is_valid_signature = $this->is_valid_signature();
 		if ( ! $is_valid_signature ) {
+			http_response_code( 400 );
+			wp_send_json_error( [ 'message' => 'Invalid signature' ], 400 );
+
 			return;
 		}
 
-		$callback = $this->get_callback_body();
-		$this->logger->info( __FUNCTION__, 'Unlimit callback: ' . print_r( $callback, true ) );
+		$callback         = $this->get_callback_body();
+		$callback_decoded = $this->decode_callback( $callback );
+
+		$order_id     = $this->getOrder_id( $callback_decoded );
+		$payment_type = $this->get_transaction_type( $callback_decoded );
+
+		$this->logger->info(
+			__FUNCTION__,
+			"Unlimit callback for order #$order_id (Payment Type: $payment_type): " . print_r( $callback_decoded, true )
+		);
 
 		$this->set_order_status( $callback );
 
@@ -57,11 +68,10 @@ class WC_Unlimit_Callback {
 
 		$is_valid_signature = true;
 		if ( $generated_signature !== $callback_signature ) {
-			$order_id   = isset( $callback_decoded['merchant_order']['id'] ) ? $callback_decoded['merchant_order']['id'] : 'N/A';
-			$payment_id = isset( $callback_decoded['payment_id'] ) ? $callback_decoded['payment_id'] : 'N/A';
+			$order_id = $this->getOrder_id( $callback_decoded );
 
 			$this->logger->error( __FUNCTION__, 'Unlimit callback signature does not match for order #' .
-			                                    $order_id . ' and payment #' . $payment_id );
+			                                    $order_id );
 			$is_valid_signature = false;
 		}
 
@@ -141,13 +151,15 @@ class WC_Unlimit_Callback {
 		}
 
 		$callback_decoded = $this->decode_callback( $callback );
-		$order_id         =
-			isset( $callback_decoded['merchant_order']['id'] ) ? $callback_decoded['merchant_order']['id'] : 'N/A';
+		$order_id         = $this->getOrder_id( $callback_decoded );
 		$transaction_type = $this->get_transaction_type( $callback_decoded );
 		$transaction_id   = $this->get_transaction_id( $callback_decoded, $transaction_type );
 		$new_order_status = $this->get_new_order_status( $callback_decoded, $transaction_type );
 
-		$this->logger->info( __FUNCTION__, "Unlimit new status for order #$order_id: $new_order_status" );
+		$this->logger->info(
+			__FUNCTION__,
+			"Unlimit new status for order #$order_id: $new_order_status (Payment Type: $transaction_type)"
+		);
 
 		$new_order_status_option = $this->get_new_order_status_option( $order_id, $new_order_status );
 		$this->logger->info( __FUNCTION__, 'Unlimit callback: Order #' .
@@ -171,8 +183,10 @@ class WC_Unlimit_Callback {
 		$old_status     = $status_change_info['from'];
 		$new_status_set = $status_change_info['to'];
 
-		$this->logger->info( __FUNCTION__,
-			"Unlimit callback was processed, order #$order_id, old status: $old_status, new status: $new_status_set" );
+		$this->logger->info(
+			__FUNCTION__,
+			"Unlimit callback was processed, order #$order_id, old status: $old_status, new status: $new_status_set"
+		);
 	}
 
 	private function get_new_order_status_option( $order_id, $new_order_status ) {
@@ -306,5 +320,17 @@ class WC_Unlimit_Callback {
 		$order = wc_get_order( $order_id );
 
 		return WC_Unlimit_Helper::get_order_meta( $order, WC_Unlimit_Constants::ORDER_META_GATEWAY_FIELDNAME );
+	}
+
+	/**
+	 * @param mixed $callback_decoded
+	 *
+	 * @return mixed|string
+	 */
+	private function getOrder_id( mixed $callback_decoded ): mixed {
+		$order_id = isset( $callback_decoded['merchant_order']['id'] ) ?
+			$callback_decoded['merchant_order']['id'] : 'N/A';
+
+		return $order_id;
 	}
 }

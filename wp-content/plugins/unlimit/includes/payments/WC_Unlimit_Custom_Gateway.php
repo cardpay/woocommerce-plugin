@@ -186,7 +186,6 @@ class WC_Unlimit_Custom_Gateway extends WC_Unlimit_Gateway_Abstract {
 				'error'
 			);
 
-
 			return self::RESPONSE_FOR_FAIL;
 		}
 

@@ -220,12 +220,18 @@ class WC_Unlimit_Alt_Gateway extends WC_Unlimit_Gateway_Abstract {
 				JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE )
 		);
 
-		$gateway_id = 'unlimit_' . $this->short_gateway_id;
-		if ( ! isset( $_POST[ $gateway_id ] ) ) {
-			$this->logger->error( __FUNCTION__,
-				'A problem was occurred when processing your payment. Please, try again.' );
-			wc_add_notice( '<p>' . __( 'Unlimit - A problem was occurred when processing your payment. Please, try again.',
-					'unlimit' ) . '</p>', 'error' );
+		$gateway_id       = 'unlimit_' . $this->short_gateway_id;
+		$allowed_gateways = [ 'unlimit_ticket', 'unlimit_pix' ];
+
+		if ( in_array( $gateway_id, $allowed_gateways ) && ! isset( $_POST[ $gateway_id ] ) ) {
+			$this->logger->error(
+				__FUNCTION__,
+				'A problem occurred when processing your payment. Please, try again.'
+			);
+			wc_add_notice(
+				'<p>' . __( 'A problem occurred when processing your payment. Please, try again.', 'unlimit' ) . '</p>',
+				'error'
+			);
 
 			return self::RESPONSE_FOR_FAIL;
 		}

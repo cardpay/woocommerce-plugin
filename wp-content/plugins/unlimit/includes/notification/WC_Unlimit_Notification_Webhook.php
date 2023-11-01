@@ -18,13 +18,16 @@ class WC_Unlimit_Notification_Webhook extends WC_Unlimit_Notification_Abstract {
 		if ( isset( $data['action'], $data['order_id'] ) ) {
 			$redirect_url = '';
 			$order_id     = $data['order_id'];
-			$order       = wc_get_order( $order_id );
+			$order        = wc_get_order( $order_id );
 
 			switch ( $data['action'] ) {
 				case 'cancel' :
 				case 'decline' :
 					$this->restore_cart( $order );
-					$redirect_url = wc_get_checkout_url();      // redirect to 'Checkout' page with the cart restored
+					$redirect_url = wc_get_checkout_url();
+					if ( ! wc_notice_count( 'error' ) ) {
+						wc_add_notice( __( 'Order was unsuccessful', 'unlimit' ), 'error' );
+					}
 					break;
 
 				case 'inprocess' :
@@ -51,7 +54,7 @@ class WC_Unlimit_Notification_Webhook extends WC_Unlimit_Notification_Abstract {
 		WC()->cart->empty_cart();
 
 		foreach ( $order->get_items() as $product ) {
-			$product_id   = isset( $product['product_id'] ) ? (int) $product['product_id'] : 0;
+			$product_id  = isset( $product['product_id'] ) ? (int) $product['product_id'] : 0;
 			$quantity    = isset( $product['quantity'] ) ? (int) $product['quantity'] : 1;
 			$variationId = isset( $product['variation_id'] ) ? (int) $product['variation_id'] : 0;
 			$variation   = isset( $product['variation'] ) ? $product['variation'] : [];
@@ -109,7 +112,7 @@ class WC_Unlimit_Notification_Webhook extends WC_Unlimit_Notification_Abstract {
 	 * @return mixed|string
 	 */
 	public function process_status_ul_business( $data, $order ) {
-		$status      = $data[ self::PAYMENT_DATA ]['status'] ?? 'PENDING';
+		$status       = $data[ self::PAYMENT_DATA ]['status'] ?? 'PENDING';
 		$total_paid   = $data[ self::PAYMENT_DATA ]['amount'] ?? 0.00;
 		$total_refund = $data['refund_data']['amount'] ?? 0.00;
 
