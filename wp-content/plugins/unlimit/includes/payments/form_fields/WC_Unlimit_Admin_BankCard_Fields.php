@@ -217,38 +217,15 @@ class WC_Unlimit_Admin_BankCard_Fields extends WC_Unlimit_Admin_Fields {
 	}
 
 	public function field_api_access_mode() {
-		$bankcard_alert_translations = $this->get_bankcard_alert_translations( [
-			'MERCHANT_FINANCED' => __( 'Merchant financed', 'unlimit' ),
-			'API_ACCESS_MODE'   =>
-				__( 'API access mode is changed, please check Terminal code, Terminal password, Callback secret values.',
-					'unlimit' ) . ' ' .
-				__( 'After changing of the API mode in plugin also must be changed API access mode in Unlimit.', 'unlimit' ) . ' ' .
-				__( 'Please consult about it with Unlimit support.', 'unlimit' ),
-		] );
+		$merchant_financed_translation = esc_js( __( 'Merchant financed', 'unlimit' ) );
 
 		echo "
   			<script type='text/javascript'>
-  			if (typeof BANKCARD_ALERT_TRANSLATIONS_CHANGE_MODE === 'undefined') {
-    			var BANKCARD_ALERT_TRANSLATIONS_CHANGE_MODE = $bankcard_alert_translations;
-    		}
+    			var MERCHANT_FINANCED_TRANSLATION = '{$merchant_financed_translation}';
 			</script>
 		";
 
-		return [
-			'title'       => __( 'API access mode', 'unlimit' ),
-			'type'        => 'select',
-			'description' => __( "If \"Payment page\" mode is selected - payment page by Unlimit", 'unlimit' ) . ' ' .
-			                 __( "in iFrame is used for customer data collecting.", 'unlimit' )
-			                 . ' < br>'
-			                 . __( "If \"Gateway\" mode is selected - embedded payment form in plugin", 'unlimit' ) . ' ' .
-			                 __( "is used for customer data collecting.", 'unlimit' ),
-			'default'     => 'Payment page',
-			'options'     => [
-				'payment_page' => __( 'Payment page', 'unlimit' ),
-				'gateway'      => __( 'Gateway', 'unlimit' ),
-			],
-			'onkeyup'     => "formatUlCardField(this.id);",
-		];
+		return parent::field_api_access_mode();
 	}
 
 	/**

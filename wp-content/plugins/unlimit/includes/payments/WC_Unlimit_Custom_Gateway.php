@@ -41,6 +41,7 @@ class WC_Unlimit_Custom_Gateway extends WC_Unlimit_Gateway_Abstract {
 		$this->register_auth_payment();
 
 		$this->files_registrar = new WC_Unlimit_Files_Registrar();
+		$this->files_registrar->load_payment_form_script();
 		$this->files_registrar->register_settings_js( 'bankcard', 'bankcard_settings_unlimit.js' );
 	}
 

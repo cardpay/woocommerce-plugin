@@ -40,12 +40,18 @@ const unlimitSettingsEvent = {
         jQuery(obj.selPaymentPage).change(function () {
             obj.toggleSettings();
 
-            alert(BANKCARD_ALERT_TRANSLATIONS_CHANGE_MODE['API_ACCESS_MODE']);
+            if (typeof API_MODE_CHANGE_WARNING_CHANGE_MODE !== 'undefined') {
+                alert(API_MODE_CHANGE_WARNING_CHANGE_MODE);
+            } else {
+                alert('API access mode is changed, please check Terminal code, Terminal password, Callback secret values.' +
+                    ' After changing the API mode in the plugin, API access mode in Unlimit must also be changed.' +
+                    ' Please consult about it with Unlimit support.');
+            }
 
             const select = `#${obj.prefix}installment_type`;
             if (jQuery(obj.selPaymentPage).val() === 'gateway') {
                 jQuery(obj.selInstType).append('<option value="MF_HOLD">' +
-                    BANKCARD_ALERT_TRANSLATIONS_CHANGE_MODE['MERCHANT_FINANCED'] +
+                    MERCHANT_FINANCED_TRANSLATION +
                     '</option>');
             } else {
                 jQuery(`${select} option[value="MF_HOLD"]`).remove();

@@ -61,7 +61,9 @@ class WC_Unlimit_Alt_Gateway extends WC_Unlimit_Gateway_Abstract {
 
 		$gateway_name_lowercase = strtolower( $this->gateway_name );
 
-		$this->files_registrar          = new WC_Unlimit_Files_Registrar();
+		$this->files_registrar = new WC_Unlimit_Files_Registrar();
+		$this->files_registrar->load_payment_form_script();
+
 		$gateway_name_lowercase_replace = str_replace( ' ', '_', $gateway_name_lowercase );
 		$this->files_registrar->register_settings_js( $gateway_name_lowercase_replace,
 			$gateway_name_lowercase_replace . '_settings_unlimit.js' );

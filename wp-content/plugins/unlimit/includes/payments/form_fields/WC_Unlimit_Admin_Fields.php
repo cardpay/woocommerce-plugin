@@ -106,39 +106,22 @@ class WC_Unlimit_Admin_Fields {
 		];
 	}
 
-	public function getUnlimit_alert_translations( $unlimit_translations_change_mode ): string {
-		$unlimit_alert_translations = '{';
-		foreach ( $unlimit_translations_change_mode as $key => $value ) {
-			$unlimit_alert_translations .= "\"$key\":\"$value\"";
-			if ( array_key_last( $unlimit_translations_change_mode ) != $key ) {
-				$unlimit_alert_translations .= ',';
-			}
-		}
-		$unlimit_alert_translations .= '}';
-
-		return $unlimit_alert_translations;
-	}
-
 	/**
 	 * @return array
 	 */
 	public function field_api_access_mode() {
-		$unlimit_alert_translations = $this->getUnlimit_alert_translations( [
-			'API_ACCESS_MODE' => __(
-				__( 'API access mode is changed, please check Terminal code, Terminal password, Callback secret values.',
-					'unlimit' ) .
-				__( 'After changing of the API mode in plugin also must be changed API access mode in Unlimit.', 'unlimit' ) .
-				__( 'Please consult about it with Unlimit support.',
-					'unlimit' ),
-			),
-		] );
+		$api_mode_change_warning = esc_js(
+			__( 'API access mode is changed, please check Terminal code, Terminal password, Callback secret values.',
+				'unlimit' ) .
+			__( 'After changing of the API mode in plugin also must be changed API access mode in Unlimit.', 'unlimit' ) . ' ' .
+			__( 'Please consult about it with Unlimit support.',
+				'unlimit' ),
+		);
 
 		echo "
-			<script type='text/javascript'>
-			if (typeof UNLIMIT_ALERT_TRANSLATIONS_CHANGE_MODE === 'undefined') {
-                var UNLIMIT_ALERT_TRANSLATIONS_CHANGE_MODE = $unlimit_alert_translations;
-            }
-			</script>
+	    <script type='text/javascript'>
+	        var API_MODE_CHANGE_WARNING_CHANGE_MODE  = '{$api_mode_change_warning}';
+	    </script>
 		";
 
 		return [

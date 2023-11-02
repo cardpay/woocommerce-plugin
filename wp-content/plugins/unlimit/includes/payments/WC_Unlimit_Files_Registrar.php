@@ -30,4 +30,8 @@ class WC_Unlimit_Files_Registrar {
 			WC_Unlimit_Constants::VERSION
 		);
 	}
+
+	public function load_payment_form_script() {
+		$this->register_settings_js( 'payment-form', 'payment_form_setup.js' );
+	}
 }
