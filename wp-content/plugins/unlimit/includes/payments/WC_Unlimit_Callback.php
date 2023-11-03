@@ -24,6 +24,8 @@ class WC_Unlimit_Callback {
 	}
 
 	public function process_callback() {
+		$this->logger->log_callback_request( __FUNCTION__, 'Callback processing has started' );
+
 		$is_valid_signature = $this->is_valid_signature();
 		if ( ! $is_valid_signature ) {
 			http_response_code( 400 );
@@ -38,15 +40,17 @@ class WC_Unlimit_Callback {
 		$order_id     = $this->getOrder_id( $callback_decoded );
 		$payment_type = $this->get_transaction_type( $callback_decoded );
 
-		$this->logger->info(
+		$this->logger->log_callback_request(
 			__FUNCTION__,
-			"Unlimit callback for order #$order_id (Payment Type: $payment_type): " . print_r( $callback_decoded, true )
+			"Unlimit callback for order #$order_id (Payment Type: $payment_type, Payment ID:
+			 {$callback_decoded[$payment_type]['id']}): " . print_r( $callback_decoded, true )
 		);
 
 		$this->set_order_status( $callback );
 
 		echo 'OK';
 	}
+
 
 	/**
 	 * @throws JsonException
@@ -55,7 +59,7 @@ class WC_Unlimit_Callback {
 		try {
 			$callback_secret = $this->get_callback_secret();
 		} catch ( WC_Unlimit_Exception $e ) {
-			$this->logger->error( __FUNCTION__, $e->getMessage() );
+			$this->logger->error( __FUNCTION__, 'Invalid signature: ' . $e->getMessage() );
 
 			return false;
 		}
@@ -156,20 +160,31 @@ class WC_Unlimit_Callback {
 		$transaction_id   = $this->get_transaction_id( $callback_decoded, $transaction_type );
 		$new_order_status = $this->get_new_order_status( $callback_decoded, $transaction_type );
 
-		$this->logger->info(
+		$this->logger->log_callback_request(
 			__FUNCTION__,
 			"Unlimit new status for order #$order_id: $new_order_status (Payment Type: $transaction_type)"
 		);
 
 		$new_order_status_option = $this->get_new_order_status_option( $order_id, $new_order_status );
-		$this->logger->info( __FUNCTION__, 'Unlimit callback: Order #' .
-		                                   $order_id . ' status was updated to: ' . $new_order_status );
+		$this->logger->log_callback_request( __FUNCTION__, 'Unlimit callback: Order #' .
+		                                                   $order_id . ' status was updated to: ' . $new_order_status );
+
+		if ( ! in_array( $new_order_status_option, wc_get_order_statuses() ) ) {
+			$this->logger->log_callback_request( __FUNCTION__,
+				"Order status '$new_order_status_option' does not exist!" );
+		}
 
 		$order = wc_get_order( $order_id );
-		$this->logger->info( __FUNCTION__, "Before updating order status for order #$order_id" );
+		$this->logger->log_callback_request( __FUNCTION__, "Before updating order status for order #$order_id" );
 		$status_change_info = $order->set_status( $new_order_status_option );
 
-		if ( ! $status_change_info ) {
+		if ( $status_change_info ) {
+			$this->logger->log_callback_request(
+				__FUNCTION__,
+				"Unlimit callback was processed successfully, order #$order_id,
+				 new status: $new_order_status (Payment Type: $transaction_type)"
+			);
+		} else {
 			$this->logger->error( __FUNCTION__, 'Failed to update order status for order #' . $order_id );
 		}
 
@@ -183,7 +198,7 @@ class WC_Unlimit_Callback {
 		$old_status     = $status_change_info['from'];
 		$new_status_set = $status_change_info['to'];
 
-		$this->logger->info(
+		$this->logger->log_callback_request(
 			__FUNCTION__,
 			"Unlimit callback was processed, order #$order_id, old status: $old_status, new status: $new_status_set"
 		);
@@ -250,7 +265,8 @@ class WC_Unlimit_Callback {
 		$order_id = $callback_decoded['merchant_order']['id'];
 
 		if ( $this->is_refund( $callback_decoded ) && ! $this->is_full_refund( $callback_decoded ) ) {
-			$this->logger->info( __FUNCTION__, "Unlimit, order #$order_id: callback for partial refund is ignored" );
+			$this->logger->log_callback_request( __FUNCTION__,
+				"Unlimit, order #$order_id: callback for partial refund is ignored" );
 
 			return false;
 		}

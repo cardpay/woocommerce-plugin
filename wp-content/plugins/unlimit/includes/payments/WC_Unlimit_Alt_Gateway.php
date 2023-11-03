@@ -56,9 +56,6 @@ class WC_Unlimit_Alt_Gateway extends WC_Unlimit_Gateway_Abstract {
 
 		parent::__construct();
 
-		$this->callback = new WC_Unlimit_Callback();
-		add_action( 'woocommerce_api_unlimit_callback', [ $this, 'handle_callback' ] );
-
 		$gateway_name_lowercase = strtolower( $this->gateway_name );
 
 		$this->files_registrar = new WC_Unlimit_Files_Registrar();
@@ -217,11 +214,6 @@ class WC_Unlimit_Alt_Gateway extends WC_Unlimit_Gateway_Abstract {
 	 * @throws WC_Data_Exception
 	 */
 	public function process_payment( $order_id ) {
-		$this->logger->info( __FUNCTION__,
-			'Alternative payment method, POST data: ' . wp_json_encode( $_POST,
-				JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE )
-		);
-
 		$gateway_id       = 'unlimit_' . $this->short_gateway_id;
 		$allowed_gateways = [ 'unlimit_ticket', 'unlimit_pix' ];
 

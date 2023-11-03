@@ -217,32 +217,6 @@ class WC_Unlimit_Admin_BankCard_Fields extends WC_Unlimit_Admin_Fields {
 	}
 
 	public function field_api_access_mode() {
-		$merchant_financed_translation = esc_js( __( 'Merchant financed', 'unlimit' ) );
-
-		echo "
-  			<script type='text/javascript'>
-    			var MERCHANT_FINANCED_TRANSLATION = '{$merchant_financed_translation}';
-			</script>
-		";
-
 		return parent::field_api_access_mode();
-	}
-
-	/**
-	 * @param array $bankcard_translations_change_mode
-	 *
-	 * @return string
-	 */
-	public function get_bankcard_alert_translations( $bankcard_translations_change_mode ): string {
-		$bankcard_alert_translations = '{';
-		foreach ( $bankcard_translations_change_mode as $key => $value ) {
-			$bankcard_alert_translations .= "\"$key\":\"$value\"";
-			if ( array_key_last( $bankcard_translations_change_mode ) != $key ) {
-				$bankcard_alert_translations .= ',';
-			}
-		}
-		$bankcard_alert_translations .= '}';
-
-		return $bankcard_alert_translations;
 	}
 }

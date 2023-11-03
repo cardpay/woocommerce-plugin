@@ -110,20 +110,6 @@ class WC_Unlimit_Admin_Fields {
 	 * @return array
 	 */
 	public function field_api_access_mode() {
-		$api_mode_change_warning = esc_js(
-			__( 'API access mode is changed, please check Terminal code, Terminal password, Callback secret values.',
-				'unlimit' ) .
-			__( 'After changing of the API mode in plugin also must be changed API access mode in Unlimit.', 'unlimit' ) . ' ' .
-			__( 'Please consult about it with Unlimit support.',
-				'unlimit' ),
-		);
-
-		echo "
-	    <script type='text/javascript'>
-	        var API_MODE_CHANGE_WARNING_CHANGE_MODE  = '{$api_mode_change_warning}';
-	    </script>
-		";
-
 		return [
 			'title'       => __( 'API access mode', 'unlimit' ),
 			'type'        => 'select',

@@ -25,7 +25,8 @@ class WC_Unlimit_Refund {
 	public $unlimit_sdk;
 
 	public function __construct( $gateway_id ) {
-		$this->logger      = new WC_Unlimit_Logger();
+		$this->logger = new WC_Unlimit_Logger();
+
 		$this->unlimit_sdk = new WC_Unlimit_Sdk( $gateway_id );
 	}
 
@@ -56,7 +57,7 @@ class WC_Unlimit_Refund {
 		if ( isset( $refund_info['status'] ) && (int) $refund_info['status'] === 201 ) {
 			$this->logger->info(
 				__FUNCTION__,
-				"c #$order_id: " .
+				"Refund processing successful for order #$order_id: " .
 				wp_json_encode(
 					$refund_info,
 					JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE

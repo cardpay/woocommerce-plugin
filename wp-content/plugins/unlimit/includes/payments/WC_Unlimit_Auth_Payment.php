@@ -7,6 +7,7 @@ use Automattic\WooCommerce\Admin\Overrides\Order;
 require_once __DIR__ . '/../module/WC_Unlimit_Helper.php';
 require_once __DIR__ . '/../module/config/WC_Unlimit_Constants.php';
 require_once __DIR__ . '/form_fields/WC_Unlimit_Admin_Order_Status_Fields.php';
+require_once __DIR__ . '/WC_Unlimit_Files_Registrar.php';
 
 /**
  * Authorized (2 phase) payment or installment
@@ -22,6 +23,8 @@ class WC_Unlimit_Auth_Payment {
 	private const SUCCESSFUL_RESPONSE = [ 'success' => true ];
 	private const PAYMENT_DATA = 'payment_data';
 
+	protected $files_registrar;
+
 	/**
 	 * @var WC_Unlimit_Logger
 	 */
@@ -33,8 +36,9 @@ class WC_Unlimit_Auth_Payment {
 	public $unlimit_sdk;
 
 	public function __construct() {
-		$this->logger      = new WC_Unlimit_Logger();
-		$this->unlimit_sdk = new WC_Unlimit_Sdk( WC_Unlimit_Custom_Gateway::GATEWAY_ID );
+		$this->logger          = new WC_Unlimit_Logger();
+		$this->unlimit_sdk     = new WC_Unlimit_Sdk( WC_Unlimit_Custom_Gateway::GATEWAY_ID );
+		$this->files_registrar = new WC_Unlimit_Files_Registrar();
 	}
 
 	// called in UnlimitInit
@@ -72,42 +76,7 @@ class WC_Unlimit_Auth_Payment {
 			return;
 		}
 
-		$capture_button_label = __( 'Capture', 'unlimit' );
-		$cancel_button_label  = __( 'Cancel', 'unlimit' );
-
-		echo "<button type='button' id='ul_button_capture' class='button' style='color: #000000' onclick='ulCapturePayment()'>
-			$capture_button_label
-		</button> ";
-		echo "<button type='button' id='ul_button_cancel' class='button' style='color: #000000' onclick='ulCancelPayment()'>
-			$cancel_button_label
-		</button>";
-
-		$this->echo_bankcard_translations();
-	}
-
-	private function echo_bankcard_translations() {
-		$bankcard_translations = [
-			'ARE_YOU_SURE'     => __( 'Are you sure you want to', 'unlimit' ),
-			'THE_PAYMENT'      => __( 'The payment?', 'unlimit' ),
-			'PAYMENT_WAS_NOT'  => __( 'Payment was not', 'unlimit' ),
-			'PAYMENT_HAS_BEEN' => __( 'Payment has been', 'unlimit' ),
-			'SUCCESSFULLY'     => __( 'Successfully', 'unlimit' ),
-			'CANCEL'           => __( 'Cancel', 'unlimit' ),
-			'CAPTURE'          => __( 'Capture', 'unlimit' ),
-			'CANCELLED'        => __( 'Cancelled', 'unlimit' ),
-			'CAPTURED'         => __( 'Captured', 'unlimit' ),
-		];
-
-		$bankcard_alert_translations =
-			( new WC_Unlimit_Admin_BankCard_Fields() )->get_bankcard_alert_translations( $bankcard_translations );
-
-		echo "
-			<script type='text/javascript'>
-			if (typeof BANKCARD_ALERT_TRANSLATIONS === 'undefined') {
-                var BANKCARD_ALERT_TRANSLATIONS = $bankcard_alert_translations;
-            }
-			</script>
-		";
+		$this->files_registrar->load_order_actions();
 	}
 
 	public function do_payment_action( $payment_action ) {

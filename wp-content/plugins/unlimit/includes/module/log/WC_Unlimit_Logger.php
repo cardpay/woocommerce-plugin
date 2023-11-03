@@ -39,7 +39,7 @@ class WC_Unlimit_Logger {
 	public function logger_enabled() {
 		$logger_enabled = false;
 		if ( empty( $_REQUEST['payment_method'] ) ) {
-			return false;
+			return $logger_enabled;
 		}
 
 		switch ( $_REQUEST['payment_method'] ) {
@@ -88,5 +88,13 @@ class WC_Unlimit_Logger {
 
 	private function log( $function, $message, $log_level ) {
 		$this->wc_logger->$log_level( '[' . $function . ']: ' . $message );
+	}
+
+	public function log_callback_request( $function, $message ) {
+		if ( ! $this->debug_mode ) {
+			return;
+		}
+
+		$this->log( $function, $message, self::INFO_LOG_LEVEL );
 	}
 }

@@ -3,7 +3,7 @@
  * Plugin Name: WooCommerce Unlimit Payments
  * Plugin URI: https://github.com/cardpay/woocommerce-plugin
  * Description: Unlimit WooCommerce plugin allows merchants to make payments, installment payments and refunds.
- * Version: 1.1.32
+ * Version: 1.1.35
  * Author: Unlimit
  * Author URI: https://www.unlimit.com
  * Text Domain: woocommerce-unlimit

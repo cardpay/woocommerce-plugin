@@ -40,18 +40,12 @@ const unlimitSettingsEvent = {
         jQuery(obj.selPaymentPage).change(function () {
             obj.toggleSettings();
 
-            if (typeof API_MODE_CHANGE_WARNING_CHANGE_MODE !== 'undefined') {
-                alert(API_MODE_CHANGE_WARNING_CHANGE_MODE);
-            } else {
-                alert('API access mode is changed, please check Terminal code, Terminal password, Callback secret values.' +
-                    ' After changing the API mode in the plugin, API access mode in Unlimit must also be changed.' +
-                    ' Please consult about it with Unlimit support.');
-            }
+            alert(unlimit_vars.bankcard_translations.api_mode_change_warning)
 
             const select = `#${obj.prefix}installment_type`;
             if (jQuery(obj.selPaymentPage).val() === 'gateway') {
                 jQuery(obj.selInstType).append('<option value="MF_HOLD">' +
-                    MERCHANT_FINANCED_TRANSLATION +
+                    unlimit_vars.bankcard_translations.merchant_financed_translation +
                     '</option>');
             } else {
                 jQuery(`${select} option[value="MF_HOLD"]`).remove();
@@ -285,57 +279,3 @@ window.addEventListener('load', function () {
         unlimitSettingsEvent.init();
     }
 });
-
-const ulCapturePayment = function () {
-    ulProcessPayment('capture', BANKCARD_ALERT_TRANSLATIONS['CAPTURED'],
-        BANKCARD_ALERT_TRANSLATIONS['CAPTURE']);
-};
-
-const ulCancelPayment = function () {
-    ulProcessPayment('cancel', BANKCARD_ALERT_TRANSLATIONS['CANCELLED'],
-        BANKCARD_ALERT_TRANSLATIONS['CANCEL']);
-};
-
-const ulProcessPayment = function (action, statusMessage, actionMessage) {
-    /*global woocommerce_admin_meta_boxes */
-    if (!window.confirm(
-        `${BANKCARD_ALERT_TRANSLATIONS['ARE_YOU_SURE']} ${actionMessage} ${BANKCARD_ALERT_TRANSLATIONS['THE_PAYMENT']}`)) {
-        return;
-    }
-
-    jQuery.ajax({
-        url: woocommerce_admin_meta_boxes.ajax_url,
-        data: {
-            action: `wc_ul_${action}`,
-            order_id: woocommerce_admin_meta_boxes.post_id,
-            security: woocommerce_admin_meta_boxes.order_item_nonce,
-        },
-        type: 'POST',
-        success: function (response) {
-            const alertPaymentWasNot = BANKCARD_ALERT_TRANSLATIONS['PAYMENT_WAS_NOT'];
-            const errorMessage = `${alertPaymentWasNot} ${statusMessage}`;
-            if (!response) {
-                alert(errorMessage);
-                return;
-            }
-            const responseParsed = JSON.parse(response);
-            if (!responseParsed) {
-                alert(errorMessage);
-                return;
-            }
-
-            if (responseParsed.success) {
-                alert(
-                    `${BANKCARD_ALERT_TRANSLATIONS['PAYMENT_HAS_BEEN']} ${statusMessage} ${BANKCARD_ALERT_TRANSLATIONS['SUCCESSFULLY']}`);
-                location.reload();
-            } else {
-                if (responseParsed.data && responseParsed.data['error_message']) {
-                    alert(
-                        `${alertPaymentWasNot} ${statusMessage}: ${responseParsed.data.error_message}`);
-                } else {
-                    alert(errorMessage);
-                }
-            }
-        },
-    });
-};

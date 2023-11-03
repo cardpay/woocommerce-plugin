@@ -298,8 +298,10 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 			'form_is_saved'
 		] );
 
-		$this->callback = new WC_Unlimit_Callback();
-		add_action( 'woocommerce_api_unlimit_callback', [ $this->callback, 'process_callback' ] );
+		if ( ! $this->callback_action_exists() ) {
+			$this->callback = new WC_Unlimit_Callback();
+			add_action( 'woocommerce_api_unlimit_callback', [ $this->callback, 'process_callback' ] );
+		}
 
 		$this->refund = new WC_Unlimit_Refund( $this->id );
 
@@ -584,5 +586,11 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 		);
 
 		return self::RESPONSE_FOR_FAIL;
+	}
+
+	private function callback_action_exists() {
+		$callbacks = $GLOBALS['wp_filter']['woocommerce_api_unlimit_callback'];
+
+		return isset( $callbacks );
 	}
 }

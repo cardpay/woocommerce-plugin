@@ -211,15 +211,6 @@ class WC_Unlimit_Custom_Gateway extends WC_Unlimit_Gateway_Abstract {
 		if ( isset( $post_data_for_log['unlimit_custom']['cvc'] ) ) {
 			$post_data_for_log['unlimit_custom']['cvc'] = WC_Unlimit_Constants::SECURITY_CODE_MASKED;
 		}
-
-		$this->logger->info(
-			__FUNCTION__,
-			'Bank card, POST data: ' .
-			wp_json_encode(
-				$post_data_for_log,
-				JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
-			)
-		);
 	}
 
 	/**

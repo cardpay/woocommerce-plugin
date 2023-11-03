@@ -67,11 +67,6 @@ abstract class WC_Unlimit_Module_Abstract extends WC_Payment_Gateway {
 	protected $notification_class;
 
 	/**
-	 * @var array
-	 */
-	protected $ex_payments;
-
-	/**
 	 * @var string
 	 */
 	protected $installments;
@@ -87,7 +82,6 @@ abstract class WC_Unlimit_Module_Abstract extends WC_Payment_Gateway {
 		$this->payment            = $payment;
 		$this->logger             = $payment->logger;
 		$this->order              = $order;
-		$this->ex_payments        = $this->payment->ex_payments;
 		$this->installments       = $this->payment->installments;
 		$this->notification_class = get_class( $this->payment );
 		$this->sandbox            = $this->payment->is_test_user();
