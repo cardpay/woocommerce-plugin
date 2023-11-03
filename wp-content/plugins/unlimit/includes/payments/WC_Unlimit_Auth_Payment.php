@@ -57,6 +57,7 @@ class WC_Unlimit_Auth_Payment {
 	 * @return void
 	 */
 	public function show_auth_payment_buttons( $order ) {
+		$this->files_registrar->load_order_actions();
 		$callback_status = WC_Unlimit_Helper::get_order_meta(
 			$order,
 			WC_Unlimit_Constants::ORDER_META_CALLBACK_STATUS_FIELDNAME

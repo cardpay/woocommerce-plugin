@@ -1,35 +1,56 @@
-document.addEventListener('DOMContentLoaded', function () {
-    var addButtonAfter = document.querySelector('.refund-items');
-    if (addButtonAfter) {
-        var captureButton = document.createElement('button');
-        captureButton.type = 'button';
-        captureButton.id = 'ul_button_capture';
-        captureButton.className = 'button';
-        captureButton.style.color = '#000000';
-        captureButton.textContent = unlimit_vars.bankcard_translations.capture;
-        captureButton.onclick = ulCapturePayment;
+const targetElement = document.querySelector('.wc-order-data-row.wc-order-bulk-actions.wc-order-data-row-toggle');
+const observer = new MutationObserver(handleMutations);
+observer.observe(targetElement, {attributes: true, attributeFilter: ['style']});
 
-        var cancelButton = document.createElement('button');
-        cancelButton.type = 'button';
-        cancelButton.id = 'ul_button_cancel';
-        cancelButton.className = 'button';
-        cancelButton.style.color = '#000000';
-        cancelButton.textContent = unlimit_vars.bankcard_translations.cancel;
-        cancelButton.onclick = ulCancelPayment;
+function handleMutations(mutationsList) {
+    mutationsList.forEach((mutation) => {
+        if (mutation.attributeName === 'style') {
+            const mutationTarget = mutation.target;
+            const newDisplayStyle = getComputedStyle(mutationTarget).display;
 
-        addButtonAfter.parentNode.insertBefore(cancelButton, addButtonAfter.nextSibling);
-        addButtonAfter.parentNode.insertBefore(captureButton, addButtonAfter.nextSibling);
+            if (newDisplayStyle !== 'none') {
+                addButtonIfMissing();
+            }
+        }
+    });
+}
+
+function addButtonIfMissing() {
+    var captureButton = document.getElementById('ul_button_capture');
+    var cancelButton = document.getElementById('ul_button_cancel');
+
+    if (!captureButton || !cancelButton) {
+        var refundButton = document.querySelector('.refund-items');
+
+        if (refundButton) {
+            captureButton = document.createElement('button');
+            captureButton.type = 'button';
+            captureButton.id = 'ul_button_capture';
+            captureButton.className = 'button';
+            captureButton.style.color = '#000000';
+            captureButton.textContent = unlimit_vars.bankcard_translations.capture;
+            captureButton.onclick = ulCapturePayment;
+
+            cancelButton = document.createElement('button');
+            cancelButton.type = 'button';
+            cancelButton.id = 'ul_button_cancel';
+            cancelButton.className = 'button';
+            cancelButton.style.color = '#000000';
+            cancelButton.textContent = unlimit_vars.bankcard_translations.cancel;
+            cancelButton.onclick = ulCancelPayment;
+
+            refundButton.parentNode.appendChild(captureButton);
+            refundButton.parentNode.appendChild(cancelButton);
+        }
     }
-});
+}
 
 const ulCapturePayment = function () {
-    ulProcessPayment('capture', unlimit_vars.bankcard_translations.captured,
-        unlimit_vars.bankcard_translations.capture);
+    ulProcessPayment('capture', unlimit_vars.bankcard_translations.captured, unlimit_vars.bankcard_translations.capture);
 };
 
 const ulCancelPayment = function () {
-    ulProcessPayment('cancel', unlimit_vars.bankcard_translations.cancelled,
-        unlimit_vars.bankcard_translations.cancel);
+    ulProcessPayment('cancel', unlimit_vars.bankcard_translations.cancelled, unlimit_vars.bankcard_translations.cancel);
 };
 
 const ulProcessPayment = function (action, statusMessage, actionMessage) {
@@ -73,3 +94,5 @@ const ulProcessPayment = function (action, statusMessage, actionMessage) {
         },
     });
 };
+
+setInterval(addButtonIfMissing, 100);
