@@ -1,7 +1,8 @@
 # Unlimit WooCommerce plugin
 
 ## Overview
-**Unlimit WooCommerce** engine plugin allows merchants to make payments, installment payments and refunds using the WooCommerce platform, as well as preauthorized payments plugin supports cancellation (void), capture of the payment or installment payment, payment refund.
+**Unlimit WooCommerce** engine plugin allows merchants to make payments, installment payments, and refunds (credit memos) using the WooCommerce platform.
+Additionally, the plugin supports cancellation (void) transactions and payment capture for preauthorized payments. 
 
 **Unlimit WooCommerce** plugin is able to work in following modes:
 * Gateway mode
@@ -84,8 +85,10 @@ To enable payments via **Credit card** complete the following steps:
 
 ![](readme_images/credit_card.png)
 
-
- * Set **API access mode** in order to select the use of **Payment page** or process payments directly by **Gateway**.
+ * **API access mode:**
+    * Set to **Payment page** for cases when payment page by Unlimit in iFrame is used for customer data collecting.
+    * Set to **Gateway** for cases when embedded payment form in plugin is used for customer data collecting.
+ * Set **API access mode** to either select using the **Payment page** or process payments directly by **Gateway**.
  * Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in Unlimit APIv3 for this payment method (how to obtain credentials see [here](https://www.unlimit.com/integration/)).
  * Test environment:
     * Set to **Yes** for Sandbox environment (for test purposes).
@@ -300,7 +303,7 @@ For creating a **Refund online** navigate to **Orders** and choose any **Order**
 
 Click the **Refund** button and fill in the quantity of items for a refund (change the quantity of items for **partial refund**).
 
-Fill in the delivery rate amount of the refund - refund amount is calculated automatically.
+Fill in the delivery amount of the refund - refund amount is calculated automatically.
 
 Click the **Refund via Credit card - Unlimit** button after the refund amount calculation is complete.
 

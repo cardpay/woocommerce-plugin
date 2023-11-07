@@ -31,10 +31,11 @@ class WC_Unlimit_Refund {
 	}
 
 	public function process_refund( $order_id, $amount = null, $reason = '' ) {
-		$this->logger->info( __FUNCTION__, 'Refund processing has started' );
+		$this->logger->log_callback_request( __FUNCTION__, 'Refund processing has started' );
 
 		try {
 			$this->validate_order_for_refund( $amount, $order_id );
+			$this->logger->log_callback_request( __FUNCTION__, 'Refund validation passed' );
 		} catch ( WC_Unlimit_Exception $e ) {
 			$error_message = $e->getMessage();
 			$this->logger->error( __FUNCTION__, $error_message );
@@ -51,11 +52,12 @@ class WC_Unlimit_Refund {
 			);
 		}
 
+		$this->logger->log_callback_request( __FUNCTION__, 'Refund request is about to be sent' );
 		$request     = $this->get_refund_request( $order_id, $amount, $reason );
 		$refund_info = $this->unlimit_sdk->post( '/refunds', wp_json_encode( $request ) );
 
 		if ( isset( $refund_info['status'] ) && (int) $refund_info['status'] === 201 ) {
-			$this->logger->info(
+			$this->logger->log_callback_request(
 				__FUNCTION__,
 				"Refund processing successful for order #$order_id: " .
 				wp_json_encode(

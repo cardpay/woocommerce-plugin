@@ -57,7 +57,6 @@ class WC_Unlimit_Auth_Payment {
 	 * @return void
 	 */
 	public function show_auth_payment_buttons( $order ) {
-		$this->files_registrar->load_order_actions();
 		$callback_status = WC_Unlimit_Helper::get_order_meta(
 			$order,
 			WC_Unlimit_Constants::ORDER_META_CALLBACK_STATUS_FIELDNAME
@@ -164,7 +163,7 @@ class WC_Unlimit_Auth_Payment {
 			$order->set_status( WC_Unlimit_Admin_Order_Status_Fields::PROCESSING_WC );
 			$order->save();
 
-			$this->logger->info(
+			$this->logger->log_callback_request(
 				__FUNCTION__,
 				"Order #$order_id: payment was captured and new order status 'Processing' has been set"
 			);

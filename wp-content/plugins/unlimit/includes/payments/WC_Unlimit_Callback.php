@@ -165,11 +165,12 @@ class WC_Unlimit_Callback {
 			"Unlimit new status for order #$order_id: $new_order_status (Payment Type: $transaction_type)"
 		);
 
-		$new_order_status_option = $this->get_new_order_status_option( $order_id, $new_order_status );
+		$new_order_status_option = $this->get_new_order_status_option( $new_order_status );
 		$this->logger->log_callback_request( __FUNCTION__, 'Unlimit callback: Order #' .
 		                                                   $order_id . ' status was updated to: ' . $new_order_status );
 
-		if ( ! in_array( $new_order_status_option, wc_get_order_statuses() ) ) {
+		$order_statuses = wc_get_order_statuses();
+		if ( ! in_array( $new_order_status_option, array_keys( $order_statuses ) ) ) {
 			$this->logger->log_callback_request( __FUNCTION__,
 				"Order status '$new_order_status_option' does not exist!" );
 		}
@@ -204,51 +205,8 @@ class WC_Unlimit_Callback {
 		);
 	}
 
-	private function get_new_order_status_option( $order_id, $new_order_status ) {
-		$gateway_class = $this->get_gateway_class( $order_id );
-
-		switch ( $gateway_class ) {
-			case WC_Unlimit_Constants::BANKCARD_GATEWAY:
-				$gateway = new WC_Unlimit_Custom_Gateway();
-				break;
-
-			case WC_Unlimit_Constants::BOLETO_GATEWAY:
-				$gateway = new WC_Unlimit_Ticket_Gateway();
-				break;
-
-			case WC_Unlimit_Constants::PIX_GATEWAY:
-				$gateway = new WC_Unlimit_Pix_Gateway();
-				break;
-
-			case WC_Unlimit_Constants::PAYPAL_GATEWAY:
-				$gateway = new WC_Unlimit_Paypal_Gateway();
-				break;
-
-			case WC_Unlimit_Constants::SPEI_GATEWAY:
-				$gateway = new WC_Unlimit_Spei_Gateway();
-				break;
-
-			case WC_Unlimit_Constants::MBWAY_GATEWAY:
-				$gateway = new WC_Unlimit_Mbway_Gateway();
-				break;
-
-			case WC_Unlimit_Constants::SEPA_GATEWAY:
-				$gateway = new WC_Unlimit_Sepa_Gateway();
-				break;
-
-			case WC_Unlimit_Constants::MULTIBANCO_GATEWAY:
-				$gateway = new WC_Unlimit_Multibanco_Gateway();
-				break;
-
-			case WC_Unlimit_Constants::GPAY_GATEWAY:
-				$gateway = new WC_Unlimit_Gpay_Gateway();
-				break;
-
-			default:
-				throw new WC_Unlimit_Exception( 'Unable to get new order status from Unlimit callback' );
-		}
-
-		return $gateway->get_option(
+	private function get_new_order_status_option( $new_order_status ) {
+		return get_option(
 			WC_Unlimit_Admin_Order_Status_Fields::FIELDNAME_PREFIX .
 			strtolower( $new_order_status )
 		);
