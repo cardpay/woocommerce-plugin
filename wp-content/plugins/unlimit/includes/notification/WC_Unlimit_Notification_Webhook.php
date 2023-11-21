@@ -7,8 +7,6 @@ require_once __DIR__ . '/../module/WC_Unlimit_Helper.php';
 
 class WC_Unlimit_Notification_Webhook extends WC_Unlimit_Notification_Abstract {
 
-	private const PAYMENT_DATA = 'payment_data';
-
 	/**
 	 * Return Actions
 	 */
@@ -72,7 +70,7 @@ class WC_Unlimit_Notification_Webhook extends WC_Unlimit_Notification_Abstract {
 		if ( ! empty( $data ) ) {
 			$data = json_decode( $data, true );
 
-			if ( isset( $data['callback_time'] ) && isset( $data[ self::PAYMENT_DATA ] ) ) {
+			if ( isset( $data['callback_time'] ) && isset( $data[ WC_Unlimit_Constants::PAYMENT_DATA ] ) ) {
 				$err = false;
 				do_action( 'valid_unlimit_ipn_request', $data );
 				$this->set_response( 200, 'OK', 'Notification IPN is successful' );
@@ -87,7 +85,7 @@ class WC_Unlimit_Notification_Webhook extends WC_Unlimit_Notification_Abstract {
 	}
 
 	/**
-	 * @param array $data Payment data
+	 * @param  array  $data  Payment data
 	 */
 	public function successful_request( $data ) {
 		try {
@@ -106,19 +104,20 @@ class WC_Unlimit_Notification_Webhook extends WC_Unlimit_Notification_Abstract {
 	}
 
 	/**
-	 * @param array $data Payment data.
-	 * @param object $order Order.
+	 * @param  array  $data  Payment data.
+	 * @param  object  $order  Order.
 	 *
 	 * @return mixed|string
 	 */
 	public function process_status_ul_business( $data, $order ) {
-		$status       = $data[ self::PAYMENT_DATA ]['status'] ?? 'PENDING';
-		$total_paid   = $data[ self::PAYMENT_DATA ]['amount'] ?? 0.00;
+		$status       = $data[ WC_Unlimit_Constants::PAYMENT_DATA ]['status'] ?? 'PENDING';
+		$total_paid   = $data[ WC_Unlimit_Constants::PAYMENT_DATA ]['amount'] ?? 0.00;
 		$total_refund = $data['refund_data']['amount'] ?? 0.00;
 
 		// Updates the type of gateway.
-		WC_Unlimit_Helper::set_order_meta( $order, __( 'Payment type', 'unlimit' ), self::PAYMENT_DATA );
-		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_GATEWAY_FIELDNAME, get_class( $this ) );
+		WC_Unlimit_Helper::set_order_meta( $order, __( 'Payment type', 'unlimit' ), WC_Unlimit_Constants::PAYMENT_DATA );
+		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_GATEWAY_FIELDNAME,
+			get_class( $this ) );
 
 		if ( ! empty( $data['payer']['email'] ) ) {
 			WC_Unlimit_Helper::set_order_meta( $order, __( 'Buyer email', 'unlimit' ), $data['payer']['email'] );

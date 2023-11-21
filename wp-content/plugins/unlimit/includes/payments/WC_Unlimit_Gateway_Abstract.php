@@ -36,13 +36,6 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 		'auto_return',
 	];
 
-	public const CREDENTIAL_FIELDS = [
-		'_ul_public_key_test',
-		'_ul_access_token_test',
-		'_ul_public_key_prod',
-		'_ul_access_token_prod',
-	];
-
 	public const ALLOWED_SECTIONS = [
 		'woo-unlimit-custom',
 		'woo-unlimit-ticket',
@@ -93,16 +86,6 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 	/**
 	 * @var string
 	 */
-	public $auto_return;
-
-	/**
-	 * @var string
-	 */
-	public $success_url;
-
-	/**
-	 * @var string
-	 */
 	public $installments;
 
 	/**
@@ -134,11 +117,6 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 	 * @var string[]
 	 */
 	public $supports;
-
-	/**
-	 * @var mixed
-	 */
-	public $icon;
 
 	/**
 	 * @var mixed|string
@@ -341,8 +319,8 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 	/**
 	 * Load Unlimit options from DB
 	 *
-	 * @param string $key key.
-	 * @param string $default default.
+	 * @param  string  $key  key.
+	 * @param  string  $default  default.
 	 *
 	 * @return mixed|string
 	 */
@@ -353,7 +331,7 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 		$wordpress_configs = self::COMMON_CONFIGS;
 		if ( in_array( $key, $wordpress_configs, true ) ) {
 			$db_option = get_option( $key, $default );
-		} else if ( in_array( $key_ul, $wordpress_configs, true ) ) {
+		} elseif ( in_array( $key_ul, $wordpress_configs, true ) ) {
 			$db_option = get_option( $key_ul, $default );
 		} else {
 			$option = get_option( $key, $default );
@@ -402,8 +380,8 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * @param array $form_fields fields.
-	 * @param array $ordination ordination.
+	 * @param  array  $form_fields  fields.
+	 * @param  array  $ordination  ordination.
 	 *
 	 * @return array
 	 */
@@ -466,7 +444,8 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 	public function is_production_mode() {
 		$this->update_credential_production();
 
-		return $this->get_option_ul( 'checkout_credential_prod', get_option( 'checkout_credential_prod', 'no' ) ) === 'yes';
+		return $this->get_option_ul( 'checkout_credential_prod',
+				get_option( 'checkout_credential_prod', 'no' ) ) === 'yes';
 	}
 
 	public function update_credential_production() {
@@ -492,8 +471,8 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * @param WC_Order $order
-	 * @param array $response
+	 * @param  WC_Order  $order
+	 * @param  array  $response
 	 *
 	 * @throws WC_Data_Exception
 	 */
@@ -507,20 +486,22 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 			get_option( WC_Unlimit_Admin_BankCard_Fields::FIELDNAME_PREFIX .
 			            WC_Unlimit_Admin_BankCard_Fields::FIELD_INSTALLMENT_TYPE ) );
 
-		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_GATEWAY_FIELDNAME, get_class( $this ) );
+		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_GATEWAY_FIELDNAME,
+			get_class( $this ) );
 		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_COUNT_INSTALLMENT,
 			$installments_order_meta );
 		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_REDIRECT_URL_FIELDNAME,
 			$response['redirect_url'] );
-		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_INITIAL_API_TOTAL, $order->get_total() );
+		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_INITIAL_API_TOTAL,
+			$order->get_total() );
 
-		$order->set_transaction_id( $response['payment_data']['id'] );
+		$order->set_transaction_id( $response[ WC_Unlimit_Constants::PAYMENT_DATA ]['id'] );
 
 		$order->save();
 	}
 
 	/**
-	 * @param array $api_request
+	 * @param  array  $api_request
 	 *
 	 * @return mixed
 	 */
@@ -556,8 +537,8 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * @param array $api_response
-	 * @param WC_Order $order
+	 * @param  array  $api_response
+	 * @param  WC_Order  $order
 	 *
 	 * @return array|string[]
 	 * @throws WC_Data_Exception
@@ -576,7 +557,8 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 			];
 		}
 
-		$this->logger->error( __FUNCTION__, 'There is a technical issue with the payment, please try place order again' );
+		$this->logger->error( __FUNCTION__,
+			'There is a technical issue with the payment, please try place order again' );
 
 		wc_add_notice(
 			'<p>' .

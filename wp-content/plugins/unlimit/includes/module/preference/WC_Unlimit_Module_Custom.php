@@ -4,13 +4,12 @@ defined( 'ABSPATH' ) || exit;
 
 class WC_Unlimit_Module_Custom extends WC_Unlimit_Module_Abstract {
 	public const INSTALLMENTS = 'installments';
-	const PAYMENT_DATA = 'payment_data';
 
 	/**
-	 * @param WC_Unlimit_Gateway_Abstract $payment Payment.
-	 * @param WC_Order $order
-	 * @param bool $post_can_be_empty
-	 * @param array|null $post_fields Custom checkout.
+	 * @param  WC_Unlimit_Gateway_Abstract  $payment  Payment.
+	 * @param  WC_Order  $order
+	 * @param  bool  $post_can_be_empty
+	 * @param  array|null  $post_fields  Custom checkout.
 	 *
 	 * @throws Exception
 	 */
@@ -41,38 +40,39 @@ class WC_Unlimit_Module_Custom extends WC_Unlimit_Module_Abstract {
 			WC_Unlimit_Admin_BankCard_Fields::FIELD_INSTALLMENT_TYPE
 		);
 		if ( $are_installments_enabled && isset( $card_post_fields[ self::INSTALLMENTS ] ) ) {
-			$api_request[ self::PAYMENT_DATA ] = [
+			$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ] = [
 				'installment_type' => $installment_type,
 				self::INSTALLMENTS => $installments,
 			];
 		}
 
-		$api_request['payment_method']                 = 'BANKCARD';
-		$api_request[ self::PAYMENT_DATA ]['amount']   = $this->order->get_total();
-		$api_request[ self::PAYMENT_DATA ]['currency'] = get_woocommerce_currency();
+		$api_request['payment_method']                                 = 'BANKCARD';
+		$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['amount']   = $this->order->get_total();
+		$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['currency'] = get_woocommerce_currency();
 
 		$is_preauth = ( 'no' === get_option( $field_name_prefix . WC_Unlimit_Admin_BankCard_Fields::FIELD_CAPTURE_PAYMENT ) );
 		if ( $is_preauth ) {
-			$api_request[ self::PAYMENT_DATA ]['preauth'] = true;
-			WC_Unlimit_Helper::set_order_meta( $this->order, WC_Unlimit_Constants::ORDER_META_PREAUTH_FIELDNAME, 'true' );
+			$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['preauth'] = true;
+			WC_Unlimit_Helper::set_order_meta( $this->order, WC_Unlimit_Constants::ORDER_META_PREAUTH_FIELDNAME,
+				'true' );
 		}
 
 		if ( $are_installments_enabled && $installment_type == 'IF' && $installments > 1 ) {
 			if ( $is_preauth ) {
-				unset( $api_request[ self::PAYMENT_DATA ]['preauth'] );
+				unset( $api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['preauth'] );
 			}
-			$amount                                                  = round(
-				$api_request[ self::PAYMENT_DATA ]['amount']
+			$amount                                                                  = round(
+				$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['amount']
 				/
 				$installments,
 				2
 			);
-			$api_request[ self::PAYMENT_DATA ]['installment_amount'] = $amount;
+			$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['installment_amount'] = $amount;
 		}
 
 		$dynamic_descriptor = get_option( $field_name_prefix . WC_Unlimit_Admin_BankCard_Fields::FIELD_DYNAMIC_DESCRIPTOR );
 		if ( ! empty( $dynamic_descriptor ) ) {
-			$api_request[ self::PAYMENT_DATA ]['dynamic_descriptor'] = $dynamic_descriptor;
+			$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['dynamic_descriptor'] = $dynamic_descriptor;
 		}
 
 		$is_cpf_required = ( 'yes' === get_option( $field_name_prefix . WC_Unlimit_Admin_BankCard_Fields::FIELD_ASK_CPF ) );

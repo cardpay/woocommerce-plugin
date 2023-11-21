@@ -17,9 +17,9 @@ class WC_Unlimit_Alt_Module extends WC_Unlimit_Module_Abstract {
 	private $post_structure;
 
 	/**
-	 * @param WC_Unlimit_Gateway_Abstract $payment Payment
-	 * @param Order $order
-	 * @param array $post_fields
+	 * @param  WC_Unlimit_Gateway_Abstract  $payment  Payment
+	 * @param  Order  $order
+	 * @param  array  $post_fields
 	 *
 	 * @throws Exception
 	 */
@@ -38,9 +38,9 @@ class WC_Unlimit_Alt_Module extends WC_Unlimit_Module_Abstract {
 
 		$api_request = $this->get_common_api_request();
 
-		$api_request['payment_method']           = $this->payment_method;
-		$api_request['payment_data']['amount']   = $this->order->get_total();
-		$api_request['payment_data']['currency'] = get_woocommerce_currency();
+		$api_request['payment_method']                                 = $this->payment_method;
+		$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['amount']   = $this->order->get_total();
+		$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['currency'] = get_woocommerce_currency();
 
 		$api_request['customer']['full_name'] = $this->order->get_customer_first_name() .
 		                                        ' ' . $this->order->get_customer_last_name();

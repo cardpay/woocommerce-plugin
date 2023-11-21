@@ -6,11 +6,11 @@ require_once __DIR__ . '/../module/log/WC_Unlimit_Logger.php';
 require_once __DIR__ . '/../module/WC_Unlimit_Helper.php';
 require_once __DIR__ . '/../module/config/WC_Unlimit_Constants.php';
 require_once __DIR__ . '/form_fields/WC_Unlimit_Admin_Order_Status_Fields.php';
+require_once __DIR__ . '/WC_Unlimit_Order_Status_Updater.php';
 
 class WC_Unlimit_Callback {
 	const SIGNATURE_HEADER = 'HTTP_SIGNATURE';
 
-	private const PAYMENT_DATA_TRANSACTION_TYPE = 'payment_data';
 	private const REFUND_DATA_TRANSACTION_TYPE = 'refund_data';
 	private const STATUS_FIELD = 'status';
 
@@ -175,34 +175,19 @@ class WC_Unlimit_Callback {
 				"Order status '$new_order_status_option' does not exist!" );
 		}
 
-		$order = wc_get_order( $order_id );
-		$this->logger->log_callback_request( __FUNCTION__, "Before updating order status for order #$order_id" );
-		$status_change_info = $order->set_status( $new_order_status_option );
-
-		if ( $status_change_info ) {
-			$this->logger->log_callback_request(
-				__FUNCTION__,
-				"Unlimit callback was processed successfully, order #$order_id,
-				 new status: $new_order_status (Payment Type: $transaction_type)"
-			);
-		} else {
-			$this->logger->error( __FUNCTION__, 'Failed to update order status for order #' . $order_id );
-		}
+		$order_status_updater = new WC_Unlimit_Order_Status_Updater();
+		$order                = wc_get_order( $order_id );
+		$order_status_updater->update_order_status( $order, $new_order_status_option );
 
 		WC_Unlimit_Helper::set_order_meta( $order,
 			WC_Unlimit_Constants::ORDER_META_CALLBACK_STATUS_FIELDNAME, $new_order_status_option );
+
 		if ( $transaction_id && ! $order->get_transaction_id() ) {
 			$order->set_transaction_id( $transaction_id );
 		}
+
+		$this->logger->log_callback_request( __FUNCTION__, "Order #$order_id save" );
 		$order->save();
-
-		$old_status     = $status_change_info['from'];
-		$new_status_set = $status_change_info['to'];
-
-		$this->logger->log_callback_request(
-			__FUNCTION__,
-			"Unlimit callback was processed, order #$order_id, old status: $old_status, new status: $new_status_set"
-		);
 	}
 
 	private function get_new_order_status_option( $new_order_status ) {
@@ -223,8 +208,10 @@ class WC_Unlimit_Callback {
 		$order_id = $callback_decoded['merchant_order']['id'];
 
 		if ( $this->is_refund( $callback_decoded ) && ! $this->is_full_refund( $callback_decoded ) ) {
-			$this->logger->log_callback_request( __FUNCTION__,
-				"Unlimit, order #$order_id: callback for partial refund is ignored" );
+			$this->logger->log_callback_request(
+				__FUNCTION__,
+				"Unlimit, order #$order_id: callback for partial refund is ignored. Order status wasn't changed."
+			);
 
 			return false;
 		}
@@ -251,7 +238,7 @@ class WC_Unlimit_Callback {
 		if ( isset( $callback_decoded[ self::REFUND_DATA_TRANSACTION_TYPE ] ) ) {
 			$transaction_type = self::REFUND_DATA_TRANSACTION_TYPE;
 		} else {
-			$transaction_type = self::PAYMENT_DATA_TRANSACTION_TYPE;
+			$transaction_type = WC_Unlimit_Constants::PAYMENT_DATA;
 		}
 
 		return $transaction_type;
@@ -273,8 +260,8 @@ class WC_Unlimit_Callback {
 		return $this->is_refund( $callback_decoded )
 		       && WC_Unlimit_Constants::TRANSACTION_STATUS_COMPLETED ===
 		          $callback_decoded[ self::REFUND_DATA_TRANSACTION_TYPE ][ self::STATUS_FIELD ]
-		       && isset( $callback_decoded[ self::PAYMENT_DATA_TRANSACTION_TYPE ]['remaining_amount'] )
-		       && ( 0 === (int) $callback_decoded[ self::PAYMENT_DATA_TRANSACTION_TYPE ]['remaining_amount'] );
+		       && isset( $callback_decoded[ WC_Unlimit_Constants::PAYMENT_DATA ]['remaining_amount'] )
+		       && ( 0 === (int) $callback_decoded[ WC_Unlimit_Constants::PAYMENT_DATA ]['remaining_amount'] );
 	}
 
 	private function get_callback_body() {
@@ -297,7 +284,7 @@ class WC_Unlimit_Callback {
 	}
 
 	/**
-	 * @param mixed $callback_decoded
+	 * @param  mixed  $callback_decoded
 	 *
 	 * @return mixed|string
 	 */

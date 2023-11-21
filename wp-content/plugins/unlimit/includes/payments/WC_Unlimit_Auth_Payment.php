@@ -8,6 +8,7 @@ require_once __DIR__ . '/../module/WC_Unlimit_Helper.php';
 require_once __DIR__ . '/../module/config/WC_Unlimit_Constants.php';
 require_once __DIR__ . '/form_fields/WC_Unlimit_Admin_Order_Status_Fields.php';
 require_once __DIR__ . '/WC_Unlimit_Files_Registrar.php';
+require_once __DIR__ . '/WC_Unlimit_Order_Status_Updater.php';
 
 /**
  * Authorized (2 phase) payment or installment
@@ -21,7 +22,6 @@ class WC_Unlimit_Auth_Payment {
 
 	private const ERROR_RESPONSE = [ 'success' => false ];
 	private const SUCCESSFUL_RESPONSE = [ 'success' => true ];
-	private const PAYMENT_DATA = 'payment_data';
 
 	protected $files_registrar;
 
@@ -35,10 +35,13 @@ class WC_Unlimit_Auth_Payment {
 	 */
 	public $unlimit_sdk;
 
+	private $order_status_updater;
+
 	public function __construct() {
-		$this->logger          = new WC_Unlimit_Logger();
-		$this->unlimit_sdk     = new WC_Unlimit_Sdk( WC_Unlimit_Custom_Gateway::GATEWAY_ID );
-		$this->files_registrar = new WC_Unlimit_Files_Registrar();
+		$this->logger               = new WC_Unlimit_Logger();
+		$this->unlimit_sdk          = new WC_Unlimit_Sdk( WC_Unlimit_Custom_Gateway::GATEWAY_ID );
+		$this->files_registrar      = new WC_Unlimit_Files_Registrar();
+		$this->order_status_updater = new WC_Unlimit_Order_Status_Updater();
 	}
 
 	// called in UnlimitInit
@@ -52,7 +55,7 @@ class WC_Unlimit_Auth_Payment {
 	}
 
 	/**
-	 * @param Order $order
+	 * @param  Order  $order
 	 *
 	 * @return void
 	 */
@@ -99,21 +102,21 @@ class WC_Unlimit_Auth_Payment {
 				break;
 
 			case self::CANCEL_PAYMENT_ACTION:
-				$is_api_transaction_updated = $this->update_api_transaction_status( $order, self::REVERSE_STATUS_TO );
-				if ( $is_api_transaction_updated ) {
-					$order->set_status( WC_Unlimit_Admin_Order_Status_Fields::CANCELLED_WC );
-					$order->save();
+				$this->logger->log_callback_request( __FUNCTION__, 'Cancellation process started' );
 
-					$this->logger->info(
-						__FUNCTION__,
-						"Order #$order_id: payment was cancelled and new order status 'Cancelled' has been set"
-					);
+				$is_api_transaction_updated = $this->update_api_transaction_status( $order, self::REVERSE_STATUS_TO,
+					WC_Unlimit_Admin_Order_Status_Fields::CANCELLED_WC );
+				if ( $is_api_transaction_updated ) {
+
+					$this->logger->log_callback_request( __FUNCTION__,
+						"Order #$order_id: payment was cancelled and new order status 'Cancelled' has been set" );
 					$response = self::SUCCESSFUL_RESPONSE;
 				}
 				break;
 
 			default:
-				$this->logger->error( __FUNCTION__, "Invalid auth payment action: '$payment_action' for order #$order_id" );
+				$this->logger->error( __FUNCTION__,
+					"Invalid auth payment action: '$payment_action' for order #$order_id" );
 				break;
 		}
 
@@ -121,8 +124,8 @@ class WC_Unlimit_Auth_Payment {
 	}
 
 	/**
-	 * @param WC_Order $order
-	 * @param int $order_id
+	 * @param  WC_Order  $order
+	 * @param  int  $order_id
 	 *
 	 * @return array|bool[]
 	 */
@@ -157,16 +160,18 @@ class WC_Unlimit_Auth_Payment {
 			);
 		}
 
-		$response                   = self::ERROR_RESPONSE;
-		$is_api_transaction_updated = $this->update_api_transaction_status( $order, self::COMPLETE_STATUS_TO );
+		$response = self::ERROR_RESPONSE;
+		$this->logger->log_callback_request( __FUNCTION__, "Capture payment process started" );
+
+		$is_api_transaction_updated = $this->update_api_transaction_status( $order, self::COMPLETE_STATUS_TO,
+			WC_Unlimit_Admin_Order_Status_Fields::PROCESSING_WC );
+
 		if ( $is_api_transaction_updated ) {
-			$order->set_status( WC_Unlimit_Admin_Order_Status_Fields::PROCESSING_WC );
 			$order->save();
 
-			$this->logger->log_callback_request(
-				__FUNCTION__,
-				"Order #$order_id: payment was captured and new order status 'Processing' has been set"
-			);
+			$this->logger->log_callback_request( __FUNCTION__,
+				"Order #$order_id: payment was captured and new order status 'Processing' has been set" );
+
 			$response = self::SUCCESSFUL_RESPONSE;
 		}
 
@@ -186,12 +191,12 @@ class WC_Unlimit_Auth_Payment {
 	}
 
 	/**
-	 * @param WC_Order $order
-	 * @param string $status_to
+	 * @param  WC_Order  $order
+	 * @param  string  $status_to
 	 *
 	 * @return bool
 	 */
-	private function update_api_transaction_status( $order, $status_to ) {
+	private function update_api_transaction_status( $order, $status_to, $update_status ) {
 		$order_id           = $order->get_id();
 		$amount             = $order->get_total();
 		$payment_type_field = WC_Unlimit_Helper::get_order_meta(
@@ -201,7 +206,7 @@ class WC_Unlimit_Auth_Payment {
 		$payment_id         = $order->get_transaction_id();
 
 		if ( $payment_type_field === WC_Unlimit_Constants::PAYMENT_TYPE_PAYMENT ) {
-			$api_request = $this->get_api_request_for_update( self::PAYMENT_DATA, $status_to, $amount );
+			$api_request = $this->get_api_request_for_update( WC_Unlimit_Constants::PAYMENT_DATA, $status_to, $amount );
 			$endpoint    = "/payments/$payment_id";
 		} else {
 			$this->logger->error( __FUNCTION__, "Invalid payment type: '$payment_type_field' for order #$order_id" );
@@ -209,27 +214,29 @@ class WC_Unlimit_Auth_Payment {
 			return false;
 		}
 
+		$this->order_status_updater->update_order_status( $order, $update_status );
 		$api_response = $this->unlimit_sdk->patch( $endpoint, wp_json_encode( $api_request ) );
 		if ( ! is_array( $api_response )
 		     || empty( $api_response )
 		     || (int) $api_response['status'] !== 200
-		     || ! isset( $api_response['response'][ self::PAYMENT_DATA ]['status'] ) ) {
-			$this->logger->error( __FUNCTION__, "Unable to update Unlimit transaction '$payment_id' for order #$order_id" );
+		     || ! isset( $api_response['response'][ WC_Unlimit_Constants::PAYMENT_DATA ]['status'] ) ) {
+			$this->logger->error( __FUNCTION__,
+				"Unable to update Unlimit transaction '$payment_id' for order #$order_id" );
 
 			return false;
 		}
 
 		return $this->is_payment_status_updated(
 			$payment_type_field,
-			$api_response['response'][ self::PAYMENT_DATA ],
+			$api_response['response'][ WC_Unlimit_Constants::PAYMENT_DATA ],
 			$status_to
 		);
 	}
 
 	/**
-	 * @param string $payment_type_field
-	 * @param array $api_structure
-	 * @param string $status_to
+	 * @param  string  $payment_type_field
+	 * @param  array  $api_structure
+	 * @param  string  $status_to
 	 *
 	 * @return bool
 	 */

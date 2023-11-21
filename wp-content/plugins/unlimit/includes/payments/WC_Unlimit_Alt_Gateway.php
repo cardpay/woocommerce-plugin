@@ -237,8 +237,4 @@ class WC_Unlimit_Alt_Gateway extends WC_Unlimit_Gateway_Abstract {
 
 		return $this->handle_api_response( $api_response, $order );
 	}
-
-	public function handle_callback() {
-		$this->callback->process_callback();
-	}
 }

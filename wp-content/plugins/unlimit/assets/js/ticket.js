@@ -21,9 +21,7 @@ const formatUlBoletoCpf = function (cpfFieldId) {
 }
 
 const validateUlBoletoCpf = function () {
-    const zip = validateUlBoletoZip();
-    const cpf = validateUlCpf('ul-cpf-ticket');
-    return zip && cpf;
+    return validateUlCpf('ul-cpf-ticket');
 }
 
 const checkZip = function (id) {
@@ -38,18 +36,6 @@ const checkZip = function (id) {
         return false;
     }
     return true;
-}
-
-const validateUlBoletoZip = function () {
-    const shippingCheck = checkZip('shipping_postcode');
-    const billingCheck = checkZip('billing_postcode');
-    if (!shippingCheck) {
-        alert(getShippingZipErrorMessage());
-    }
-    if (!billingCheck) {
-        alert(getBillingZipErrorMessage());
-    }
-    return shippingCheck && billingCheck;
 }
 
 const validateUlCpf = function (cpfFieldId) {

@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/../module/config/WC_Unlimit_Constants.php';
 require_once __DIR__ . '/../module/WC_Unlimit_Helper.php';
+require_once __DIR__ . '/WC_Unlimit_Order_Status_Updater.php';
 
 class WC_Unlimit_Refund {
 	const ERROR_BOLETO = 'Refund is not available for Boleto';
@@ -52,11 +53,14 @@ class WC_Unlimit_Refund {
 			);
 		}
 
-		$this->logger->log_callback_request( __FUNCTION__, 'Refund request is about to be sent' );
-		$request     = $this->get_refund_request( $order_id, $amount, $reason );
-		$refund_info = $this->unlimit_sdk->post( '/refunds', wp_json_encode( $request ) );
+		$request      = $this->get_refund_request( $order_id, $amount, $reason );
+		$request_json = json_encode( $request, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+		$this->logger->log_callback_request( __FUNCTION__, "Sending refund API request: " . $request_json );
 
+		$refund_info = $this->unlimit_sdk->post( '/refunds', wp_json_encode( $request ) );
 		if ( isset( $refund_info['status'] ) && (int) $refund_info['status'] === 201 ) {
+			$this->handle_refund_status( $order_id, $refund_info['response'] );
+
 			$this->logger->log_callback_request(
 				__FUNCTION__,
 				"Refund processing successful for order #$order_id: " .
@@ -72,7 +76,8 @@ class WC_Unlimit_Refund {
 		$error_message = '';
 		if ( isset( $refund_info['response']['message'] ) ) {
 			$error_message = $refund_info['response']['message'];
-			$this->logger->error( __FUNCTION__, "Refund for order #$order_id has failed with error: " . $error_message );
+			$this->logger->error( __FUNCTION__,
+				"Refund for order #$order_id has failed with error: " . $error_message );
 		}
 
 		return new WP_Error(
@@ -133,5 +138,20 @@ class WC_Unlimit_Refund {
 				'currency' => get_woocommerce_currency()
 			],
 		];
+	}
+
+	/**
+	 * @param $order_id
+	 * @param $response
+	 */
+	private function handle_refund_status( $order_id, $response ): void {
+		$order            = wc_get_order( $order_id );
+		$remaining_amount = isset( $response['payment_data']['remaining_amount'] ) ?
+			$response['payment_data']['remaining_amount'] : null;
+		if ( isset( $remaining_amount ) && ( 0 === (int) $remaining_amount ) ) {
+			$order_status_updater = new WC_Unlimit_Order_Status_Updater();
+			$order_status_updater->update_order_status( $order,
+				WC_Unlimit_Admin_Order_Status_Fields::REFUNDED_WC );
+		}
 	}
 }
