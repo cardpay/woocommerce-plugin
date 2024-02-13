@@ -3,12 +3,14 @@
 defined( 'ABSPATH' ) || exit;
 
 class WC_Unlimit_Constants {
-	public const VERSION = '1.1.46';
+	public const VERSION = '1.2.0';
 
 	public const API_UL_BASE_URL = 'https://cardpay.com/api';
 	public const API_UL_SANDBOX_URL = 'https://sandbox.cardpay.com/api';
 
 	public const BANKCARD_GATEWAY = 'WC_Unlimit_Custom_Gateway';
+	public const APAY_GATEWAY = 'WC_Unlimit_Apay_Gateway';
+
 	public const BOLETO_GATEWAY = 'WC_Unlimit_Ticket_Gateway';
 	public const PIX_GATEWAY = 'WC_Unlimit_Pix_Gateway';
 	public const PAYPAL_GATEWAY = 'WC_Unlimit_Paypal_Gateway';
@@ -20,6 +22,7 @@ class WC_Unlimit_Constants {
 
 	public const PAYMENT_GATEWAYS = [
 		self::BANKCARD_GATEWAY,
+		self::APAY_GATEWAY,
 		self::BOLETO_GATEWAY,
 		self::GPAY_GATEWAY,
 		self::MBWAY_GATEWAY,

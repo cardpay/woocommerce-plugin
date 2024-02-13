@@ -237,8 +237,9 @@ const unlimitSettingsEvent = {
 
         if (error) {
             if (displayError === true) {
+                const adminField = obj.maximumAcceptedInstallments;
                 showUlAdminError('maximum_accepted_installments',
-                    'Allowed installments range');
+                    adminField.data('invalid-error'));
             }
             highlightUlAdminError(
                 jQuery(obj.maximumAcceptedInstallments).attr('id'));

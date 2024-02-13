@@ -59,11 +59,13 @@ class WC_Unlimit_Admin_Gpay_Fields extends WC_Unlimit_Alt_Admin_Fields {
 	}
 
 	public function field_google_merchant_id() {
+		$title = __( 'Google merchant ID', 'unlimit' );
 		return [
-			'title'       => __( 'Google merchant ID', 'unlimit' ),
+			'title'       => $title,
 			'type'        => 'password',
 			'description' => __( 'Your Merchant ID, provided by Google.', 'unlimit' ),
 			'default'     => '',
+			'custom_attributes' => $this->get_custom_attributes($title)
 		];
 	}
 }

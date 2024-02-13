@@ -140,6 +140,9 @@ class WC_Unlimit_Init {
 
 		add_action( 'woocommerce_checkout_process', [ __CLASS__, 'validate_form' ] );
 
+		add_action( 'wp_ajax_validate_merchant', [ 'WC_Unlimit_Hook_Apay', 'validate_merchant' ] );
+		add_action( 'wp_ajax_nopriv_validate_merchant', [ 'WC_Unlimit_Hook_Apay', 'validate_merchant' ] );
+
 		add_action( 'wp_ajax_wc_ul_capture', [ __CLASS__, 'ajax_ul_capture_payment' ] );
 		add_action( 'wp_ajax_wc_ul_cancel', [ __CLASS__, 'ajax_ul_cancel_payment' ] );
 	}

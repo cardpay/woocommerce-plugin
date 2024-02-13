@@ -193,6 +193,9 @@ msgstr "Método de pago MB WAY"
 msgid "Google Pay payment method"
 msgstr "Método de pago Google Pay"
 
+msgid "Apple Pay payment method"
+msgstr "Método de pago Apple Pay"
+
 msgid "Setting is for regular payments and Merchant financed installments. If set to \"No\","
 msgstr "La configuración es para pagos regulares y cuotas comerciante financiadas. Si se establece en \"No\","
 
@@ -727,7 +730,7 @@ msgstr "El número de teléfono MB WAY no es válido"
 msgid "Please fill out a MB WAY phone number"
 msgstr "Por favor, ingrese un número de teléfono MB WAY"
 
-msgid "Plugin communication log entries will be written to the your web server log."
+msgid "Plugin communication log entries will be written to your web server log."
 msgstr "Las entradas del registro de comunicación del complemento se escribirán en el registro de su servidor web."
 
 msgid "<strong>Billing: Phone</strong>, size must be between 8 and 18 characters."
@@ -741,3 +744,24 @@ msgstr "Se ha producido un problema al procesar su pago. Por favor, inténtelo d
 
 msgid "Order was unsuccessful"
 msgstr "El pedido no se realizó con éxito."
+
+msgid "Apple merchant ID"
+msgstr "ID de comerciante de Apple"
+
+msgid "Payment processing certificate"
+msgstr "Certificado de procesamiento de pago"
+
+msgid "Merchant identity certificate"
+msgstr "Certificado de identidad mercantil"
+
+msgid "Invalid merchant certificate file format"
+msgstr "Formato de archivo de certificado de comerciante inválido"
+
+msgid "Invalid payment certificate file format"
+msgstr "Formato de archivo de certificado de procesamiento inválido"
+
+msgid "Empty %s"
+msgstr "%s vacío"
+
+msgid "Invalid %s"
+msgstr "%s inválido"

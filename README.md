@@ -1,5 +1,31 @@
-# Unlimit WooCommerce plugin
 
+# Unlimit WooCommerce plugin
+## Table of Contents
+- [Overview](#overview)
+- [Requirements](#requirements)
+- [Supported Payment Methods](#supported-payment-methods)
+- [Supported Languages](#supported-languages)
+- [Installation](#installation)
+- [Configuration](#configuration)
+  - [Basic Settings](#basic-settings)
+  - [Payment Methods Settings](#payment-methods-settings)
+    - [Credit Card](#credit-card)
+    - [Apple Pay](#apple-pay)
+    - [Boleto](#boleto)
+    - [Google Pay](#google-pay)
+    - [MB WAY](#mb-way)
+    - [Multibanco](#multibanco)
+    - [PayPal](#paypal)
+    - [Pix](#pix)
+    - [SEPA Instant](#sepa-instant)
+    - [SPEI](#spei)
+  - [Payment Notification Configuration](#payment-notification-configuration)
+- [Supported Post-Payment Operations](#supported-post-payment-operations)
+  - [Cancellation (void) / Capture of the Payment](#cancellation-void-capture-of-the-payment)
+    - [Capture of the payment](#capture-of-the-payment)
+    - [Cancel (void) the payment](#cancel-void-the-payment)
+   - [Refund  online](#refund-online)
+   - [Refund offline](#refund-offline)
 ## Overview
 **Unlimit WooCommerce** engine plugin allows merchants to make payments, installment payments, and refunds (credit memos) using the WooCommerce platform.
 Additionally, the plugin supports cancellation (void) transactions and payment capture for preauthorized payments. 
@@ -19,9 +45,11 @@ Additionally, the plugin supports cancellation (void) transactions and payment c
 
 Supported payment methods, the countries where those methods are available in, and their capabilities are displayed in the table below:
 
+
 | Payment method | Country  | Payment | Installment | Void/Cancel | Online refund | Offline refund |
 |----------------|----------|---------|-------------|-------------|---------------|----------------|
-| Credit card    | Global   | Yes     | Yes         | Yes         | Yes           | Yes            |
+| Credit Card    | Global   | Yes     | Yes         | Yes         | Yes           | Yes            |
+| Apple Pay      | Global   | Yes     | No          | No          | No            | Yes            |       
 | Boleto         | Brazil   | Yes     | No          | No          | No            | Yes            |
 | Google Pay     | Global   | Yes     | No          | No          | Yes           | Yes            |
 | MB WAY         | Portugal | Yes     | No          | No          | Yes           | Yes            |
@@ -62,6 +90,7 @@ Begin with the following basic settings:
 
 3. To enable payment methods in the **WooCommerce** plugin:
     - Credit card
+    - Apple Pay
     - Boleto
     - Google Pay
     - MB WAY
@@ -77,9 +106,9 @@ see [here](https://www.unlimit.com/integration/)).
 
 ![](readme_images/payments_methods.png)
 
-#### Payment methods settings
+### Payment methods settings
 
-##### **Credit card**
+#### Credit card
 
 To enable payments via **Credit card** complete the following steps:
 
@@ -109,7 +138,22 @@ To enable payments via **Credit card** complete the following steps:
  * **Dynamic descriptor** - short description of the service or product, see `dynamic_descriptor` API field in [API documentation](https://integration.unlimit.com/api-reference/b5e0a98548e2b-payment-request-payment-data).
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
-##### **Boleto**
+### Apple Pay
+To enable payments via **Apple Pay** complete the following steps:
+
+![](readme_images/apple_pay.png)
+* Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in
+  Unlimit APIv3 for this payment method (how to obtain credentials see [here](https://www.unlimit.com/integration/))
+ * **Test environment:**
+    * Set to **Yes** for Sandbox environment (for test purposes).
+    * Set to **No** for Production environment.
+  * **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
+  * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
+ * **Apple merchant ID**  - unique identifier provided by Apple using an Apple Developer Account.
+ * **Payment processing certificate**  - Certificate Signing Request (CSR) required to encrypt transaction data. File in .pem format is required. Certificate provided by Apple using an Apple Developer Account (how to make certificate see [here](https://integration.unlimit.com/doc-guides/lznqjw351z86e-card-methods#applepay)).
+ * **Merchant identity certificate** - Transport Layer Security (TLS) certificate associated with your merchant ID, used to authenticate your sessions with the Apple Pay servers [here](https://integration.unlimit.com/doc-guides/lznqjw351z86e-card-methods#applepay)).
+ 
+### Boleto
 
 To enable payments via **Boleto** complete the following steps:
 	
@@ -122,7 +166,7 @@ To enable payments via **Boleto** complete the following steps:
 * **Payment title** - fill in the name of the payment method, will be presented for the customer in checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
-##### **Google Pay**
+#### Google Pay
 To enable payments via **Google Pay** complete the following steps:
 
 ![](readme_images/googlepay.png)
@@ -136,7 +180,7 @@ To enable payments via **Google Pay** complete the following steps:
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 * **Google merchant ID** - Merchant ID, provided by Google.
 
-##### **MB WAY**
+#### MB WAY
 To enable payments via **MB WAY** complete the following steps:
 
 ![](readme_images/mbway.png)
@@ -152,7 +196,7 @@ To enable payments via **MB WAY** complete the following steps:
 * **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
-##### **Multibanco**
+#### Multibanco
 To enable payments via **Multibanco** complete the following steps:
 
 ![](readme_images/multibanco.png)
@@ -168,7 +212,7 @@ To enable payments via **Multibanco** complete the following steps:
 * **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
-##### **PayPal**
+#### PayPal
 To enable payments via **PayPal** complete the following steps:
 
 ![](readme_images/paypal.png)
@@ -184,7 +228,7 @@ To enable payments via **PayPal** complete the following steps:
 * **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
-##### **Pix**
+#### Pix
 To enable payments via **Pix** complete the following steps:
 
 ![](readme_images/pix.png)
@@ -197,7 +241,7 @@ To enable payments via **Pix** complete the following steps:
 * **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
-##### **SEPA Instant**
+#### SEPA Instant
 To enable payments via **SEPA Instant** complete the following steps:
 
 ![](readme_images/sepa.png)
@@ -213,7 +257,7 @@ To enable payments via **SEPA Instant** complete the following steps:
 * **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
-##### **SPEI**
+#### SPEI
 To enable payments via **SPEI** complete the following steps:
 
 ![](readme_images/spei.png)
@@ -288,7 +332,7 @@ Order status is changed to **Cancelled**.
 ![](readme_images/order_cancelled.png)
 
 
-### Refund (online refund)
+### Refund online
 
 **Refund** operation is supported only for following payment methods:
 * Credit card (payments and "Issuer financed" installment payments)

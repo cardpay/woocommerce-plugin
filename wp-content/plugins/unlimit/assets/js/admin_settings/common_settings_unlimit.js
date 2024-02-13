@@ -9,13 +9,13 @@ const validateUlAdminField = function (fieldName, maxLength, errorField, positiv
     if (adminField) {
         const fieldValue = adminField.val();
         if (!fieldValue || fieldValue.trim().length === 0) {
-            showUlAdminError(errorMessageId, `Empty ${errorField}`);
+            showUlAdminError(errorMessageId, adminField.data('empty-error'));
             highlightUlAdminError(fieldName);
             return false;
         }
 
         if (fieldValue.length > maxLength || (positiveInteger && (isNaN(fieldValue) || parseInt(fieldValue) < 0))) {
-            showUlAdminError(errorMessageId, `Invalid ${errorField}`);
+            showUlAdminError(errorMessageId, adminField.data('invalid-error'));
             highlightUlAdminError(fieldName);
             return false;
         }

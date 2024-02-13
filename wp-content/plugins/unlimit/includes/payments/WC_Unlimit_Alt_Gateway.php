@@ -116,6 +116,10 @@ class WC_Unlimit_Alt_Gateway extends WC_Unlimit_Gateway_Abstract {
 	 * @return array
 	 */
 	public function get_form_fields() {
+		if ( isset( $_REQUEST['woo-unlimit-apay'] ) ) {
+			return $this->gateway_fields->get_form_fields( false, $this->settings );
+		}
+
 		return $this->gateway_fields->get_form_fields();
 	}
 
@@ -208,7 +212,7 @@ class WC_Unlimit_Alt_Gateway extends WC_Unlimit_Gateway_Abstract {
 	/**
 	 * Process payment
 	 *
-	 * @param int $order_id Order Id.
+	 * @param  int  $order_id  Order Id.
 	 *
 	 * @return array|string[]
 	 * @throws WC_Data_Exception

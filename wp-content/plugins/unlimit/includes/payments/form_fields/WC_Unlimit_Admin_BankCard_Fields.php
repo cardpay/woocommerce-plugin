@@ -158,11 +158,12 @@ class WC_Unlimit_Admin_BankCard_Fields extends WC_Unlimit_Admin_Fields {
 	 * @return array
 	 */
 	public function field_maximum_accepted_installments() {
+		$title = __( "Allowed installments range", 'unlimit' );
 		return [
-			'title'       => __( "Allowed installments range", 'unlimit' ),
+			'title'       => $title,
 			'type'        => 'text',
 			'description' =>
-				__( "Allowed installments range", 'unlimit' )
+				$title
 				. ',' . '<br> '
 				. __( "For \"Merchant financed\" installments can be filled in", 'unlimit' ) . ' ' .
 				__( "range of allowed values or several allowed values not in a row.",
@@ -179,7 +180,8 @@ class WC_Unlimit_Admin_BankCard_Fields extends WC_Unlimit_Admin_Fields {
 				__( "(2-12 for \"Merchant financed\" and 3, 6, 9, 12, 18 for \"Issuer financed\").",
 					'unlimit' )
 			,
-			'default'     => '1'
+			'default'     => '1',
+			'custom_attributes' => $this->get_custom_attributes($title)
 		];
 	}
 
@@ -209,10 +211,12 @@ class WC_Unlimit_Admin_BankCard_Fields extends WC_Unlimit_Admin_Fields {
 	 * @return array
 	 */
 	public function field_dynamic_descriptor() {
+		$title = __( 'Dynamic descriptor', 'unlimit' );
 		return [
 			'title'   => __( 'Dynamic descriptor', 'unlimit' ),
 			'type'    => 'text',
 			'default' => '',
+			'custom_attributes' => $this->get_custom_attributes($title)
 		];
 	}
 

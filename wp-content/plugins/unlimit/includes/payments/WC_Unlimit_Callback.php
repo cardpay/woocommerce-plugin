@@ -103,6 +103,10 @@ class WC_Unlimit_Callback {
 				$fieldname_prefix = WC_Unlimit_Admin_BankCard_Fields::FIELDNAME_PREFIX;
 				break;
 
+			case WC_Unlimit_Constants::APAY_GATEWAY:
+				$fieldname_prefix = WC_Unlimit_Admin_Apay_Fields::FIELDNAME_PREFIX;
+				break;
+
 			case WC_Unlimit_Constants::BOLETO_GATEWAY:
 				$fieldname_prefix = WC_Unlimit_Admin_Boleto_Fields::FIELDNAME_PREFIX;
 				break;

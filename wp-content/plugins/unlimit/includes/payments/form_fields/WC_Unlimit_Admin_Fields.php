@@ -28,11 +28,13 @@ class WC_Unlimit_Admin_Fields {
 	 * @return array
 	 */
 	public function field_terminal_code() {
+		$title = __( 'Terminal code', 'unlimit' );
 		return [
-			'title'       => __( 'Terminal code', 'unlimit' ),
+			'title'       => $title,
 			'type'        => 'text',
 			'description' => __( "If \"API access mode\" setting is changed - then \"Terminal code\" value need to be checked and changed (if needed).", 'unlimit' ), //NOSONAR
 			'default'     => '',
+			'custom_attributes' => $this->get_custom_attributes($title)
 		];
 	}
 
@@ -40,24 +42,28 @@ class WC_Unlimit_Admin_Fields {
 	 * @return array
 	 */
 	public function field_terminal_password() {
+		$title = __( 'Terminal password', 'unlimit' );
 		return [
-			'title'       => __( 'Terminal password', 'unlimit' ),
+			'title'       => $title,
 			'type'        => 'password',
 			'description' => __( 'Get your credentials, visit the',
 					'unlimit' ) . ' ' .
 			                 '<a href="https://unlimit.com" target=_blank>unlimit.com</a>.' . ' ' .
 			                 __( "If \"API access mode\" setting is changed - then \"Terminal password\" value need to be checked and changed (if needed).", 'unlimit' ), //NOSONAR
 			'default'     => '',
+			'custom_attributes' => $this->get_custom_attributes($title)
 		];
 	}
 
 	public function field_callback_secret() {
+		$title = __( 'Callback secret', 'unlimit' );
 		return [
-			'title'       => __( 'Callback secret', 'unlimit' ),
+			'title'       => $title,
 			'type'        => 'password',
 			'description' =>
 				__( "If \"API access mode\" setting is changed - then \"Callback secret\" value need to be checked and changed (if needed).", 'unlimit' ), //NOSONAR
 			'default'     => '',
+			'custom_attributes' => $this->get_custom_attributes($title)
 		];
 	}
 
@@ -82,11 +88,13 @@ class WC_Unlimit_Admin_Fields {
 	/**
 	 * @return array
 	 */
-	public function field_payment_title( $title = null ) {
+	public function field_payment_title( $default = null ) {
+		$title = __( 'Payment title', 'unlimit' );
 		return [
-			'title'   => __( 'Payment title', 'unlimit' ),
+			'title'   => $title,
 			'type'    => 'text',
-			'default' => __( $title, 'unlimit' ),
+			'default' => __( $default, 'unlimit' ),
+			'custom_attributes' => $this->get_custom_attributes($title)
 		];
 	}
 
@@ -97,7 +105,7 @@ class WC_Unlimit_Admin_Fields {
 		return [
 			'title'       => __( 'Log to file', 'unlimit' ),
 			'type'        => 'select',
-			'description' => __( 'Plugin communication log entries will be written to the your web server log.', 'unlimit' ),
+			'description' => __( 'Plugin communication log entries will be written to your web server log.', 'unlimit' ),
 			'default'     => 'yes',
 			'options'     => [
 				'false' => __( 'No', 'unlimit' ),
@@ -124,6 +132,13 @@ class WC_Unlimit_Admin_Fields {
 				'gateway'      => __( 'Gateway', 'unlimit' ),
 			],
 			'onkeyup'     => "formatUlCardField(this.id);",
+		];
+	}
+
+	public function get_custom_attributes( $title ) {
+		return [
+			'data-empty-error' => sprintf(__('Empty %s', 'unlimit'), $title),
+			'data-invalid-error' => sprintf(__('Invalid %s', 'unlimit'), $title)
 		];
 	}
 }

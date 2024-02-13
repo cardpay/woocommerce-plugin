@@ -70,6 +70,9 @@ class WC_Unlimit_Logger {
 			case 'woo-unlimit-gpay':
 				$logger_enabled = get_option( 'woocommerce_unlimit_gpay_log_to_file' );
 				break;
+			case 'woo-unlimit-apay':
+				$logger_enabled = get_option( 'woocommerce_unlimit_apay_log_to_file' );
+				break;
 			default:
 				$logger_enabled = false;
 				break;
