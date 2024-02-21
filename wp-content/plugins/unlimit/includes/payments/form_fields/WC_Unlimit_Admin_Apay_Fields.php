@@ -70,8 +70,7 @@ class WC_Unlimit_Admin_Apay_Fields extends WC_Unlimit_Alt_Admin_Fields {
 	}
 
 	public function field_apple_merchant_certificate($settings = []) {
-		$merchant_crt = $settings[self::FIELDNAME_PREFIX.'merchant_certificate'];
-		$desc = $merchant_crt ?? null;
+		$desc = $settings[self::FIELDNAME_PREFIX.'merchant_certificate'] ?? null;
 		$title = __( 'Payment processing certificate', 'unlimit' );
 		return [
 			'title'       => $title,
@@ -83,8 +82,7 @@ class WC_Unlimit_Admin_Apay_Fields extends WC_Unlimit_Alt_Admin_Fields {
 	}
 
 	public function field_apple_merchant_key($settings = []) {
-		$merchant_key = $settings[self::FIELDNAME_PREFIX.'merchant_key'];
-		$desc = $merchant_key ?? null;
+		$desc = $settings[self::FIELDNAME_PREFIX.'merchant_key'] ?? null;
 		$title = __( 'Merchant identity certificate', 'unlimit' );
 		return [
 			'title'       => $title,

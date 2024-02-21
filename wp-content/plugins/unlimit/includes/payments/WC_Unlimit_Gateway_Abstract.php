@@ -573,8 +573,6 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 	}
 
 	private function callback_action_exists() {
-		$callbacks = $GLOBALS['wp_filter']['woocommerce_api_unlimit_callback'];
-
-		return isset( $callbacks );
+		return isset( $GLOBALS['wp_filter']['woocommerce_api_unlimit_callback'] );
 	}
 }

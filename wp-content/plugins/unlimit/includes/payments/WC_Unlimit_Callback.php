@@ -292,10 +292,7 @@ class WC_Unlimit_Callback {
 	 *
 	 * @return mixed|string
 	 */
-	private function getOrder_id( mixed $callback_decoded ): mixed {
-		$order_id = isset( $callback_decoded['merchant_order']['id'] ) ?
-			$callback_decoded['merchant_order']['id'] : 'N/A';
-
-		return $order_id;
+	private function getOrder_id( array $callback_decoded ): string {
+		return $callback_decoded['merchant_order']['id'] ?? 'N/A';
 	}
 }
