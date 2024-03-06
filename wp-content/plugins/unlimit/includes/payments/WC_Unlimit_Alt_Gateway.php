@@ -78,6 +78,7 @@ class WC_Unlimit_Alt_Gateway extends WC_Unlimit_Gateway_Abstract {
 			'woo-unlimit-paypal',
 			'woo-unlimit-gpay',
 			'woo-unlimit-mbway',
+			'woo-unlimit-apay',
 		];
 
 		$field_status_order = $order->get_status();

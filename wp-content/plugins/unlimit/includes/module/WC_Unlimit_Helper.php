@@ -2,6 +2,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Automattic\WooCommerce\Utilities\OrderUtil;
+
 class WC_Unlimit_Helper {
 
 	/**
@@ -15,11 +17,12 @@ class WC_Unlimit_Helper {
 			return null;
 		}
 
-		if ( method_exists( $order, 'get_meta' ) ) {
-			return $order->get_meta( $key );
+		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
+			$order = wc_get_order( $order->get_id() );
+			return $order->get_meta( $key, true );
+		} else {
+			return get_post_meta( $order->get_id(), $key, true );
 		}
-
-		return get_post_meta( $order->get_id(), $key, true );
 	}
 
 	public static function set_order_meta( $order, $key, $value ) {
@@ -28,8 +31,9 @@ class WC_Unlimit_Helper {
 		}
 
 		// WooCommerce 3.0 or later.
-		if ( method_exists( $order, 'update_meta_data' ) ) {
+		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$order->update_meta_data( $key, $value );
+			$order->save();
 		} else {
 			update_post_meta( $order, $key, $value );
 		}

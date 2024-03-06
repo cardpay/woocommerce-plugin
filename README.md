@@ -7,6 +7,7 @@
 - [Supported Languages](#supported-languages)
 - [Installation](#installation)
 - [Configuration](#configuration)
+  - [Checkout page configuration](#checkout-page-configuration)
   - [Basic Settings](#basic-settings)
   - [Payment Methods Settings](#payment-methods-settings)
     - [Credit Card](#credit-card)
@@ -45,11 +46,10 @@ Additionally, the plugin supports cancellation (void) transactions and payment c
 
 Supported payment methods, the countries where those methods are available in, and their capabilities are displayed in the table below:
 
-
 | Payment method | Country  | Payment | Installment | Void/Cancel | Online refund | Offline refund |
 |----------------|----------|---------|-------------|-------------|---------------|----------------|
 | Credit Card    | Global   | Yes     | Yes         | Yes         | Yes           | Yes            |
-| Apple Pay      | Global   | Yes     | No          | No          | No            | Yes            |       
+| Apple Pay      | Global   | Yes     | No          | No          | Yes           | Yes            |       
 | Boleto         | Brazil   | Yes     | No          | No          | No            | Yes            |
 | Google Pay     | Global   | Yes     | No          | No          | Yes           | Yes            |
 | MB WAY         | Portugal | Yes     | No          | No          | Yes           | Yes            |
@@ -58,7 +58,6 @@ Supported payment methods, the countries where those methods are available in, a
 | Pix            | Brazil   | Yes     | No          | No          | No            | Yes            |
 | SEPA Instant   | Europe   | Yes     | No          | No          | No            | Yes            |
 | SPEI           | Mexico   | Yes     | No          | No          | No            | Yes            |
-
 ### Supported languages:
 
 - English (EN)
@@ -80,6 +79,22 @@ Installation process explains how to install the WooCommerce plugin:
 
 ## Configuration
 Configuration process explains how to set up and configure the WooCommerce plugin to accept payments in supported payment methods.
+
+### Checkout page configuration
+The Checkout Page is an essential component of any eCommerce site, serving as the final step in the purchasing process where customers review their cart, provide shipping and payment information, and confirm their order. 
+
+> [!IMPORTANT]
+> The plugin currently supports only one version of the Checkout Page, specifically configured through the shortcode checkout flow. During the checkout process, you may encounter issues with the availability of Unlimit payment methods. If such a problem arises, it's crucial to configure your Checkout Page using the shortcode flow as described below
+
+1. Navigate to the **Pages** section by selecting **Pages** -> **All Pages** from the WordPress dashboard.
+2. Locate the **Checkout** page from the list and click **Edit** to modify its contents.
+![](readme_images/page_settings.png)
+3. On the default Checkout Page view, select the full checkout block and remove it to clear the page for customization.
+4. Add a new block by selecting the Toggle block inserter button, and choose the **Shortcode** block from the available options.
+5. Within the Shortcode block, input the following shortcode: `[woocommerce_checkout]`. This shortcode will render the WooCommerce checkout form.
+![](readme_images/checkout_page.png)
+6. To apply the changes, click the **Update** button located at the top right corner of the editor.
+
 
 ### Basic settings
 Begin with the following basic settings:
@@ -336,6 +351,7 @@ Order status is changed to **Cancelled**.
 
 **Refund** operation is supported only for following payment methods:
 * Credit card (payments and "Issuer financed" installment payments)
+* Apple Pay
 * Google Pay
 * MB WAY
 * PayPal
