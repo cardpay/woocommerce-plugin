@@ -18,6 +18,7 @@ require_once __DIR__ . '/WC_Unlimit_Paypal_Gateway.php';
 require_once __DIR__ . '/WC_Unlimit_Pix_Gateway.php';
 require_once __DIR__ . '/WC_Unlimit_Sepa_Gateway.php';
 require_once __DIR__ . '/WC_Unlimit_Spei_Gateway.php';
+require_once __DIR__ . '/WC_Unlimit_Oxxo_Gateway.php';
 require_once __DIR__ . '/WC_Unlimit_Files_Registrar.php';
 
 class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
@@ -42,6 +43,7 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 		'woo-unlimit-apay',
 		'woo-unlimit-ticket',
 		'woo-unlimit-pix',
+		'woo-unlimit-oxxo',
 		'woo-unlimit-paypal',
 		'woo-unlimit-spei',
 		'woo-unlimit-mbway',

@@ -190,6 +190,14 @@ class WC_Unlimit_Alt_Gateway extends WC_Unlimit_Gateway_Abstract {
 			);
 		}
 
+		if ( $this->id == 'woo-unlimit-oxxo' ) {
+			$parameters['is_oxxo_payment_page_required'] = (
+				'payment_page' === get_option(
+					WC_Unlimit_Admin_Oxxo_Fields::FIELDNAME_PREFIX . WC_Unlimit_Admin_Fields::FIELD_API_ACCESS_MODE
+				)
+			);
+		}
+
 		if ( $this->id == 'woo-unlimit-sepa' ) {
 			$parameters['is_sepa_payment_page_required'] = (
 				'payment_page' === get_option(

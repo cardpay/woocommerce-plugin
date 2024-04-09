@@ -8,6 +8,7 @@
 - [Installation](#installation)
 - [Configuration](#configuration)
   - [Checkout page configuration](#checkout-page-configuration)
+  - [Locale Settings](#locale-settings)
   - [Basic Settings](#basic-settings)
   - [Payment Methods Settings](#payment-methods-settings)
     - [Credit Card](#credit-card)
@@ -16,6 +17,7 @@
     - [Google Pay](#google-pay)
     - [MB WAY](#mb-way)
     - [Multibanco](#multibanco)
+    - [OXXO](#oxxo)
     - [PayPal](#paypal)
     - [Pix](#pix)
     - [SEPA Instant](#sepa-instant)
@@ -54,6 +56,7 @@ Supported payment methods, the countries where those methods are available in, a
 | Google Pay     | Global   | Yes     | No          | No          | Yes           | Yes            |
 | MB WAY         | Portugal | Yes     | No          | No          | Yes           | Yes            |
 | Multibanco     | Portugal | Yes     | No          | No          | No            | Yes            |
+| OXXO           | Mexico   | Yes     | No          | No          | No            | Yes            |
 | PayPal         | Global   | Yes     | No          | No          | Yes           | Yes            |
 | Pix            | Brazil   | Yes     | No          | No          | No            | Yes            |
 | SEPA Instant   | Europe   | Yes     | No          | No          | No            | Yes            |
@@ -88,13 +91,23 @@ The Checkout Page is an essential component of any eCommerce site, serving as th
 
 1. Navigate to the **Pages** section by selecting **Pages** -> **All Pages** from the WordPress dashboard.
 2. Locate the **Checkout** page from the list and click **Edit** to modify its contents.
-![](readme_images/page_settings.png)
+![](readme_images/page_setting.png)
 3. On the default Checkout Page view, select the full checkout block and remove it to clear the page for customization.
 4. Add a new block by selecting the Toggle block inserter button, and choose the **Shortcode** block from the available options.
 5. Within the Shortcode block, input the following shortcode: `[woocommerce_checkout]`. This shortcode will render the WooCommerce checkout form.
 ![](readme_images/checkout_page.png)
 6. To apply the changes, click the **Update** button located at the top right corner of the editor.
 
+### Locale settings
+The locale setting are essential for specifying the language on the payment page and payment result page, independent from the store or checkout page language settings.
+
+To configure locale settings, the following is required:
+
+1. Navigate to the **Settings** > **General** > **Site Language** from the WordPress dashboard.
+![](readme_images/site_locale.png)
+3. Choose the desired language from the list. This language applies to the payment page and payment result page during client transactions.
+
+If the selected language is not supported for payment-related pages, English will be used as the default. Additionally, the language chosen in the Site Language setting also determines the language for the admin panel. 
 
 ### Basic settings
 Begin with the following basic settings:
@@ -110,6 +123,7 @@ Begin with the following basic settings:
     - Google Pay
     - MB WAY
     - Multibanco
+    - OXXO
     - PayPal
     - Pix
     - SEPA Instant
@@ -226,6 +240,23 @@ To enable payments via **Multibanco** complete the following steps:
     * Set to **No** for Production environment.
 * **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
+
+### OXXO
+
+To enable payments via **OXXO** complete the following steps:
+	
+![](readme_images/oxxo.png)
+
+* **API access mode:**
+    * Set to **Payment page** for cases when payment page by Unlimit in iFrame is used for customer data collecting.
+    * Set to **Gateway** for cases when embedded payment form in plugin is used for customer data collecting.
+* Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in Unlimit API v3 for this payment method (how to obtain credentials see [here](https://www.unlimit.com/integration/)).
+* **Test environment**:
+    * Set to **Yes** for Sandbox environment (for test purposes).
+    * Set to **No** for Production environment.
+* **Payment title** - fill in the name of the payment method, will be presented for the customer in checkout.
+* **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
+
 
 #### PayPal
 To enable payments via **PayPal** complete the following steps:
@@ -355,7 +386,6 @@ Order status is changed to **Cancelled**.
 * Google Pay
 * MB WAY
 * PayPal
-
 
 For creating a **Refund online** navigate to **Orders** and choose any **Order** in status **Processing**.
 

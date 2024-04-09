@@ -3,7 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 
 class WC_Unlimit_Constants {
-	public const VERSION = '1.3.7';
+	public const VERSION = '1.4.11';
 
 	public const API_UL_BASE_URL = 'https://cardpay.com/api';
 	public const API_UL_SANDBOX_URL = 'https://sandbox.cardpay.com/api';
@@ -18,6 +18,7 @@ class WC_Unlimit_Constants {
 	public const GPAY_GATEWAY = 'WC_Unlimit_Gpay_Gateway';
 	public const MBWAY_GATEWAY = 'WC_Unlimit_Mbway_Gateway';
 	public const SEPA_GATEWAY = 'WC_Unlimit_Sepa_Gateway';
+	public const OXXO_GATEWAY = 'WC_Unlimit_Oxxo_Gateway';
 	public const MULTIBANCO_GATEWAY = 'WC_Unlimit_Multibanco_Gateway';
 
 	public const PAYMENT_GATEWAYS = [
@@ -31,6 +32,7 @@ class WC_Unlimit_Constants {
 		self::PAYPAL_GATEWAY,
 		self::SEPA_GATEWAY,
 		self::SPEI_GATEWAY,
+		self::OXXO_GATEWAY,
 	];
 
 	// order meta fields (for 'wp_postmeta' DB table)
@@ -57,4 +59,35 @@ class WC_Unlimit_Constants {
 	public const SECURITY_CODE_MASKED = '...';
 
 	const PAYMENT_DATA = 'payment_data';
+
+	const LANGUAGES = [
+		'en',
+		'zh',
+		'hy',
+		'pl',
+		'az',
+		'bg',
+		'cs',
+		'es',
+		'ka',
+		'el',
+		'hu',
+		'id',
+		'ja',
+		'ms',
+		'pt',
+		'ro',
+		'ru',
+		'sr',
+		'ar',
+		'th',
+		'tr',
+		'uk',
+		'vi',
+		'de',
+		'fr',
+		'it',
+		'sv',
+		'nl'
+	];
 }

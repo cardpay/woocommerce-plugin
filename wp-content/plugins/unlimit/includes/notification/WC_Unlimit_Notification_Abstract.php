@@ -208,6 +208,7 @@ abstract class WC_Unlimit_Notification_Abstract {
 				case WC_Unlimit_Constants::GPAY_GATEWAY:
 				case WC_Unlimit_Constants::PIX_GATEWAY:
 				case WC_Unlimit_Constants::MULTIBANCO_GATEWAY:
+				case WC_Unlimit_Constants::OXXO_GATEWAY:
 					if ( 'no' === get_option( 'stock_reduce_mode', 'no' ) ) {
 						$order->payment_complete();
 						if ( 'completed' !== $payment_completed_status ) {

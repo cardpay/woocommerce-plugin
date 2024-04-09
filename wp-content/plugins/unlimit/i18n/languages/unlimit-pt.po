@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Unlimit payments for WooCommerce 6.1.1\n"
 "POT-Creation-Date: 2022-02-21\n"
-"PO-Revision-Date: 2023-10-11 23:38+0300\n"
+"PO-Revision-Date: 2024-04-04 11:45+0530\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Domain: unlimit\n"
 
 msgid "Are you sure you want to"
@@ -156,6 +156,9 @@ msgstr "Forma de pagamento PayPal"
 
 msgid "Multibanco payment method"
 msgstr "Forma de pagamento Multibanco"
+
+msgid "OXXO payment method"
+msgstr "Forma de pagamento OXXO"
 
 msgid "MB WAY payment method"
 msgstr "Forma de pagamento MB WAY"
@@ -750,6 +753,9 @@ msgstr "<strong>Telefone da Fatura</strong>, o número de telefone não pode com
 
 msgid "A problem occurred when processing your payment. Please, try again."
 msgstr "Ocorreu um problema ao processar o seu pagamento. Por favor, tente novamente."
+
+msgid "Unable to pay using payment method. Choose another payment method."
+msgstr "Não é possível pagar usando o método de pagamento. Escolha outro método de pagamento."
 
 msgid "Order was unsuccessful"
 msgstr "O pedido não foi bem-sucedido."

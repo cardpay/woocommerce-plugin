@@ -12,6 +12,7 @@ class WC_Unlimit_Refund
     const ERROR_PIX = 'Refund is not available for Pix';
     const ERROR_SPEI = 'Refund is not available for SPEI';
     const ERROR_SEPA = 'Refund is not available for SEPA Instant';
+    const ERROR_OXXO = 'Refund is not available for OXXO';
     const ERROR_STATUS = "Refund can be made in 'Processing' or 'Completed' order status only";
 
     const ALLOWED_ORDER_STATUSES = ['processing', 'completed'];
@@ -115,6 +116,10 @@ class WC_Unlimit_Refund
 
         if (WC_Unlimit_Constants::SPEI_GATEWAY === $gateway) {
             throw new WC_Unlimit_Exception(__(self::ERROR_SPEI));
+        }
+
+        if (WC_Unlimit_Constants::OXXO_GATEWAY === $gateway) {
+            throw new WC_Unlimit_Exception(__(self::ERROR_OXXO));
         }
 
         if (WC_Unlimit_Constants::SEPA_GATEWAY === $gateway) {

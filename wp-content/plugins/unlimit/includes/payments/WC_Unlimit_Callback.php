@@ -139,6 +139,10 @@ class WC_Unlimit_Callback {
 				$fieldname_prefix = WC_Unlimit_Admin_Gpay_Fields::FIELDNAME_PREFIX;
 				break;
 
+			case WC_Unlimit_Constants::OXXO_GATEWAY:
+				$fieldname_prefix = WC_Unlimit_Admin_Oxxo_Fields::FIELDNAME_PREFIX;
+				break;
+
 			default:
 				throw new WC_Unlimit_Exception( 'Invalid gateway provided for Unlimit callback secret' );
 		}

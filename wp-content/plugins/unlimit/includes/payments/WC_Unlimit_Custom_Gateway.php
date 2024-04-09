@@ -54,7 +54,7 @@ class WC_Unlimit_Custom_Gateway extends WC_Unlimit_Gateway_Abstract {
 			'completed',
 		];
 		if ( ! in_array( $field_status_order, $status_true ) ) {
-			$can_refund = false;
+			return false;
 		}
 
 		$field_installment_type       = $order->get_meta( '_ul_field_installment_type' );

@@ -82,6 +82,7 @@ const unlimitIframeProcessor = {
         const isCreditCard = jQuery('#payment_method_woo-unlimit-custom').is(':checked');
         const isMbway = jQuery('#payment_method_woo-unlimit-mbway').is(':checked');
         const isMultibanco = jQuery('#payment_method_woo-unlimit-multibanco').is(':checked');
+        const isOxxo = jQuery('#payment_method_woo-unlimit-oxxo').is(':checked');
         const isPaypal = jQuery('#payment_method_woo-unlimit-paypal').is(':checked');
         const isSpei = jQuery('#payment_method_woo-unlimit-spei').is(':checked');
         const isSepa = jQuery('#payment_method_woo-unlimit-sepa').is(':checked');
@@ -90,6 +91,7 @@ const unlimitIframeProcessor = {
             (isCreditCard && !unlimitIframePaymentMethods.includes('creditcard')) ||
             (isMbway && !unlimitIframePaymentMethods.includes('mbway')) ||
             (isMultibanco && !unlimitIframePaymentMethods.includes('multibanco')) ||
+            (isOxxo && !unlimitIframePaymentMethods.includes('oxxo')) ||
             (isPaypal && !unlimitIframePaymentMethods.includes('paypal')) ||
             (isSpei && !unlimitIframePaymentMethods.includes('spei')) ||
             (isSepa && !unlimitIframePaymentMethods.includes('sepa'))
@@ -98,7 +100,7 @@ const unlimitIframeProcessor = {
             return;
         }
 
-        if (!isMbway && !isCreditCard && !isMultibanco && !isPaypal && !isSpei && !isSepa && unlimitIframeProcessor.oldEvents !== false) {
+        if (!isMbway && !isCreditCard && !isMultibanco && !isOxxo && !isPaypal && !isSpei && !isSepa && unlimitIframeProcessor.oldEvents !== false) {
             unlimitFormCheckout.unbind('submit');
             const events = unlimitIframeProcessor.oldEvents;
             for (const type in events) {
@@ -113,7 +115,7 @@ const unlimitIframeProcessor = {
             unlimitIframeProcessor.oldEvents = false;
             return;
         }
-        if ((isMbway || isCreditCard || isMultibanco || isPaypal || isSpei || isSepa) && unlimitIframeProcessor.oldEvents === false) {
+        if ((isMbway || isCreditCard || isMultibanco || isOxxo || isPaypal || isSpei || isSepa) && unlimitIframeProcessor.oldEvents === false) {
             unlimitIframeProcessor.oldEvents = unlimitFormCheckout.data('events',
                 'submit');
             unlimitFormCheckout.unbind('submit').submit(function (event) {
@@ -164,20 +166,16 @@ const unlimitIframeProcessor = {
                 window.location.reload();
                 return;
             }
-            const messages = (
-                (
-                    'array' === typeof e['messages']
-                ) && e['messages'].length > 0
-            ) ? e['messages'] : [];
+            const messages = (e['messages'].length > 0) ? e['messages'] : [];
             !0 === (
                 e.refresh && g(document.body).trigger('update_checkout') &&
                 messages.length === 0
             )
                 ?
-                this.submit_error(messages)
-                :
                 this.submit_error(
-                    `<div class="woocommerce-error">${wc_checkout_params.i18n_checkout_error}</div>`);
+                    `<div class="woocommerce-error">${wc_checkout_params.i18n_checkout_error}</div>`)
+                :
+                this.submit_error(messages);
         }
     },
     formSubmit: function () {

@@ -254,7 +254,7 @@
 
 .ul-panel-custom-checkout {
     background-color: #fff;
-    padding: 20px 15px 0;
+    padding: 20px 37px 0 15px;
 }
 
 .ul-subtitle-custom-checkout {
@@ -366,6 +366,10 @@
     line-height: 1;
     letter-spacing: normal;
     color: rgba(0, 0, 0, 0.7) !important;
+}
+
+.theme-twentytwentytwo #unlimit-form .ul-col-md-6 {
+    width:100%;
 }
 
 .ul-label-form em {
@@ -778,7 +782,7 @@
     background-image: url(../images/visa.png);
     position: absolute;
     right: 8px;
-    top: 53px;
+    top: 45px;
     background-size: contain;
     background-repeat: no-repeat;
     width: 37px;
@@ -786,10 +790,10 @@
 }
 
 .card-brand-mastercard {
-    background: url(../images/card_brands_sprite.png) no-repeat -227px -218px;
+    background: url(../images/card_brands_sprite.png) no-repeat -232px -217px;
     position: absolute;
     right: 4px;
-    top: 45px;
+    top: 35px;
     width: 48px;
     height: 28px;
 }
@@ -798,25 +802,25 @@
     background: url(../images/card_brands_sprite.png) no-repeat -227px -148px;
     position: absolute;
     right: 5px;
-    top: 46px;
+    top: 37px;
     width: 41px;
     height: 25px;
 }
 
 .card-brand-mir {
-    background: url(../images/card_brands_sprite.png) no-repeat -315px -275px;
+    background: url(../images/card_brands_sprite.png) no-repeat -315px -267px;
     position: absolute;
     right: 8px;
-    top: 50px;
+    top: 35px;
     width: 50px;
     height: 25px;
 }
 
 .card-brand-discover {
-    background: url(../images/card_brands_sprite.png) no-repeat -373px -85px;
+    background: url(../images/card_brands_sprite.png) no-repeat -374px -85px;
     position: absolute;
     right: 5px;
-    top: 41px;
+    top: 32px;
     width: 44px;
     height: 31px;
 }
@@ -825,7 +829,7 @@
     background: url(../images/amex.png);
     position: absolute;
     right: 4px;
-    top: 45px;
+    top: 36px;
     width: 27px;
     height: 27px;
 }
@@ -840,10 +844,10 @@
 }
 
 .card-brand-jcb {
-    background: url(../images/card_brands_sprite.png) no-repeat -269px -65px;
+    background: url(../images/card_brands_sprite.png) no-repeat -267px -64px;
     position: absolute;
     right: 0;
-    top: 46px;
+    top: 37px;
     width: 40px;
     height: 26px;
 }
@@ -852,7 +856,7 @@
     background: url(../images/card_brands_sprite.png) no-repeat -318px -50px;
     position: absolute;
     right: 4px;
-    top: 46px;
+    top: 37px;
     width: 41px;
     height: 25px;
 }
@@ -864,6 +868,20 @@
     top: 48px;
     width: 40px;
     height: 20px;
+}
+
+.filing_id_wrapper {
+    line-height: 32px;
+}
+
+.filing_id_wrapper .card-logo{
+    margin-left: 10px;
+    position: initial;
+    display: inline-block;
+}
+
+.filing_id_wrapper .card-brand-visa{
+    margin-bottom: -12px;
 }
 
 .closed_unlimit {
@@ -1074,4 +1092,9 @@ div.apple-pay {
 
 .apple-pay-donate-button-white-with-line {
     -apple-pay-button-style: white-outline;
+}
+
+html .woocommerce-checkout #payment .payment_methods li [class^="payment_box payment_method_woo-unlimit-"] img {
+    max-height: initial;
+    float: none;
 }

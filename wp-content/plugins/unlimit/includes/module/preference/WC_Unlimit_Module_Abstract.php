@@ -102,6 +102,10 @@ abstract class WC_Unlimit_Module_Abstract extends WC_Payment_Gateway {
 		$order_id         = $this->order->get_id();
 		$customer         = WC()->customer;
 
+		$locale            = get_locale();
+		$language_code     = substr( $locale, 0, 2 );
+		$selected_language = in_array( $language_code, WC_Unlimit_Constants::LANGUAGES ) ? $language_code : 'en';
+
 		$common_api_request = [
 			'request'        => [
 				'id'   => uniqid( '', true ),
@@ -121,9 +125,10 @@ abstract class WC_Unlimit_Module_Abstract extends WC_Payment_Gateway {
 				]
 			],
 			'customer'       => [
-				'id'    => $this->order->get_user_id(),
-				'email' => $this->order->get_billing_email(),
-				'phone' => preg_replace( '/[^\d]/', '', $this->order->get_billing_phone() ),
+				'id'     => $this->order->get_user_id(),
+				'email'  => $this->order->get_billing_email(),
+				'phone'  => preg_replace( '/[^\d]/', '', $this->order->get_billing_phone() ),
+				'locale' => $selected_language,
 			],
 			'return_urls'    => [
 				'decline_url'   => $this->build_return_url( $notification_url, 'decline', $order_id ),

@@ -14,6 +14,7 @@ require_once __DIR__ . '/../../../payments/form_fields/WC_Unlimit_Admin_Paypal_F
 require_once __DIR__ . '/../../../payments/form_fields/WC_Unlimit_Admin_Pix_Fields.php';
 require_once __DIR__ . '/../../../payments/form_fields/WC_Unlimit_Admin_Sepa_Fields.php';
 require_once __DIR__ . '/../../../payments/form_fields/WC_Unlimit_Admin_Spei_Fields.php';
+require_once __DIR__ . '/../../../payments/form_fields/WC_Unlimit_Admin_Oxxo_Fields.php';
 require_once __DIR__ . '/../../../module/config/WC_Unlimit_Constants.php';
 require_once __DIR__ . '/../../../module/WC_Unlimit_Helper.php';
 
@@ -346,6 +347,10 @@ class WC_Unlimit_Sdk {
 
 			case WC_Unlimit_Multibanco_Gateway::GATEWAY_ID:
 				$prefix = WC_Unlimit_Admin_Multibanco_Fields::FIELDNAME_PREFIX;
+				break;
+
+			case WC_Unlimit_Oxxo_Gateway::GATEWAY_ID:
+				$prefix = WC_Unlimit_Admin_Oxxo_Fields::FIELDNAME_PREFIX;
 				break;
 
 			default:

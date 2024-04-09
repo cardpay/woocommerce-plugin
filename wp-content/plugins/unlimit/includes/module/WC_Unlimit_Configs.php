@@ -108,6 +108,7 @@ class WC_Unlimit_Configs {
 		$methods[] = WC_Unlimit_Constants::GPAY_GATEWAY;
 		$methods[] = WC_Unlimit_Constants::MBWAY_GATEWAY;
 		$methods[] = WC_Unlimit_Constants::MULTIBANCO_GATEWAY;
+		$methods[] = WC_Unlimit_Constants::OXXO_GATEWAY;
 		$methods[] = WC_Unlimit_Constants::PAYPAL_GATEWAY;
 		$methods[] = WC_Unlimit_Constants::PIX_GATEWAY;
 		$methods[] = WC_Unlimit_Constants::SEPA_GATEWAY;
