@@ -1,4 +1,3 @@
-
 # Unlimit WooCommerce plugin
 ## Table of Contents
 - [Overview](#overview)
@@ -99,13 +98,13 @@ The Checkout Page is an essential component of any eCommerce site, serving as th
 6. To apply the changes, click the **Update** button located at the top right corner of the editor.
 
 ### Locale settings
-The locale setting are essential for specifying the language on the payment page and payment result page, independent from the store or checkout page language settings.
+The locale settings are essential for specifying the language on the payment page, the payment result page, the store language, and the checkout page language settings.
 
 To configure locale settings, the following is required:
 
 1. Navigate to the **Settings** > **General** > **Site Language** from the WordPress dashboard.
 ![](readme_images/site_locale.png)
-3. Choose the desired language from the list. This language applies to the payment page and payment result page during client transactions.
+2. Choose the desired language from the list. This language applies to the payment page, the payment result page, the store language, and the checkout page during client transactions.
 
 If the selected language is not supported for payment-related pages, English will be used as the default. Additionally, the language chosen in the Site Language setting also determines the language for the admin panel. 
 
@@ -245,7 +244,7 @@ To enable payments via **Multibanco** complete the following steps:
 
 To enable payments via **OXXO** complete the following steps:
 	
-![](readme_images/oxxo.png)
+![](readme_images/OXXO.png)
 
 * **API access mode:**
     * Set to **Payment page** for cases when payment page by Unlimit in iFrame is used for customer data collecting.
