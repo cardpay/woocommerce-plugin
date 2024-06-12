@@ -49,7 +49,7 @@ class WC_Unlimit_Init {
 	/**
 	 * Add mp order meta box actions function
 	 *
-	 * @param array $actions actions.
+	 * @param  array  $actions  actions.
 	 *
 	 * @return array
 	 */
@@ -134,6 +134,7 @@ class WC_Unlimit_Init {
 
 			add_action( 'woocommerce_order_actions', [ __CLASS__, 'add_ul_order_meta_box_actions' ] );
 			self::save_default_order_statuses_mapping();
+			self::on_upgrader_process_complete();
 		}
 
 		add_action( 'woocommerce_settings_checkout', [ __CLASS__, 'ul_show_admin_notices' ] );
@@ -145,6 +146,38 @@ class WC_Unlimit_Init {
 
 		add_action( 'wp_ajax_wc_ul_capture', [ __CLASS__, 'ajax_ul_capture_payment' ] );
 		add_action( 'wp_ajax_wc_ul_cancel', [ __CLASS__, 'ajax_ul_cancel_payment' ] );
+	}
+
+	/**
+	 * Function to handle the upgrader_process_complete hook
+	 */
+	public static function on_upgrader_process_complete() {
+		self::update_completed_unlimit_option();
+		self::update_chargeback_resolved_unlimit_option();
+	}
+
+	/**
+	 * Function to update the completed_unlimit option
+	 */
+	public static function update_completed_unlimit_option() {
+		$option_name  = 'woocommerce_unlimit_order_status_completed';
+		$option_value = get_option( $option_name );
+
+		if ( $option_value !== WC_Unlimit_Admin_Order_Status_Fields::COMPLETED_WC_DEFAULT ) {
+			update_option( $option_name, WC_Unlimit_Admin_Order_Status_Fields::COMPLETED_WC_DEFAULT );
+		}
+	}
+
+	/**
+	 * Function to update the chargeback_resolved_unlimit option
+	 */
+	public static function update_chargeback_resolved_unlimit_option() {
+		$option_name  = 'woocommerce_unlimit_order_status_chargeback_resolved';
+		$option_value = get_option( $option_name );
+
+		if ( $option_value !== WC_Unlimit_Admin_Order_Status_Fields::CHARGEBACK_RESOLVED_WC_DEFAULT ) {
+			update_option( $option_name, WC_Unlimit_Admin_Order_Status_Fields::CHARGEBACK_RESOLVED_WC_DEFAULT );
+		}
 	}
 
 	private static function save_default_order_statuses_mapping() {

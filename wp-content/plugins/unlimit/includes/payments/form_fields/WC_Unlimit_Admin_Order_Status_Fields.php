@@ -26,7 +26,7 @@ class WC_Unlimit_Admin_Order_Status_Fields extends WC_Unlimit_Admin_Fields {
 
 	public const COMPLETED_UNLIMIT = 'completed';
 
-	public const COMPLETED_WC_DEFAULT = self::PROCESSING_WC;
+	public const COMPLETED_WC_DEFAULT = self::COMPLETED_WC;
 
 	public const CANCELED_UNLIMIT = 'canceled';
 
@@ -46,7 +46,7 @@ class WC_Unlimit_Admin_Order_Status_Fields extends WC_Unlimit_Admin_Fields {
 
 	public const CHARGEBACK_RESOLVED_UNLIMIT = 'chargeback_resolved';
 
-	public const CHARGEBACK_RESOLVED_WC_DEFAULT = self::PROCESSING_WC;
+	public const CHARGEBACK_RESOLVED_WC_DEFAULT = self::COMPLETED_WC;
 
 	public const TERMINATED_UNLIMIT = 'terminated';
 
@@ -55,7 +55,7 @@ class WC_Unlimit_Admin_Order_Status_Fields extends WC_Unlimit_Admin_Fields {
 	// WooCommerce statuses
 	public const PENDING_WC = 'wc-pending';
 	public const FAILED_WC = 'wc-failed';
-	public const PROCESSING_WC = 'wc-processing';
+	public const COMPLETED_WC = 'wc-completed';
 	public const ON_HOLD_WC = 'wc-on-hold';
 	public const CANCELLED_WC = 'wc-cancelled';
 	public const REFUNDED_WC = 'wc-refunded';

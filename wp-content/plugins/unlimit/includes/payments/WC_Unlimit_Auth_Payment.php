@@ -164,7 +164,7 @@ class WC_Unlimit_Auth_Payment {
 		$this->logger->log_callback_request( __FUNCTION__, "Capture payment process started" );
 
 		$is_api_transaction_updated = $this->update_api_transaction_status( $order, self::COMPLETE_STATUS_TO,
-			WC_Unlimit_Admin_Order_Status_Fields::PROCESSING_WC );
+			WC_Unlimit_Admin_Order_Status_Fields::COMPLETED_WC );
 
 		if ( $is_api_transaction_updated ) {
 			$order->save();
