@@ -103,15 +103,14 @@ The Checkout Page is an essential component of any eCommerce site, serving as th
 6. To apply the changes, click the **Update** button located at the top right corner of the editor.
 
 ### Locale settings
-The locale setting are essential for specifying the language on the payment page and payment result page, independent from the store or checkout page language settings.
+The locale settings are essential for specifying the language on the payment page, the payment result page, the store language, and the checkout page language settings.
 
 To configure locale settings, the following is required:
 
 1. Navigate to the **Settings** > **General** > **Site Language** from the WordPress dashboard.
 
 ![](readme_images/site_locale.png)
- 
-2. Choose the desired language from the list. This language applies to the payment page and payment result page during client transactions.
+2. Choose the desired language from the list. This language applies to the payment page, the payment result page, the store language, and the checkout page during client transactions.
 
 If the selected language is not supported for payment-related pages, English will be used as the default. Additionally, the language chosen in the Site Language setting also determines the language for the admin panel. 
 
@@ -365,7 +364,7 @@ Then click the **Capture** button.
 
 Click **Yes** inside the presented pop-up window in order to proceed with the payment operation processing.
 
-The status of the order is changed to **Processing**.
+The status of the order is changed to **Completed**.
 
 ![](readme_images/order_processing.png)
 
@@ -393,7 +392,7 @@ Order status is changed to **Cancelled**.
 * MB WAY
 * PayPal
 
-For creating a **Refund online** navigate to **Orders** and choose any **Order** in status **Processing**.
+For creating a **Refund online** navigate to **Orders** and choose any **Order** in status **Completed**.
 
 ![](readme_images/order_processing.png)
 

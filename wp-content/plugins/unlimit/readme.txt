@@ -4,7 +4,7 @@ Tags: ecommerce, unlimit, woocommerce
 Requires at least: WooCommerce engine version 7.3.0
 Tested up to: WooCommerce engine version 7.7.0
 Requires PHP: 7.4 and up to PHP 8.1 according to the official WooCommerce recommendations
-Stable tag: 1.4.13
+Stable tag: 1.4.14
 License: MIT
 
 == Description ==
