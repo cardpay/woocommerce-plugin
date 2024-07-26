@@ -130,7 +130,6 @@ class WC_Unlimit_Sdk {
 	 * @return array|null
 	 */
 	public function get_preference( $id ) {
-
 		$request = [
 			'headers' => [
 				'Authorization' => self::BEARER . $this->get_access_token(),
@@ -147,7 +146,6 @@ class WC_Unlimit_Sdk {
 	 * @return array|null
 	 */
 	public function create_payment( $preference ) {
-
 		$request = [
 			'uri'     => '/payments',
 			'headers' => [
@@ -184,7 +182,6 @@ class WC_Unlimit_Sdk {
 	 * @return array|null
 	 */
 	public function cancel_payment( $id ) {
-
 		$request = [
 			'headers' => [
 				'Authorization' => self::BEARER . $this->get_access_token(),

@@ -11,14 +11,7 @@ const UL_MAX_CARD_EXPIRATION_YEARS = 40;
 const formCheckout = jQuery('form.checkout');
 
 const checkForm = {
-    INPUT_UL_FIELD_IDS: [
-        UL_CARD_NUMBER,
-        UL_CARD_HOLDER_NAME,
-        UL_CARD_EXPIRATION_DATE,
-        UL_CVC,
-        UL_INSTALLMENTS,
-        UL_CPF
-    ],
+    INPUT_UL_FIELD_IDS: [UL_CARD_NUMBER, UL_CARD_HOLDER_NAME, UL_CARD_EXPIRATION_DATE, UL_CVC, UL_INSTALLMENTS, UL_CPF],
     check: function () {
         let areInputFieldsValid = true;
 
@@ -31,13 +24,109 @@ const checkForm = {
     }
 };
 
-(function ($) {
-    $(function () {
+(function (jQuery) {
+    jQuery(function () {
         formCheckout.on('checkout_place_order_woo-unlimit-custom', function () {
+            const inputFieldError = jQuery(`#ul-filing-id-error`);
+            inputFieldError.hide();
+            const inputField = jQuery('.select_filing_id');
+
+            if (jQuery('input[name="unlimit_custom[filing_id]"]').length > 0 &&
+                jQuery('input[name="unlimit_custom[filing_id]"]:checked').length === 0 &&
+                !jQuery('#unlimit-form').is(':visible')) {
+                if (inputField.is(':visible')) {
+                    inputField.addClass(UL_ERROR_CLASS);
+                    inputFieldError.show();
+                    return false;
+                }
+            }
             return checkForm.check();
+        });
+
+        jQuery(document).on('change', 'input[name="unlimit_custom[filing_id]"]', function () {
+            jQuery(`#ul-filing-id-error`).hide();
+            jQuery('.select_filing_id').removeClass(UL_ERROR_CLASS);
+            if (jQuery('input[name="unlimit_custom[filing_id]"]:checked').val() !== "0") {
+                jQuery('#unlimit-form').hide();
+            } else {
+                jQuery('#unlimit-form').show();
+            }
+        });
+
+        jQuery(document).on('click', '.add_new_card .add-card', function () {
+            jQuery('#unlimit-form').slideToggle();
+            jQuery('input[name="unlimit_custom[filing_id]"]:checked').prop('checked', false);
+            jQuery('.select_filing_id').animate({
+                scrollTop: jQuery("#unlimit-form").offset().top - jQuery(".ul-panel-custom-checkout").offset().top - 50
+            }, 500);
+        });
+
+        jQuery(document).on('click', '.init-delete-card', function () {
+            jQuery(this).hide();
+            jQuery(this).parent().find('.delete-card-wrapper').show();
+        });
+
+        jQuery(document).on('click', '.delete-cancel', function () {
+            jQuery(this).parent().hide();
+            jQuery(this).parent().next().show();
+        });
+
+        jQuery(document).on('click', '.delete-card', function () {
+            deleteCard(jQuery(this));
         });
     });
 }(jQuery));
+
+const deleteCard = function (el) {
+    jQuery.post(getCheckoutConfigParam('ajax_url', ''), {
+        action: 'delete_card',
+        nonce: getCheckoutConfigParam('ajax_nonce', ''),
+        recurring_data_id: el.val()
+    }, function (data) {
+        const response = JSON.parse(data);
+        if (response.success) {
+            jQuery('.unlimit-custom-success').text(response.message).show();
+            el.parent().parent().remove();
+            checkAndHideSelectFiling();
+
+            setTimeout(function () {
+                jQuery('.unlimit-custom-success').fadeOut(1000);
+            }, 3000);
+        } else {
+            jQuery('.unlimit-custom-error').text(response.message).show();
+        }
+    }, 'text')
+        .fail(function (xhr, textStatus, errorThrown) {
+            console.log(xhr.responseText);
+        });
+};
+
+const checkAndHideSelectFiling = function () {
+    let hasCards = false;
+
+    jQuery('.select_filing_id').each(function () {
+        if (jQuery(this).find('.filing_id_wrapper').length) {
+            hasCards = true;
+            jQuery(this).show();
+        } else {
+            jQuery(this).hide();
+        }
+    });
+
+    if (!hasCards) {
+        jQuery('#unlimit-form').show();
+    } else {
+        jQuery('#unlimit-form').hide();
+    }
+};
+
+const getCheckoutConfigParam = function (type, defaultValue) {
+    if (typeof window.wc_unlimit_custom_params === 'undefined' || typeof window.wc_unlimit_custom_params[type] === 'undefined') {
+        return defaultValue;
+    }
+    return window.wc_unlimit_custom_params[type];
+}
+
 
 const formatUlCardField = function (fieldId) {
     const inputField = jQuery('#' + fieldId);
@@ -303,7 +392,7 @@ const validateCardNumber = function (CARD_BRANDS, cardNumberError) {
     if (!cardNumberInputField) {
         return true;
     }
-    cardNumberInputField.removeClass('ul-form-control-error');
+    cardNumberInputField.removeClass(UL_ERROR_CLASS);
 
     const cardNumber = cardNumberInputField.val().replace(/[^\d]/gi, '');
 
@@ -381,5 +470,3 @@ const areUlInstallmentsValid = function () {
 const validateUlCardFieldInput = function (field) {
     setTimeout(validateUlCardField(field.id), 1);
 }
-
-

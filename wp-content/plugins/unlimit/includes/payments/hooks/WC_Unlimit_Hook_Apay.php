@@ -23,8 +23,6 @@ class WC_Unlimit_Hook_Apay extends WC_Unlimit_Alt_Hook {
 
 		if ( $this->is_gateway_enabled() ) {
 			add_action( 'wp_enqueue_scripts', [ $this, 'add_checkout_scripts_apay' ] );
-            add_action( 'wp_ajax_validate_merchant', [ $this, 'validate_merchant' ] );
-            add_action( 'wp_ajax_nopriv_validate_merchant', [ $this, 'validate_merchant' ] );
 		}
 	}
 
@@ -107,8 +105,6 @@ class WC_Unlimit_Hook_Apay extends WC_Unlimit_Alt_Hook {
 					'store_name'  => get_bloginfo('name'),
 					'currency'	  => get_woocommerce_currency(),
 					'merchant_id' => $this->gateway->settings['apple_merchant_id'],
-					'validatemerchant_url' => admin_url('admin-ajax.php'),
-					'validatemerchant_nonce' => wp_create_nonce('validatemerchant'),
 					'payer_email' => esc_js( $this->gateway->logged_user_email ),
 					'apply'       => __( 'Apply', 'unlimit' ),
 					'remove'      => __( 'Remove', 'unlimit' ),
@@ -124,7 +120,7 @@ class WC_Unlimit_Hook_Apay extends WC_Unlimit_Alt_Hook {
 
     public static function validate_merchant()
     {
-		if (!wp_verify_nonce( $_POST['nonce'], 'validatemerchant' )) {
+		if (!wp_verify_nonce( $_POST['nonce'], 'unlimitnonce' )) {
 			wp_die();
 		}
         $postData = array(

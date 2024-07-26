@@ -12,6 +12,7 @@ class WC_Unlimit_Callback {
 	const SIGNATURE_HEADER = 'HTTP_SIGNATURE';
 
 	private const REFUND_DATA_TRANSACTION_TYPE = 'refund_data';
+	private const RECURRING_DATA_TRANSACTION_TYPE = 'recurring_data';
 	private const STATUS_FIELD = 'status';
 
 	/**
@@ -74,8 +75,9 @@ class WC_Unlimit_Callback {
 		if ( $generated_signature !== $callback_signature ) {
 			$order_id = $this->getOrder_id( $callback_decoded );
 
-			$this->logger->error( __FUNCTION__, 'Unlimit callback signature does not match for order #' .
-			                                    $order_id );
+			$this->logger->error( __FUNCTION__,
+				'Unlimit callback signature does not match for order #' .
+				$order_id );
 			$is_valid_signature = false;
 		}
 
@@ -167,6 +169,47 @@ class WC_Unlimit_Callback {
 		$transaction_type = $this->get_transaction_type( $callback_decoded );
 		$transaction_id   = $this->get_transaction_id( $callback_decoded, $transaction_type );
 		$new_order_status = $this->get_new_order_status( $callback_decoded, $transaction_type );
+		$order            = wc_get_order( $order_id );
+
+		if (
+			$transaction_type === self::RECURRING_DATA_TRANSACTION_TYPE &&
+			isset( $callback_decoded[ $transaction_type ]['filing']['id'] ) &&
+			$order->get_customer_id() &&
+			isset( $callback_decoded['card_account']['masked_pan'] )
+		) {
+			global $wpdb;
+
+			$table_name = $wpdb->prefix . 'ul_recurring_data';
+			$filing_id = $callback_decoded[ $transaction_type ]['filing']['id'];
+			$results    = $wpdb->get_row(
+				'SELECT * FROM `' . $table_name . '` WHERE `filing_id` = "' . $filing_id . '"',
+				ARRAY_A
+			);
+			if ( ! $results ) {
+				$wpdb->insert(
+					$table_name,
+					array(
+						'customer_id'   => (int) $order->get_customer_id(),
+						'recurring_id'  => $callback_decoded[ $transaction_type ]['id'],
+						'terminal_code' => get_option(
+							WC_Unlimit_Admin_BankCard_Fields::FIELDNAME_PREFIX . WC_Unlimit_Admin_Fields::FIELD_TERMINAL_CODE
+						),
+						'filing_id'     => $callback_decoded[ $transaction_type ]['filing']['id'],
+						'masked_pan'    => $callback_decoded['card_account']['masked_pan'],
+						'card_type'     => $callback_decoded['card_account']['card_brand']
+					)
+				);
+			} else {
+				$wpdb->update(
+					$table_name,
+					array(
+						'recurring_id' => $callback_decoded[ $transaction_type ]['id'],
+						'updated_at'   => date( 'Y-m-d H:i:s' ),
+					),
+					[ 'recurring_data_id' => (int) $results['recurring_data_id'] ]
+				);
+			}
+		}
 
 		$this->logger->log_callback_request(
 			__FUNCTION__,
@@ -174,8 +217,9 @@ class WC_Unlimit_Callback {
 		);
 
 		$new_order_status_option = $this->get_new_order_status_option( $new_order_status );
-		$this->logger->log_callback_request( __FUNCTION__, 'Unlimit callback: Order #' .
-		                                                   $order_id . ' status was updated to: ' . $new_order_status );
+		$this->logger->log_callback_request( __FUNCTION__,
+			'Unlimit callback: Order #' .
+			$order_id . ' status was updated to: ' . $new_order_status );
 
 		$order_statuses = wc_get_order_statuses();
 		if ( ! in_array( $new_order_status_option, array_keys( $order_statuses ) ) ) {
@@ -183,18 +227,24 @@ class WC_Unlimit_Callback {
 				"Order status '$new_order_status_option' does not exist!" );
 		}
 
+		self::update_order_status( $order, $new_order_status_option, $transaction_id );
+
+		$this->logger->log_callback_request( __FUNCTION__, "Order #$order_id save" );
+	}
+
+	public static function update_order_status( $order, $new_order_status_option, $transaction_id = false ) {
 		$order_status_updater = new WC_Unlimit_Order_Status_Updater();
-		$order                = wc_get_order( $order_id );
+
 		$order_status_updater->update_order_status( $order, $new_order_status_option );
 
 		WC_Unlimit_Helper::set_order_meta( $order,
-			WC_Unlimit_Constants::ORDER_META_CALLBACK_STATUS_FIELDNAME, $new_order_status_option );
+			WC_Unlimit_Constants::ORDER_META_CALLBACK_STATUS_FIELDNAME,
+			$new_order_status_option );
 
 		if ( $transaction_id && ! $order->get_transaction_id() ) {
 			$order->set_transaction_id( $transaction_id );
 		}
 
-		$this->logger->log_callback_request( __FUNCTION__, "Order #$order_id save" );
 		$order->save();
 	}
 
@@ -245,6 +295,8 @@ class WC_Unlimit_Callback {
 	private function get_transaction_type( $callback_decoded ) {
 		if ( isset( $callback_decoded[ self::REFUND_DATA_TRANSACTION_TYPE ] ) ) {
 			$transaction_type = self::REFUND_DATA_TRANSACTION_TYPE;
+		} elseif ( isset( $callback_decoded[ self::RECURRING_DATA_TRANSACTION_TYPE ] ) ) {
+			$transaction_type = self::RECURRING_DATA_TRANSACTION_TYPE;
 		} else {
 			$transaction_type = WC_Unlimit_Constants::PAYMENT_DATA;
 		}
@@ -292,7 +344,7 @@ class WC_Unlimit_Callback {
 	}
 
 	/**
-	 * @param  mixed  $callback_decoded
+	 * @param mixed $callback_decoded
 	 *
 	 * @return mixed|string
 	 */

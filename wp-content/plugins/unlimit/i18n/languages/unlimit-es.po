@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Unlimit payments for WooCommerce 6.1.1\n"
 "POT-Creation-Date: 2022-02-21\n"
-"PO-Revision-Date: 2024-04-04 11:41+0530\n"
+"PO-Revision-Date: 2024-06-12 12:19+0530\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.4.3\n"
 "X-Domain: unlimit\n"
 
 msgid "Are you sure you want to"
@@ -771,3 +771,33 @@ msgstr "%s vacío"
 
 msgid "Invalid %s"
 msgstr "%s inválido"
+
+msgid "Recurring enabled"
+msgstr "Recurrente habilitado"
+
+msgid "If set to Yes then recurring (one-click) payments field will be presented on payment form and recurring payments can be possible for processing."
+msgstr "Si se establece en Sí, el campo de pagos recurrentes (un clic) se presentará en el formulario de pago y será posible procesar los pagos recurrentes."
+
+msgid "Recurring payments aren't available while installment payments can be set up."
+msgstr "Los pagos recurrentes no están disponibles mientras se pueden configurar pagos a plazos."
+
+msgid "Saved cards"
+msgstr "Tarjetas guardadas"
+
+msgid "Save this card for future use"
+msgstr "Guarda esta tarjeta para uso futuro"
+
+msgid "Delete"
+msgstr "Borrar"
+
+msgid "Add new card"
+msgstr "Agregar nueva tarjeta"
+
+msgid "Do you want to delete the card?"
+msgstr "¿Quieres eliminar la tarjeta?"
+
+msgid "Your card has been deleted."
+msgstr "Tu tarjeta ha sido eliminada."
+
+msgid "Save the card that will be entered next"
+msgstr "Guarde la tarjeta que se ingresará a continuación"

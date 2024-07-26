@@ -25,6 +25,9 @@ const unlimitSettingsEvent = {
             'maximum_accepted_installments',
             'installment_type',
         ];
+        this.recurringSettingsFields = [
+            'recurring_enabled',
+        ];
         this.toggleSettings();
         this.selectPpAndInstType();
         this.processInstallmentSettings();
@@ -124,6 +127,21 @@ const unlimitSettingsEvent = {
                 el.show('slow');
             } else {
                 el.hide();
+            }
+        });
+        obj.processRecurringSettings();
+    },
+    processRecurringSettings: function () {
+        const obj = this;
+        const show = (
+            jQuery(obj.selInstEnabled).val() === 'no'
+        );
+        jQuery(obj.recurringSettingsFields).each(function () {
+            const el = jQuery(`#${obj.prefix}${this}`);
+            if (show) {
+                el.removeAttr('disabled');
+            } else {
+                el.attr('disabled', 'disabled');
             }
         });
     },

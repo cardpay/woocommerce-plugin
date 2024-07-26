@@ -323,8 +323,8 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 	/**
 	 * Load Unlimit options from DB
 	 *
-	 * @param  string  $key  key.
-	 * @param  string  $default  default.
+	 * @param string $key key.
+	 * @param string $default default.
 	 *
 	 * @return mixed|string
 	 */
@@ -384,8 +384,8 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * @param  array  $form_fields  fields.
-	 * @param  array  $ordination  ordination.
+	 * @param array $form_fields fields.
+	 * @param array $ordination ordination.
 	 *
 	 * @return array
 	 */
@@ -448,8 +448,10 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 	public function is_production_mode() {
 		$this->update_credential_production();
 
-		return $this->get_option_ul( 'checkout_credential_prod',
-				get_option( 'checkout_credential_prod', 'no' ) ) === 'yes';
+		return $this->get_option_ul(
+				'checkout_credential_prod',
+				get_option( 'checkout_credential_prod', 'no' )
+			) === 'yes';
 	}
 
 	public function update_credential_production() {
@@ -468,15 +470,17 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 					continue;
 				}
 				$options['checkout_credential_prod'] = $options['checkout_credential_production'];
-				update_option( $key,
-					apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $gateway::get_id(), $options ) );
+				update_option(
+					$key,
+					apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $gateway::get_id(), $options )
+				);
 			}
 		}
 	}
 
 	/**
-	 * @param  WC_Order  $order
-	 * @param  array  $response
+	 * @param WC_Order $order
+	 * @param array $response
 	 *
 	 * @throws WC_Data_Exception
 	 */
@@ -484,35 +488,80 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 		$card_post_fields        = $_POST['unlimit_custom'];
 		$installments_order_meta = (int) $card_post_fields[ WC_Unlimit_Module_Custom::INSTALLMENTS ];
 
-		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_PAYMENT_TYPE_FIELDNAME,
-			WC_Unlimit_Constants::PAYMENT_TYPE_PAYMENT );
-		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_FIELD_INSTALLMENT_TYPE,
-			get_option( WC_Unlimit_Admin_BankCard_Fields::FIELDNAME_PREFIX .
-			            WC_Unlimit_Admin_BankCard_Fields::FIELD_INSTALLMENT_TYPE ) );
+		if ( isset( $card_post_fields['recurring'] ) || isset( $card_post_fields['filing_id'] ) ) {
+			WC_Unlimit_Helper::set_order_meta(
+				$order,
+				WC_Unlimit_Constants::ORDER_META_PAYMENT_TYPE_FIELDNAME,
+				WC_Unlimit_Constants::PAYMENT_TYPE_RECURRING
+			);
+		} else {
+			WC_Unlimit_Helper::set_order_meta(
+				$order,
+				WC_Unlimit_Constants::ORDER_META_PAYMENT_TYPE_FIELDNAME,
+				WC_Unlimit_Constants::PAYMENT_TYPE_PAYMENT
+			);
+		}
 
-		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_GATEWAY_FIELDNAME,
-			get_class( $this ) );
-		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_COUNT_INSTALLMENT,
-			$installments_order_meta );
-		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_REDIRECT_URL_FIELDNAME,
-			$response['redirect_url'] );
-		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_INITIAL_API_TOTAL,
-			$order->get_total() );
+		WC_Unlimit_Helper::set_order_meta(
+			$order,
+			WC_Unlimit_Constants::ORDER_META_FIELD_INSTALLMENT_TYPE,
+			get_option(
+				WC_Unlimit_Admin_BankCard_Fields::FIELDNAME_PREFIX .
+				WC_Unlimit_Admin_BankCard_Fields::FIELD_INSTALLMENT_TYPE
+			)
+		);
 
-		$order->set_transaction_id( $response[ WC_Unlimit_Constants::PAYMENT_DATA ]['id'] );
+		WC_Unlimit_Helper::set_order_meta(
+			$order,
+			WC_Unlimit_Constants::ORDER_META_GATEWAY_FIELDNAME,
+			get_class( $this )
+		);
+		WC_Unlimit_Helper::set_order_meta(
+			$order,
+			WC_Unlimit_Constants::ORDER_META_COUNT_INSTALLMENT,
+			$installments_order_meta
+		);
+		WC_Unlimit_Helper::set_order_meta(
+			$order,
+			WC_Unlimit_Constants::ORDER_META_REDIRECT_URL_FIELDNAME,
+			$response['redirect_url']
+		);
+		WC_Unlimit_Helper::set_order_meta(
+			$order,
+			WC_Unlimit_Constants::ORDER_META_INITIAL_API_TOTAL,
+			$order->get_total()
+		);
+
+		$transaction_id = null;
+		if ( isset( $response[ WC_Unlimit_Constants::PAYMENT_DATA ]['id'] ) ) {
+			WC_Unlimit_Helper::set_order_meta( $order,
+				WC_Unlimit_Constants::ORDER_META_PAYMENT_TYPE_FIELDNAME,
+				WC_Unlimit_Constants::PAYMENT_TYPE_PAYMENT );
+			$transaction_id = $response[ WC_Unlimit_Constants::PAYMENT_DATA ]['id'];
+		} elseif ( isset( $response[ WC_Unlimit_Constants::RECURRING_DATA ]['id'] ) ) {
+			WC_Unlimit_Helper::set_order_meta( $order,
+				WC_Unlimit_Constants::ORDER_META_PAYMENT_TYPE_FIELDNAME,
+				WC_Unlimit_Constants::PAYMENT_TYPE_RECURRING );
+			$transaction_id = $response[ WC_Unlimit_Constants::RECURRING_DATA ]['id'];
+		}
+
+		$order->set_transaction_id( $transaction_id );
 
 		$order->save();
 	}
 
 	/**
-	 * @param  array  $api_request
+	 * @param array $api_request
 	 *
 	 * @return mixed
 	 */
 	protected function call_api( $api_request ) {
 		$this->logger->info( __FUNCTION__, 'call API' );
-
-		$api_response = $this->unlimit_sdk->post( '/payments', wp_json_encode( $api_request ) );
+		if ( isset( $api_request[ WC_Unlimit_Constants::RECURRING_DATA ] ) ) {
+			$api_response = $this->unlimit_sdk->post( '/recurrings', wp_json_encode( $api_request ) );
+		} else {
+			$api_response = $this->unlimit_sdk->post( '/payments', wp_json_encode( $api_request ) );
+		}
 
 		if ( $api_request['payment_method'] == "BANKCARD" && $api_response['response']['redirect_url'] ) {
 			return $api_response['response'];
@@ -541,8 +590,8 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 	}
 
 	/**
-	 * @param  array  $api_response
-	 * @param  WC_Order  $order
+	 * @param array $api_response
+	 * @param WC_Order $order
 	 *
 	 * @return array|string[]
 	 * @throws WC_Data_Exception
@@ -553,7 +602,34 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 			$this->save_order_meta( $order, $api_response );
 			$redirect = $api_response['redirect_url'] ?? $order->get_checkout_order_received_url();
 
+			if (
+				isset( $api_response[ WC_Unlimit_Constants::RECURRING_DATA ]['id'] ) &&
+				isset( $api_response[ WC_Unlimit_Constants::RECURRING_DATA ]['status'] )
+			) {
+				$order_status_updater = new WC_Unlimit_Order_Status_Updater();
+				$new_status           = get_option(
+					WC_Unlimit_Admin_Order_Status_Fields::FIELDNAME_PREFIX .
+					strtolower( $api_response[ WC_Unlimit_Constants::RECURRING_DATA ]['status'] )
+				);
+
+				$order_status_updater->update_order_status( $order, $new_status );
+			}
+
 			WC()->cart->empty_cart();
+
+			if (
+				! empty( $api_response['recurring_data']['filing']['id'] ) &&
+				$this->settings['woocommerce_unlimit_bankcard_payment_page'] === 'payment_page'
+			) {
+				$response = [
+					'result'             => 'success',
+					'redirect'           => $redirect,
+					'is_user_redirected' => true
+				];
+
+				echo json_encode( $response );
+				wp_die();
+			}
 
 			return [
 				'result'   => 'success',
@@ -561,8 +637,10 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 			];
 		}
 
-		$this->logger->error( __FUNCTION__,
-			'There is a technical issue with the payment, please try place order again' );
+		$this->logger->error(
+			__FUNCTION__,
+			'There is a technical issue with the payment, please try place order again'
+		);
 
 		wc_add_notice(
 			'<p>' .

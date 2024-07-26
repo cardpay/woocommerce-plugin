@@ -141,10 +141,14 @@ const unlimitIframeProcessor = {
         this.scroll_to_notices();
         jQuery(document.body).trigger('checkout_error', [errorMessage]);
     },
-    redirectFunc: function (url) {
-        jQuery('.unlimit_modal_bg').removeClass('closed_unlimit');
-        jQuery('body').css('overflow', 'hidden');
-        jQuery('.unlimit_modal_iframe').attr('src', url);
+    redirectFunc: function (url, isUserRedirected) {
+        if (isUserRedirected === true) {
+            window.location.href = url;
+        } else {
+            jQuery('.unlimit_modal_bg').removeClass('closed_unlimit');
+            jQuery('body').css('overflow', 'hidden');
+            jQuery('.unlimit_modal_iframe').attr('src', url);
+        }
     },
     onSuccessSubmit: function (e) {
         unlimitIframeProcessor.afterSubmit();
@@ -159,8 +163,8 @@ const unlimitIframeProcessor = {
             }
             -1 === e.redirect.indexOf('https://') || -1 ===
             e.redirect.indexOf('http://')
-                ? this.redirectFunc(e.redirect)
-                : this.redirectFunc(decodeURI(e.redirect));
+                ? this.redirectFunc(e.redirect, e.is_user_redirected)
+                : this.redirectFunc(decodeURI(e.redirect), e.is_user_redirected);
         } catch (t) {
             if (!0 === e.reload) {
                 window.location.reload();

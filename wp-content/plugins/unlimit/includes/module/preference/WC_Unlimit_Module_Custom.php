@@ -5,11 +5,13 @@ defined( 'ABSPATH' ) || exit;
 class WC_Unlimit_Module_Custom extends WC_Unlimit_Module_Abstract {
 	public const INSTALLMENTS = 'installments';
 
+	public $request_type = WC_Unlimit_Constants::PAYMENT_DATA;
+
 	/**
-	 * @param WC_Unlimit_Gateway_Abstract $payment Payment.
+	 * @param WC_Unlimit_Gateway_Abstract $payment
 	 * @param WC_Order $order
+	 * @param array $post_fields
 	 * @param bool $post_can_be_empty
-	 * @param array|null $post_fields Custom checkout.
 	 *
 	 * @throws Exception
 	 */
@@ -26,6 +28,8 @@ class WC_Unlimit_Module_Custom extends WC_Unlimit_Module_Abstract {
 	}
 
 	private function build_api_request() {
+		global $wpdb;
+
 		$api_request       = $this->get_common_api_request();
 		$field_name_prefix = WC_Unlimit_Admin_BankCard_Fields::FIELDNAME_PREFIX;
 
@@ -39,18 +43,40 @@ class WC_Unlimit_Module_Custom extends WC_Unlimit_Module_Abstract {
 			$card_post_fields = $this->post_fields['unlimit_custom'];
 			$installments     = $this->get_installments( $card_post_fields );
 
-			$this->add_installment_data( $api_request,
-				$installment_type,
-				$are_installments_enabled,
-				$installments,
-				$is_preauth );
+			if ( $are_installments_enabled ) {
+				$this->add_installment_data( $api_request, $installment_type, $installments, $is_preauth );
+			} elseif ( ! empty( $card_post_fields['recurring'] ) ) {
+				$this->prepare_recurring_data( $api_request, true );
+			} elseif ( ! empty( $card_post_fields['filing_id'] ) ) {
+				$table_name = $wpdb->prefix . 'ul_recurring_data';
+				$filing_id  = $wpdb->get_var( $wpdb->prepare(
+					"SELECT filing_id FROM $table_name WHERE recurring_data_id = %d",
+					$card_post_fields['filing_id']
+				) );
+
+				if ( $filing_id ) {
+					$this->prepare_recurring_data( $api_request, false, $filing_id );
+				}
+			}
 
 			$this->add_customer_data( $api_request, $field_name_prefix, $card_post_fields );
-
 			$this->add_card_account_data( $api_request, $field_name_prefix, $card_post_fields, $customer );
 		}
 
 		$this->finalize_api_request( $api_request, $field_name_prefix );
+	}
+
+	private function prepare_recurring_data( &$api_request, $begin, $filing_id = null ) {
+		$this->request_type                 = WC_Unlimit_Constants::RECURRING_DATA;
+		$api_request[ $this->request_type ] = $api_request[ WC_Unlimit_Constants::PAYMENT_DATA ];
+		unset( $api_request[ WC_Unlimit_Constants::PAYMENT_DATA ] );
+
+		$api_request[ $this->request_type ]['initiator'] = 'cit';
+		$api_request[ $this->request_type ]['begin']     = $begin;
+
+		if ( $filing_id !== null ) {
+			$api_request[ $this->request_type ]['filing'] = [ 'id' => $filing_id ];
+		}
 	}
 
 	private function get_installment_type( $field_name_prefix ) {
@@ -62,9 +88,10 @@ class WC_Unlimit_Module_Custom extends WC_Unlimit_Module_Abstract {
 	}
 
 	private function is_preauth( $field_name_prefix, &$api_request ) {
-		$is_preauth = 'no' === get_option( $field_name_prefix . WC_Unlimit_Admin_BankCard_Fields::FIELD_CAPTURE_PAYMENT );
+		$is_preauth =
+			'no' === get_option( $field_name_prefix . WC_Unlimit_Admin_BankCard_Fields::FIELD_CAPTURE_PAYMENT );
 		if ( $is_preauth ) {
-			$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['preauth'] = true;
+			$api_request[ $this->request_type ]['preauth'] = true;
 			WC_Unlimit_Helper::set_order_meta( $this->order,
 				WC_Unlimit_Constants::ORDER_META_PREAUTH_FIELDNAME,
 				'true' );
@@ -77,28 +104,13 @@ class WC_Unlimit_Module_Custom extends WC_Unlimit_Module_Abstract {
 		return isset( $card_post_fields[ self::INSTALLMENTS ] ) ? (int) $card_post_fields[ self::INSTALLMENTS ] : 0;
 	}
 
-	private function add_installment_data(
-		&$api_request,
-		$installment_type,
-		$are_installments_enabled,
-		$installments,
-		$is_preauth
-	) {
-		if ( $are_installments_enabled && $installments > 0 ) {
-			$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['installment_type']   = $installment_type;
-			$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ][ self::INSTALLMENTS ] = $installments;
+	private function add_installment_data( &$api_request, $installment_type, $installments, $is_preauth ) {
+		if ( $installments > 0 ) {
+			$api_request[ $this->request_type ]['installment_type']   = $installment_type;
+			$api_request[ $this->request_type ][ self::INSTALLMENTS ] = $installments;
 
-			if ( $installment_type == 'IF' && $installments > 1 ) {
-				if ( $is_preauth ) {
-					unset( $api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['preauth'] );
-				}
-				$amount                                                                  = round(
-					$this->order->get_total()
-					/
-					$installments,
-					2
-				);
-				$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['installment_amount'] = $amount;
+			if ( $installment_type === 'IF' && $installments > 1 && $is_preauth ) {
+				unset( $api_request[ $this->request_type ]['preauth'] );
 			}
 		}
 	}
@@ -135,13 +147,13 @@ class WC_Unlimit_Module_Custom extends WC_Unlimit_Module_Abstract {
 	}
 
 	private function finalize_api_request( &$api_request, $field_name_prefix ) {
-		$api_request['payment_method']                                 = 'BANKCARD';
-		$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['amount']   = $this->order->get_total();
-		$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['currency'] = get_woocommerce_currency();
-		$dynamic_descriptor                                            =
-			get_option( $field_name_prefix . WC_Unlimit_Admin_BankCard_Fields::FIELD_DYNAMIC_DESCRIPTOR );
+		$api_request['payment_method']                  = 'BANKCARD';
+		$api_request[ $this->request_type ]['amount']   = $this->order->get_total();
+		$api_request[ $this->request_type ]['currency'] = get_woocommerce_currency();
+
+		$dynamic_descriptor = get_option( $field_name_prefix . WC_Unlimit_Admin_BankCard_Fields::FIELD_DYNAMIC_DESCRIPTOR );
 		if ( ! empty( $dynamic_descriptor ) ) {
-			$api_request[ WC_Unlimit_Constants::PAYMENT_DATA ]['dynamic_descriptor'] = $dynamic_descriptor;
+			$api_request[ $this->request_type ]['dynamic_descriptor'] = $dynamic_descriptor;
 		}
 
 		$this->api_request = $api_request;

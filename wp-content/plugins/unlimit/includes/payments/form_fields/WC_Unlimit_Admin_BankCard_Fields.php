@@ -10,6 +10,7 @@ class WC_Unlimit_Admin_BankCard_Fields extends WC_Unlimit_Admin_Fields {
 	public const FIELD_CAPTURE_PAYMENT = 'capture_payment';
 	public const FIELD_API_ACCESS_MODE = 'payment_page';
 	public const FIELD_INSTALLMENT_ENABLED = 'installment_enabled';
+	public const FIELD_RECURRING_ENABLED = 'recurring_enabled';
 	public const FIELD_INSTALLMENT_TYPE = 'installment_type';
 	public const FIELD_MAXIMUM_ACCEPTED_INSTALLMENTS = 'maximum_accepted_installments';
 	public const FIELD_MINIMUM_INSTALLMENT_AMOUNT = 'minimum_installment_amount';
@@ -53,6 +54,8 @@ class WC_Unlimit_Admin_BankCard_Fields extends WC_Unlimit_Admin_Fields {
 		$form_fields[ self::FIELDNAME_PREFIX . self::FIELD_ASK_CPF ]                          = $this->field_ask_cpf();
 		$form_fields[ self::FIELDNAME_PREFIX . self::FIELD_DYNAMIC_DESCRIPTOR ]               =
 			$this->field_dynamic_descriptor();
+		$form_fields[ self::FIELDNAME_PREFIX . self::FIELD_RECURRING_ENABLED ]                  =
+			$this->field_recurring_enabled();
 		$form_fields[ self::FIELDNAME_PREFIX . WC_Unlimit_Admin_Fields::FIELD_LOG_TO_FILE ]   = $this->field_log_to_file();
 
 		return $form_fields;
@@ -217,6 +220,26 @@ class WC_Unlimit_Admin_BankCard_Fields extends WC_Unlimit_Admin_Fields {
 			'type'    => 'text',
 			'default' => '',
 			'custom_attributes' => $this->get_custom_attributes($title)
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public function field_recurring_enabled() {
+		return [
+			'title'       => __( 'Recurring enabled', 'unlimit' ),
+			'type'        => 'select',
+			'description' => __( 'If set to Yes then recurring (one-click) payments '.
+		        'field will be presented on payment form and recurring '.
+		        'payments can be possible for processing.', 'unlimit' ).
+				'<br>'.
+				__("Recurring payments aren't available while installment payments can be set up.", 'unlimit'),
+			'default'     => 'no',
+			'options'     => [
+				'no'  => __( 'No', 'unlimit' ),
+				'yes' => __( 'Yes', 'unlimit' ),
+			],
 		];
 	}
 

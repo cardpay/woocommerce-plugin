@@ -39,6 +39,8 @@ class WC_Unlimit_Alt_Hook extends WC_Unlimit_Hook_Abstract {
 					'payer_email' => esc_js( $this->gateway->logged_user_email ),
 					'apply'       => __( 'Apply', 'unlimit' ),
 					'remove'      => __( 'Remove', 'unlimit' ),
+					'ajax_url'    => admin_url('admin-ajax.php'),
+					'ajax_nonce'  => wp_create_nonce('unlimitnonce'),
 					'choose'      => __( 'To choose', 'unlimit' ),
 					'other_bank'  => __( 'Other bank', 'unlimit' ),
 					'loading'     => plugins_url( self::ASSETS_IMAGES, plugin_dir_path( __FILE__ ) ) . 'loading.gif',

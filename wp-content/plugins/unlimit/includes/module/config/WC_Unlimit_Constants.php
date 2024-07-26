@@ -3,7 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 
 class WC_Unlimit_Constants {
-	public const VERSION = '1.4.14';
+	public const VERSION = '1.5.47';
 
 	public const API_UL_BASE_URL = 'https://cardpay.com/api';
 	public const API_UL_SANDBOX_URL = 'https://sandbox.cardpay.com/api';
@@ -38,6 +38,7 @@ class WC_Unlimit_Constants {
 	// order meta fields (for 'wp_postmeta' DB table)
 	public const ORDER_META_PAYMENT_TYPE_FIELDNAME = '_ul_payment_type';
 	public const PAYMENT_TYPE_PAYMENT = 'payment';
+	public const PAYMENT_TYPE_RECURRING = 'recurring';
 
 	public const ORDER_META_GATEWAY_FIELDNAME = '_ul_used_gateway';
 	public const ORDER_META_REDIRECT_URL_FIELDNAME = '_ul_redirect_url';
@@ -59,6 +60,8 @@ class WC_Unlimit_Constants {
 	public const SECURITY_CODE_MASKED = '...';
 
 	const PAYMENT_DATA = 'payment_data';
+
+	const RECURRING_DATA = 'recurring_data';
 
 	const LANGUAGES = [
 		'en',

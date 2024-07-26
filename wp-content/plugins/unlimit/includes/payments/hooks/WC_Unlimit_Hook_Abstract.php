@@ -47,6 +47,22 @@ abstract class WC_Unlimit_Hook_Abstract {
 		$this->public_key  = $gateway->get_public_key();
 		$this->test_user   = get_option( '_test_user_v1' );
 		$this->site_id     = get_option( '_site_id_v1' );
+
+		add_filter( 'woocommerce_get_checkout_payment_url',
+			[ $this, 'custom_checkout_payment_url_on_failed_order' ],
+			10,
+			2 );
+	}
+
+	public function custom_checkout_payment_url_on_failed_order( $url, $order ) {
+		if ( $order->has_status( 'failed' ) && ! is_admin() ) {
+			$notification = new WC_Unlimit_Notification_Webhook( $this->gateway );
+			$notification->restore_cart( $order );
+
+			return wc_get_checkout_url();
+		}
+
+		return $url;
 	}
 
 	public function load_hooks() {

@@ -36,6 +36,8 @@ class WC_Unlimit_Hook_Custom extends WC_Unlimit_Hook_Abstract {
 					'payer_email'    => esc_js( $this->gateway->logged_user_email ),
 					'apply'          => __( 'Apply', 'unlimit' ),
 					'remove'         => __( 'Remove', 'unlimit' ),
+					'ajax_url'       => admin_url( 'admin-ajax.php' ),
+					'ajax_nonce'     => wp_create_nonce( 'unlimitnonce' ),
 					'choose'         => __( 'To choose', 'unlimit' ),
 					'other_bank'     => __( 'Other bank', 'unlimit' ),
 					'loading'        => plugins_url( self::ASSETS_IMAGES, plugin_dir_path( __FILE__ ) ) . 'loading.gif',
@@ -45,5 +47,51 @@ class WC_Unlimit_Hook_Custom extends WC_Unlimit_Hook_Abstract {
 				]
 			);
 		}
+	}
+
+	public static function delete_card() {
+		if ( ! wp_verify_nonce( $_POST['nonce'], 'unlimitnonce' ) ) {
+			wp_die();
+		}
+
+		$customer_id          = get_current_user_id();
+		$fieldname_prefix     = WC_Unlimit_Admin_BankCard_Fields::FIELDNAME_PREFIX;
+		$is_recurring_enabled = (
+			'yes' === get_option(
+				$fieldname_prefix .
+				WC_Unlimit_Admin_BankCard_Fields::FIELD_RECURRING_ENABLED
+			)
+		);
+
+		if ( is_user_logged_in() && $is_recurring_enabled && $customer_id ) {
+			global $wpdb;
+
+			$table_name = $wpdb->prefix . 'ul_recurring_data';
+
+			if ( $wpdb->delete(
+				$table_name,
+				[
+					'recurring_data_id' => $_POST['recurring_data_id'],
+					'customer_id'       => (int) $customer_id,
+				]
+			) ) {
+				self::displaySuccess();
+			}
+		}
+		self::displayError();
+	}
+
+	public static function displayError() {
+		wp_die( json_encode( [
+			'success' => false,
+			'message' => __( "You're not authorized to perform this action.", "unlimit" )
+		] ) );
+	}
+
+	public static function displaySuccess() {
+		wp_die( json_encode( [
+			'success' => true,
+			'message' => __( "Your card has been deleted.", "unlimit" )
+		] ) );
 	}
 }

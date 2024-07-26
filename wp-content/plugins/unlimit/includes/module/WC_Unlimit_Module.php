@@ -1,4 +1,5 @@
 <?php
+
 defined( 'ABSPATH' ) || exit;
 
 include_once __DIR__ . '/../notification/WC_Unlimit_Notification_Abstract.php';
@@ -242,7 +243,8 @@ class WC_Unlimit_Module extends WC_Unlimit_Configs {
 
 			case 'Unauthorized use of live credentials':
 				$error_message = __( 'Unauthorized use of production credentials.', 'unlimit' ) . ' ' .
-				                 __( 'Possible causes: Use permission in use for the credential of the seller.', 'unlimit' );
+				                 __( 'Possible causes: Use permission in use for the credential of the seller.',
+					                 'unlimit' );
 				break;
 
 			default:
@@ -298,7 +300,6 @@ class WC_Unlimit_Module extends WC_Unlimit_Configs {
 				substr( $user_agent, 0, 4 )
 			)
 		) {
-
 			$mobile = true;
 		}
 

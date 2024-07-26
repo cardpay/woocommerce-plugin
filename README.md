@@ -6,6 +6,7 @@
 - [Supported Payment Methods](#supported-payment-methods)
 - [Supported Languages](#supported-languages)
 - [Installation](#installation)
+- [Update](#update)
 - [Configuration](#configuration)
   - [Checkout page configuration](#checkout-page-configuration)
   - [Locale Settings](#locale-settings)
@@ -30,7 +31,7 @@
    - [Refund  online](#refund-online)
    - [Refund offline](#refund-offline)
 ## Overview
-**Unlimit WooCommerce** engine plugin allows merchants to make payments, installment payments, and refunds (credit memos) using the WooCommerce platform.
+**Unlimit WooCommerce** engine plugin allows merchants to make payments, installment payments, one-click payments, and refunds using the WooCommerce platform.
 Additionally, the plugin supports cancellation (void) transactions and payment capture for preauthorized payments. 
 
 **Unlimit WooCommerce** plugin is able to work in following modes:
@@ -48,19 +49,19 @@ Additionally, the plugin supports cancellation (void) transactions and payment c
 
 Supported payment methods, the countries where those methods are available in, and their capabilities are displayed in the table below:
 
-| Payment method | Country  | Payment | Installment | Void/Cancel | Online refund | Offline refund |
-|----------------|----------|---------|-------------|-------------|---------------|----------------|
-| Credit Card    | Global   | Yes     | Yes         | Yes         | Yes           | Yes            |
-| Apple Pay      | Global   | Yes     | No          | No          | Yes           | Yes            |       
-| Boleto         | Brazil   | Yes     | No          | No          | No            | Yes            |
-| Google Pay     | Global   | Yes     | No          | No          | Yes           | Yes            |
-| MB WAY         | Portugal | Yes     | No          | No          | Yes           | Yes            |
-| Multibanco     | Portugal | Yes     | No          | No          | No            | Yes            |
-| OXXO           | Mexico   | Yes     | No          | No          | No            | Yes            |
-| PayPal         | Global   | Yes     | No          | No          | Yes           | Yes            |
-| Pix            | Brazil   | Yes     | No          | No          | No            | Yes            |
-| SEPA Instant   | Europe   | Yes     | No          | No          | No            | Yes            |
-| SPEI           | Mexico   | Yes     | No          | No          | No            | Yes            |
+| Payment method | Country  | Payment | Installment | One-click | Void/Cancel | Online refund | Offline refund |
+|----------------|----------|---------|-------------|-----------|-------------|---------------|----------------|
+| Credit Card    | Global   | Yes     | Yes         | Yes       | Yes         | Yes           | Yes            |
+| Apple Pay      | Global   | Yes     | No          | No        | No          | Yes           | Yes            |       
+| Boleto         | Brazil   | Yes     | No          | No        | No          | No            | Yes            |
+| Google Pay     | Global   | Yes     | No          | No        | No          | Yes           | Yes            |
+| MB WAY         | Portugal | Yes     | No          | No        | No          | Yes           | Yes            |
+| Multibanco     | Portugal | Yes     | No          | No        | No          | No            | Yes            |
+| OXXO           | Mexico   | Yes     | No          | No        | No          | No            | Yes            |
+| PayPal         | Global   | Yes     | No          | No        | No          | Yes           | Yes            |
+| Pix            | Brazil   | Yes     | No          | No        | No          | No            | Yes            |
+| SEPA Instant   | Europe   | Yes     | No          | No        | No          | No            | Yes            |
+| SPEI           | Mexico   | Yes     | No          | No        | No          | No            | Yes            |
 ### Supported languages:
 
 - English (EN)
@@ -80,6 +81,23 @@ Installation process explains how to install the WooCommerce plugin:
 
 **Unlimit WooCommerce** plugin was successfully installed and activated.
 
+## Update
+The update process explains how to update the WooCommerce plugin:
+
+1. Download the `.zip` file from Unlimit's GitHub [repository](https://github.com/cardpay/woocommerce-plugin).
+
+2. Go to the **Plugins** section of your store in the WordPress admin panel.
+
+3. Click **Add New Plugin**.
+
+4. Click **Upload Plugin**, choose the downloaded `.zip` file and upload it.
+
+5. Click **Yes** to replace the existing plugin with the new one.
+
+**Unlimit WooCommerce** plugin was successfully updated.
+
+![](readme_images/update.png)
+
 ## Configuration
 Configuration process explains how to set up and configure the WooCommerce plugin to accept payments in supported payment methods.
 
@@ -91,15 +109,11 @@ The Checkout Page is an essential component of any eCommerce site, serving as th
 
 1. Navigate to the **Pages** section by selecting **Pages** -> **All Pages** from the WordPress dashboard.
 2. Locate the **Checkout** page from the list and click **Edit** to modify its contents.
-
-![](readme_images/page_settings.png)
-
+![](readme_images/page_setting.png)
 3. On the default Checkout Page view, select the full checkout block and remove it to clear the page for customization.
 4. Add a new block by selecting the Toggle block inserter button, and choose the **Shortcode** block from the available options.
 5. Within the Shortcode block, input the following shortcode: `[woocommerce_checkout]`. This shortcode will render the WooCommerce checkout form.
-
 ![](readme_images/checkout_page.png)
-
 6. To apply the changes, click the **Update** button located at the top right corner of the editor.
 
 ### Locale settings
@@ -108,7 +122,6 @@ The locale settings are essential for specifying the language on the payment pag
 To configure locale settings, the following is required:
 
 1. Navigate to the **Settings** > **General** > **Site Language** from the WordPress dashboard.
-
 ![](readme_images/site_locale.png)
 2. Choose the desired language from the list. This language applies to the payment page, the payment result page, the store language, and the checkout page during client transactions.
 
@@ -170,6 +183,7 @@ To enable payments via **Credit card** complete the following steps:
  * **Payment title** - allows to set the payment title.
  * **Ask CPF** - set to **Yes** if **CPF (Brazilian Tax Id)** is required for the customer in checkout.
  * **Dynamic descriptor** - short description of the service or product, see `dynamic_descriptor` API field in [API documentation](https://integration.unlimit.com/api-reference/b5e0a98548e2b-payment-request-payment-data).
+ * **Recurring enabled** - the recurrings (One-Click) feature allows customers to save their card information using a unique identifier (filing_id) for future transactions, simplifying the checkout process. Ensure the **Recurring enabled** setting is set to **Yes** to use this feature. If the saved card is not used for one calendar year, the filing_id will become invalid.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
 ### Apple Pay
@@ -386,7 +400,7 @@ Order status is changed to **Cancelled**.
 ### Refund online
 
 **Refund** operation is supported only for following payment methods:
-* Credit card (payments and "Issuer financed" installment payments)
+* Credit card (payments, "Issuer financed" installment payments, and one-click payments)
 * Apple Pay
 * Google Pay
 * MB WAY

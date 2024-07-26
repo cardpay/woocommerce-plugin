@@ -49,7 +49,7 @@ class WC_Unlimit_Init {
 	/**
 	 * Add mp order meta box actions function
 	 *
-	 * @param  array  $actions  actions.
+	 * @param array $actions actions.
 	 *
 	 * @return array
 	 */
@@ -134,7 +134,9 @@ class WC_Unlimit_Init {
 
 			add_action( 'woocommerce_order_actions', [ __CLASS__, 'add_ul_order_meta_box_actions' ] );
 			self::save_default_order_statuses_mapping();
+			self::create_recurring_mapping_table();
 			self::on_upgrader_process_complete();
+			self::update_plugin_db_check();
 		}
 
 		add_action( 'woocommerce_settings_checkout', [ __CLASS__, 'ul_show_admin_notices' ] );
@@ -144,40 +146,42 @@ class WC_Unlimit_Init {
 		add_action( 'wp_ajax_validate_merchant', [ 'WC_Unlimit_Hook_Apay', 'validate_merchant' ] );
 		add_action( 'wp_ajax_nopriv_validate_merchant', [ 'WC_Unlimit_Hook_Apay', 'validate_merchant' ] );
 
+		add_action( 'wp_ajax_delete_card', [ 'WC_Unlimit_Hook_Custom', 'delete_card' ] );
+		add_action( 'wp_ajax_nopriv_delete_card', [ 'WC_Unlimit_Hook_Custom', 'delete_card' ] );
+
 		add_action( 'wp_ajax_wc_ul_capture', [ __CLASS__, 'ajax_ul_capture_payment' ] );
 		add_action( 'wp_ajax_wc_ul_cancel', [ __CLASS__, 'ajax_ul_cancel_payment' ] );
 	}
 
-	/**
-	 * Function to handle the upgrader_process_complete hook
-	 */
-	public static function on_upgrader_process_complete() {
-		self::update_completed_unlimit_option();
-		self::update_chargeback_resolved_unlimit_option();
-	}
+	private static function update_plugin_db_check() {
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'ul_recurring_data';
 
-	/**
-	 * Function to update the completed_unlimit option
-	 */
-	public static function update_completed_unlimit_option() {
-		$option_name  = 'woocommerce_unlimit_order_status_completed';
-		$option_value = get_option( $option_name );
-
-		if ( $option_value !== WC_Unlimit_Admin_Order_Status_Fields::COMPLETED_WC_DEFAULT ) {
-			update_option( $option_name, WC_Unlimit_Admin_Order_Status_Fields::COMPLETED_WC_DEFAULT );
+		$column_exists = $wpdb->get_var( "SHOW COLUMNS FROM `$table_name` LIKE 'terminal_code'" );
+		if ( ! $column_exists ) {
+			$wpdb->query( "ALTER TABLE `$table_name` ADD `terminal_code` VARCHAR(255)" );
 		}
 	}
 
-	/**
-	 * Function to update the chargeback_resolved_unlimit option
-	 */
-	public static function update_chargeback_resolved_unlimit_option() {
-		$option_name  = 'woocommerce_unlimit_order_status_chargeback_resolved';
-		$option_value = get_option( $option_name );
+	private static function create_recurring_mapping_table() {
+		global $wpdb;
+		$charset_collate = $wpdb->get_charset_collate();
 
-		if ( $option_value !== WC_Unlimit_Admin_Order_Status_Fields::CHARGEBACK_RESOLVED_WC_DEFAULT ) {
-			update_option( $option_name, WC_Unlimit_Admin_Order_Status_Fields::CHARGEBACK_RESOLVED_WC_DEFAULT );
-		}
+		$sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}ul_recurring_data` (
+    	  recurring_data_id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+		  customer_id bigint(20) UNSIGNED NOT NULL,
+		  filing_id varchar(255) NULL,
+		  recurring_id varchar(255) NULL,
+		  terminal_code varchar(255) NULL,
+		  masked_pan varchar(255) NULL,
+		  card_type varchar(255) NULL,
+		  created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		  updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+		  PRIMARY KEY  (recurring_data_id)
+		) $charset_collate;";
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
 	}
 
 	private static function save_default_order_statuses_mapping() {
@@ -275,5 +279,37 @@ class WC_Unlimit_Init {
 		}
 
 		$validator->validate();
+	}
+
+	/**
+	 * Function to handle the upgrader_process_complete hook
+	 */
+	public static function on_upgrader_process_complete() {
+		self::update_completed_unlimit_option();
+		self::update_chargeback_resolved_unlimit_option();
+	}
+
+	/**
+	 * Function to update the completed_unlimit option
+	 */
+	public static function update_completed_unlimit_option() {
+		$option_name  = 'woocommerce_unlimit_order_status_completed';
+		$option_value = get_option( $option_name );
+
+		if ( $option_value !== WC_Unlimit_Admin_Order_Status_Fields::COMPLETED_WC_DEFAULT ) {
+			update_option( $option_name, WC_Unlimit_Admin_Order_Status_Fields::COMPLETED_WC_DEFAULT );
+		}
+	}
+
+	/**
+	 * Function to update the chargeback_resolved_unlimit option
+	 */
+	public static function update_chargeback_resolved_unlimit_option() {
+		$option_name  = 'woocommerce_unlimit_order_status_chargeback_resolved';
+		$option_value = get_option( $option_name );
+
+		if ( $option_value !== WC_Unlimit_Admin_Order_Status_Fields::CHARGEBACK_RESOLVED_WC_DEFAULT ) {
+			update_option( $option_name, WC_Unlimit_Admin_Order_Status_Fields::CHARGEBACK_RESOLVED_WC_DEFAULT );
+		}
 	}
 }

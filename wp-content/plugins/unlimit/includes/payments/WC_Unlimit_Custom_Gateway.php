@@ -134,6 +134,34 @@ class WC_Unlimit_Custom_Gateway extends WC_Unlimit_Gateway_Abstract {
 				WC_Unlimit_Admin_BankCard_Fields::FIELD_API_ACCESS_MODE
 			)
 		);
+		$is_recurring_enabled     = (
+			'yes' === get_option(
+				$fieldname_prefix .
+				WC_Unlimit_Admin_BankCard_Fields::FIELD_RECURRING_ENABLED
+			)
+		);
+
+		if ( ! is_user_logged_in() ) {
+			$is_recurring_enabled = false;
+		}
+
+		$customer_id         = get_current_user_id();
+		$existing_filing_ids = [];
+		if ( $is_recurring_enabled && $customer_id ) {
+			global $wpdb;
+
+			$terminal_code       = get_option(
+				WC_Unlimit_Admin_BankCard_Fields::FIELDNAME_PREFIX . WC_Unlimit_Admin_Fields::FIELD_TERMINAL_CODE
+			);
+			$table_name          = $wpdb->prefix . 'ul_recurring_data';
+			$existing_filing_ids = $wpdb->get_results(
+				'SELECT * FROM `' . $table_name . '` WHERE `customer_id` = ' . (int) $customer_id .
+				' AND `updated_at` > "' . date( 'Y-m-d H:i:s', strtotime( '-1 year' ) ) . '"' .
+				' AND `terminal_code` = "' . esc_sql( $terminal_code ) . '"' .
+				' GROUP BY `masked_pan`, `card_type`, `terminal_code`',
+				ARRAY_A
+			);
+		}
 
 		$parameters = [
 			'amount'                   => $this->get_order_total(),
@@ -144,6 +172,8 @@ class WC_Unlimit_Custom_Gateway extends WC_Unlimit_Gateway_Abstract {
 			'woocommerce_currency'     => get_woocommerce_currency(),
 			'installment_options'      => $installments_instance->get_installment_options(),
 			'are_installments_enabled' => $are_installments_enabled,
+			'is_recurring_enabled'     => $is_recurring_enabled,
+			'existing_filing_ids'      => $existing_filing_ids,
 			'is_cpf_required'          => $is_cpf_required,
 			'is_payment_page_required' => $is_payment_page_required,
 		];
@@ -180,10 +210,12 @@ class WC_Unlimit_Custom_Gateway extends WC_Unlimit_Gateway_Abstract {
 		$post_can_be_empty = ( $is_payment_page_required || ! $are_installments_enabled );
 
 		if ( ( ! isset( $_POST['unlimit_custom'] ) ) && ! $post_can_be_empty ) {
-			$this->logger->error( __FUNCTION__, 'A problem was occurred when processing your payment. Please, try again.' );
+			$this->logger->error( __FUNCTION__,
+				'A problem was occurred when processing your payment. Please, try again.' );
 			wc_add_notice(
 				'<p>' . __( 'Unlimit - A problem was occurred when processing your payment.
-				 Please, try again.', 'unlimit' ) . '</p>',
+				 Please, try again.',
+					'unlimit' ) . '</p>',
 				'error'
 			);
 

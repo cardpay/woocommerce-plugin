@@ -780,3 +780,33 @@ msgstr "%s vazio"
 
 msgid "Invalid %s"
 msgstr "%s inválido"
+
+msgid "Recurring enabled"
+msgstr "Recorrente ativado"
+
+msgid "If set to Yes then recurring (one-click) payments field will be presented on payment form and recurring payments can be possible for processing."
+msgstr "Se definido como Sim, o campo de pagamentos recorrentes (um clique) será apresentado no formulário de pagamento e pagamentos recorrentes poderão ser processados."
+
+msgid "Recurring payments aren't available while installment payments can be set up."
+msgstr "Pagamentos recorrentes não estão disponíveis, mas pagamentos parcelados podem ser configurados."
+
+msgid "Saved cards"
+msgstr "Cartões salvos"
+
+msgid "Save this card for future use"
+msgstr "Guarde este cartão para uso futuro"
+
+msgid "Delete"
+msgstr "Excluir"
+
+msgid "Add new card"
+msgstr "Adicionar novo cartão"
+
+msgid "Do you want to delete the card?"
+msgstr "Quer excluir o cartão?"
+
+msgid "Your card has been deleted."
+msgstr "Seu cartão foi excluído."
+
+msgid "Save the card that will be entered next"
+msgstr "Salve o cartão que será inserido a seguir"

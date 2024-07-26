@@ -22,13 +22,16 @@ class WC_Unlimit_Order_Status_Updater {
 
 		$new_status_data = $this->get_normalized_status( $order, $new_status );
 
-		$old_status     = $new_status_data['from'];
+		$old_status = $new_status_data['from'];
 		$new_status_set = $new_status_data['to'];
 
-		if ( $old_status !== $new_status_set ) {
-			$this->logger->log_callback_request( __FUNCTION__, "Order status updated to '$new_status'." );
+		$this->logger->log_callback_request( __FUNCTION__,
+			"Attempting to update order status for order #" . $order->get_id() . " from $old_status to $new_status_set" );
 
-			$order->set_status( $new_status );
+		if ( $old_status !== $new_status_set ) {
+			$this->logger->log_callback_request( __FUNCTION__, "Order status updated to '$new_status_set'." );
+
+			$order->set_status( $new_status_set );
 			$order->save();
 
 			$this->logger->log_callback_request(

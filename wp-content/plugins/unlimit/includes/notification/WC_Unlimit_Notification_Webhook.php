@@ -42,13 +42,12 @@ class WC_Unlimit_Notification_Webhook extends WC_Unlimit_Notification_Abstract {
 			}
 
 			wp_safe_redirect( $redirect_url );
-
 		} else {
 			$this->check_in_response();
 		}
 	}
 
-	private function restore_cart( $order ) {
+	public function restore_cart( $order ) {
 		WC()->cart->empty_cart();
 
 		foreach ( $order->get_items() as $product ) {
@@ -85,7 +84,7 @@ class WC_Unlimit_Notification_Webhook extends WC_Unlimit_Notification_Abstract {
 	}
 
 	/**
-	 * @param  array  $data  Payment data
+	 * @param array $data Payment data
 	 */
 	public function successful_request( $data ) {
 		try {
@@ -104,8 +103,8 @@ class WC_Unlimit_Notification_Webhook extends WC_Unlimit_Notification_Abstract {
 	}
 
 	/**
-	 * @param  array  $data  Payment data.
-	 * @param  object  $order  Order.
+	 * @param array $data Payment data.
+	 * @param object $order Order.
 	 *
 	 * @return mixed|string
 	 */
@@ -115,8 +114,11 @@ class WC_Unlimit_Notification_Webhook extends WC_Unlimit_Notification_Abstract {
 		$total_refund = $data['refund_data']['amount'] ?? 0.00;
 
 		// Updates the type of gateway.
-		WC_Unlimit_Helper::set_order_meta( $order, __( 'Payment type', 'unlimit' ), WC_Unlimit_Constants::PAYMENT_DATA );
-		WC_Unlimit_Helper::set_order_meta( $order, WC_Unlimit_Constants::ORDER_META_GATEWAY_FIELDNAME,
+		WC_Unlimit_Helper::set_order_meta( $order,
+			__( 'Payment type', 'unlimit' ),
+			WC_Unlimit_Constants::PAYMENT_DATA );
+		WC_Unlimit_Helper::set_order_meta( $order,
+			WC_Unlimit_Constants::ORDER_META_GATEWAY_FIELDNAME,
 			get_class( $this ) );
 
 		if ( ! empty( $data['payer']['email'] ) ) {

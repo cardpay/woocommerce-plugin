@@ -19,6 +19,7 @@ class WC_Unlimit_Helper {
 
 		if ( OrderUtil::custom_orders_table_usage_is_enabled() ) {
 			$order = wc_get_order( $order->get_id() );
+
 			return $order->get_meta( $key, true );
 		} else {
 			return get_post_meta( $order->get_id(), $key, true );

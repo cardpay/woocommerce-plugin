@@ -33,11 +33,11 @@ const unlimit = {
                 console.log(event)
                 var self = this;
                 var url = event.validationURL;
-                jQuery.post(this.getCheckoutConfigParam('validatemerchant_url', ''),
+                jQuery.post(this.getCheckoutConfigParam('ajax_url', ''),
                     {
                         url,
                         action: 'validate_merchant',
-                        nonce: this.getCheckoutConfigParam('validatemerchant_nonce', ''),
+                        nonce: this.getCheckoutConfigParam('ajax_nonce', ''),
                         merchantIdentifier: self.getMerchantIdentifier(),
                         displayName: storeName
                     }, function (data) {

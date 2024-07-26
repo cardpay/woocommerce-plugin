@@ -104,3 +104,8 @@ $delete_options = [
 foreach ( $delete_options as $option ) {
 	delete_option( "woocommerce_woo-unlimit-{$option}_settings" );
 }
+
+global $wpdb;
+$table_name = $wpdb->prefix . 'ul_recurring_data';
+$wpdb->query( "DROP TABLE IF EXISTS `$table_name`" );
+

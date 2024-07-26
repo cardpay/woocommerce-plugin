@@ -21,22 +21,28 @@ $mbwayLogoUrl = plugins_url( '../../assets/images/mbway.png', __FILE__ );
                                 <div class='ul-col-md-8'>
                                     <label for='ul-cpf-ticket' id='ul-cpf-label'
                                            class='ul-label-form title-phone'>
-										<?php echo esc_html__( 'MB WAY phone number', 'unlimit' ); ?><em>*</em>
+										<?php
+										echo esc_html__( 'MB WAY phone number', 'unlimit' ); ?><em>*</em>
                                     </label>
+                                    <div style="position: relative" class="ul-mt-5">
                                     <input type='text'
                                            onfocusout="validateUlMbwayInput();"
                                            class='ul-form-control'
                                            id='ul-mbway-phone' data-checkout='ul-mbway-phone'
-                                           name='cardpay_mbway[phone_number]'><br/>
+                                           name='cardpay_mbway[phone_number]'>
+                                    </div>
                                     <span class="ul-error ul-mt-5" id="ul-mbway-phone-error"
                                           data-main="#ul-mbway-phone-error">
-                                <?php echo esc_html__( 'MB WAY phone number is invalid', 'unlimit' ); ?>
+                                <?php
+                                echo esc_html__( 'MB WAY phone number is invalid', 'unlimit' ); ?>
                             </span>
                                     <span class="ul-error ul-mt-5" id="ul-mbway-phone-error-second"
                                           data-main="#ul-mbway-phone-error">
-                                <?php echo esc_html__( 'Please fill out a MB WAY phone number', 'unlimit' ); ?>
-                            </span><br>
-                                    <img src='<?php echo $mbwayLogoUrl ?>' width='70' height='65' alt='MB WAY'/>
+                                <?php
+                                echo esc_html__( 'Please fill out a MB WAY phone number', 'unlimit' ); ?>
+                            </span>
+                                    <img src='<?php
+									echo $mbwayLogoUrl ?>' width='70' height='65' alt='MB WAY' style="margin-top: 30px"/>
                                 </div>
                             </div>
                         </div>
@@ -45,7 +51,8 @@ $mbwayLogoUrl = plugins_url( '../../assets/images/mbway.png', __FILE__ );
             </div>
         </div>
     </div>
-<?php if ( $is_mbway_payment_page_required ) { ?>
+<?php
+if ( $is_mbway_payment_page_required ) { ?>
     <script>
         unlimitIframePaymentMethods.push("mbway");
     </script>

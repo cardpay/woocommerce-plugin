@@ -12,7 +12,7 @@ $speiLogoUrl = plugins_url( '../../assets/images/spei.png', __FILE__ );
         </div>
     </div>
     <div class='ul-panel-custom-checkout'>
-        <div class='ul-row-checkout unlimit-custom-padding'>
+        <div class='ul-row-checkout'>
             <div class='ul-col-md-12'>
                 <div class='frame-tarjetas'>
                     <div id='unlimit-form-spei'>
