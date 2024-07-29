@@ -286,7 +286,6 @@ button:hover,
 
 .card-brand-maestro {
     background: url(../images/card_brands_sprite.png) no-repeat -227px -148px;
-    position: absolute;
     right: 5px;
     top: 37px;
     width: 41px;
