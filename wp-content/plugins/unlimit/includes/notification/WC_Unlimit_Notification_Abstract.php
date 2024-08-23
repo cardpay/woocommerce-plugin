@@ -42,9 +42,8 @@ abstract class WC_Unlimit_Notification_Abstract {
 	public function __construct( $payment ) {
 		$this->payment = $payment;
 		$this->module  = $payment->unlimit_sdk;
-		$this->logger  = $payment->logger;
+		$this->logger  = $payment->logger ?? new WC_Unlimit_Logger();
 		$this->sandbox = $payment->sandbox;
-		$this->payment = $payment;
 
 		add_action( 'woocommerce_api_' . strtolower( get_class( $payment ) ), [ $this, 'check_action_response' ] );
 		add_action( 'woocommerce_api_' . strtolower( str_ireplace( '_gateway', 'Gateway', get_class( $payment ) ) ), [
@@ -117,7 +116,8 @@ abstract class WC_Unlimit_Notification_Abstract {
 			$this->set_response( 422, null, 'Order error' );
 		}
 
-		$this->logger->info( __FUNCTION__, 'updating metadata and status with data: ' . wp_json_encode( $data,
+		$this->logger->info( __FUNCTION__,
+			'updating metadata and status with data: ' . wp_json_encode( $data,
 				JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) );
 
 		return $order;
@@ -341,7 +341,8 @@ abstract class WC_Unlimit_Notification_Abstract {
 	 */
 	public function process_cancel_order_meta_box_actions( $order ) {
 		$wc_order    = wc_get_order( $order );
-		$usedGateway = WC_Unlimit_Helper::get_order_meta( $wc_order, WC_Unlimit_Constants::ORDER_META_GATEWAY_FIELDNAME );
+		$usedGateway = WC_Unlimit_Helper::get_order_meta( $wc_order,
+			WC_Unlimit_Constants::ORDER_META_GATEWAY_FIELDNAME );
 		$payments    = WC_Unlimit_Helper::get_order_meta( $wc_order, '_Unlimit_Payment_IDs' );
 
 		if ( WC_Unlimit_Constants::BANKCARD_GATEWAY === $usedGateway ) {
@@ -376,7 +377,8 @@ abstract class WC_Unlimit_Notification_Abstract {
 	 */
 	protected function can_update_order_status( $order ) {
 		return method_exists(
-			       $order, 'get_status'
+			       $order,
+			       'get_status'
 		       ) &&
 		       $order->get_status() !== 'completed' &&
 		       $order->get_status() !== 'processing';
