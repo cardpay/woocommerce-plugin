@@ -36,7 +36,7 @@ class WC_Unlimit_Helper {
 			$order->update_meta_data( $key, $value );
 			$order->save();
 		} else {
-			update_post_meta( $order, $key, $value );
+			update_post_meta( $order->get_id(), $key, $value );
 		}
 	}
 
