@@ -1,7 +1,7 @@
 {
   "name": "unlimit-woocommerce",
   "description": "Unlimit WooCommerce plugin",
-  "version": "1.5.49",
+  "version": "1.5.51",
   "repository": {
     "type": "git",
     "url": "https://github.com/cardpay/woocommerce-plugin"

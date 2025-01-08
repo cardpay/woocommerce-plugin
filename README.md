@@ -1,4 +1,3 @@
-
 # Unlimit WooCommerce plugin
 ## Table of Contents
 - [Overview](#overview)
@@ -13,6 +12,7 @@
   - [Basic Settings](#basic-settings)
   - [Payment Methods Settings](#payment-methods-settings)
     - [Credit Card](#credit-card)
+    - [Airtel Tanzania](#airtel-tanzania)
     - [Apple Pay](#apple-pay)
     - [Boleto](#boleto)
     - [Google Pay](#google-pay)
@@ -25,16 +25,17 @@
     - [SPEI](#spei)
   - [Payment Notification Configuration](#payment-notification-configuration)
 - [Supported Post-Payment Operations](#supported-post-payment-operations)
-  - [Cancellation (void) / Capture of the Payment](#cancellation-void-capture-of-the-payment)
+  - [Cancellation (void) / Capture of the Payment](#cancellation-void--capture-of-the-payment)
     - [Capture of the payment](#capture-of-the-payment)
     - [Cancel (void) the payment](#cancel-void-the-payment)
    - [Refund  online](#refund-online)
    - [Refund offline](#refund-offline)
+  
 ## Overview
 **Unlimit WooCommerce** engine plugin allows merchants to make payments, installment payments, one-click payments, and refunds using the WooCommerce platform.
 Additionally, the plugin supports cancellation (void) transactions and payment capture for preauthorized payments. 
 
-**Unlimit WooCommerce** plugin is able to work in following modes:
+**Unlimit WooCommerce** plugin is able to work in the following modes:
 * Gateway mode
 * Payment Page mode
 
@@ -49,19 +50,21 @@ Additionally, the plugin supports cancellation (void) transactions and payment c
 
 Supported payment methods, the countries where those methods are available in, and their capabilities are displayed in the table below:
 
-| Payment method | Country  | Payment | Installment | One-click | Void/Cancel | Online refund | Offline refund |
-|----------------|----------|---------|-------------|-----------|-------------|---------------|----------------|
-| Credit Card    | Global   | Yes     | Yes         | Yes       | Yes         | Yes           | Yes            |
-| Apple Pay      | Global   | Yes     | No          | No        | No          | Yes           | Yes            |       
-| Boleto         | Brazil   | Yes     | No          | No        | No          | No            | Yes            |
-| Google Pay     | Global   | Yes     | No          | No        | No          | Yes           | Yes            |
-| MB WAY         | Portugal | Yes     | No          | No        | No          | Yes           | Yes            |
-| Multibanco     | Portugal | Yes     | No          | No        | No          | No            | Yes            |
-| OXXO           | Mexico   | Yes     | No          | No        | No          | No            | Yes            |
-| PayPal         | Global   | Yes     | No          | No        | No          | Yes           | Yes            |
-| Pix            | Brazil   | Yes     | No          | No        | No          | No            | Yes            |
-| SEPA Instant   | Europe   | Yes     | No          | No        | No          | No            | Yes            |
-| SPEI           | Mexico   | Yes     | No          | No        | No          | No            | Yes            |
+| Payment method  | Country  | Payment | Installment | One-click | Void/Cancel | Online refund | Offline refund |
+|-----------------|----------|---------|-------------|-----------|-------------|---------------|----------------|
+| Credit Card     | Global   | Yes     | Yes         | Yes       | Yes         | Yes           | Yes            |
+| Airtel Tanzania | Tanzania | Yes     | No          | No        | No          | No            | Yes            |       
+| Apple Pay       | Global   | Yes     | No          | No        | No          | Yes           | Yes            |       
+| Boleto          | Brazil   | Yes     | No          | No        | No          | No            | Yes            |
+| Google Pay      | Global   | Yes     | No          | No        | No          | Yes           | Yes            |
+| MB WAY          | Portugal | Yes     | No          | No        | No          | Yes           | Yes            |
+| Multibanco      | Portugal | Yes     | No          | No        | No          | No            | Yes            |
+| OXXO            | Mexico   | Yes     | No          | No        | No          | No            | Yes            |
+| PayPal          | Global   | Yes     | No          | No        | No          | Yes           | Yes            |
+| Pix             | Brazil   | Yes     | No          | No        | No          | No            | Yes            |
+| SEPA Instant    | Europe   | Yes     | No          | No        | No          | No            | Yes            |
+| SPEI            | Mexico   | Yes     | No          | No        | No          | No            | Yes            |
+
 ### Supported languages:
 
 - English (EN)
@@ -69,7 +72,7 @@ Supported payment methods, the countries where those methods are available in, a
 - Spanish (ES)
 
 ## Installation
-Installation process explains how to install the WooCommerce plugin:
+The installation process explains how to install the WooCommerce plugin:
 
 1. Download the latest version of WooCommerce plugin from Unlimit's GitHub [repository](https://github.com/cardpay/woocommerce-plugin).
 
@@ -99,7 +102,7 @@ The update process explains how to update the WooCommerce plugin:
 ![](readme_images/update.png)
 
 ## Configuration
-Configuration process explains how to set up and configure the WooCommerce plugin to accept payments in supported payment methods.
+The configuration process explains how to set up and configure the WooCommerce plugin to accept payments in supported payment methods.
 
 ### Checkout page configuration
 The Checkout Page is an essential component of any eCommerce site, serving as the final step in the purchasing process where customers review their cart, provide shipping and payment information, and confirm their order. 
@@ -109,12 +112,12 @@ The Checkout Page is an essential component of any eCommerce site, serving as th
 
 1. Navigate to the **Pages** section by selecting **Pages** -> **All Pages** from the WordPress dashboard.
 2. Locate the **Checkout** page from the list and click **Edit** to modify its contents.
-![](readme_images/page_setting.png)
+![](readme_images/page_settings.png)
 3. On the default Checkout Page view, select the full checkout block and remove it to clear the page for customization.
 4. Add a new block by selecting the Toggle block inserter button, and choose the **Shortcode** block from the available options.
 5. Within the Shortcode block, input the following shortcode: `[woocommerce_checkout]`. This shortcode will render the WooCommerce checkout form.
 ![](readme_images/checkout_page.png)
-6. To apply the changes, click the **Update** button located at the top right corner of the editor.
+6. To apply the changes, click the **Update** button in the top right corner of the editor.
 
 ### Locale settings
 The locale settings are essential for specifying the language on the payment page, the payment result page, the store language, and the checkout page language settings.
@@ -136,6 +139,7 @@ Begin with the following basic settings:
 
 3. To enable payment methods in the **WooCommerce** plugin:
     - Credit card
+    - Airtel Tanzania
     - Apple Pay
     - Boleto
     - Google Pay
@@ -147,11 +151,10 @@ Begin with the following basic settings:
     - SEPA Instant
     - SPEI
 
-* First, access payment methods you want to enable via Unlimit support (it's a part of merchant onboarding process -
-see [here](https://www.unlimit.com/integration/)). 
+* First, access payment methods you want to enable via Unlimit support (it's a part of merchant onboarding process - see [here](https://www.unlimit.com/integration/)). 
 * Then enable the payment method by switching toggle to the 'On' position
 
-![](readme_images/payments_methods.png)
+![](readme_images/payment_methods.png)
 
 ### Payment methods settings
 
@@ -163,13 +166,13 @@ To enable payments via **Credit card** complete the following steps:
 
  * **API access mode:**
     * Set to **Payment page** for cases when payment page by Unlimit in iFrame is used for customer data collecting.
-    * Set to **Gateway** for cases when embedded payment form in plugin is used for customer data collecting.
+    * Set to **Gateway** for cases when an embedded payment form in plugin is used for customer data collecting.
  * Set **API access mode** to either select using the **Payment page** or process payments directly by **Gateway**.
  * Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in Unlimit APIv3 for this payment method (how to obtain credentials see [here](https://www.unlimit.com/integration/)).
  * Test environment:
     * Set to **Yes** for Sandbox environment (for test purposes).
     * Set to **No** for Production environment.
- * **Payment title** - fill in the name of the payment method, will be presented for the customer in checkout.
+ * **Payment title** - fill in the name of the payment method, will be presented for the customer on checkout.
  * **Capture payment**:
    * Set to **Yes** for completion payment automatically (one phase payment).
    * Set to **No** for two phases payment: the amount will not be captured but only blocked. With **No** option selected,  payments will be voided automatically in 7 days from the time of creating the preauthorized transaction. If you want payments to be captured automatically in 7 days (instead of being voided), please contact your account manager.
@@ -181,9 +184,25 @@ To enable payments via **Credit card** complete the following steps:
  * **Minimum installment amount** - allows to set the amount of order with installments with the pre-set currency parameter.
  * **Allowed installments range** - allows to split payment into 2-12 installments for **Merchant financed** type or 3, 6, 9, 12 and 18 installments for **Issuer financed** type. Each installment in 30 days period. This parameter is accessible both for **Merchant financed** and **Issuer financed** types.
  * **Payment title** - allows to set the payment title.
- * **Ask CPF** - set to **Yes** if **CPF (Brazilian Tax Id)** is required for the customer in checkout.
+ * **Ask CPF** - set to **Yes** if **CPF (Brazilian Tax Id)** is required for the customer on checkout.
  * **Dynamic descriptor** - short description of the service or product, see `dynamic_descriptor` API field in [API documentation](https://integration.unlimit.com/api-reference/b5e0a98548e2b-payment-request-payment-data).
  * **Recurring enabled** - the recurrings (One-Click) feature allows customers to save their card information using a unique identifier (filing_id) for future transactions, simplifying the checkout process. Ensure the **Recurring enabled** setting is set to **Yes** to use this feature. If the saved card is not used for one calendar year, the filing_id will become invalid.
+* **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
+
+### Airtel Tanzania
+
+To enable payments via **Airtel Tanzania** complete the following steps:
+
+![](readme_images/airtel_tz.png)
+
+* **API access mode:**
+    * Set to **Payment page** for cases when payment page by Unlimit in iFrame is used for customer data collecting.
+    * Set to **Gateway** for cases when an embedded payment form in plugin is used for customer data collecting.
+* Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in Unlimit API v3 for this payment method (how to obtain credentials see [here](https://www.unlimit.com/integration/)).
+* **Test environment**:
+    * Set to **Yes** for Sandbox environment (for test purposes).
+    * Set to **No** for Production environment.
+* **Payment title** - fill in the name of the payment method, will be presented for the customer on checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
 ### Apple Pay
@@ -195,10 +214,10 @@ To enable payments via **Apple Pay** complete the following steps:
  * **Test environment:**
     * Set to **Yes** for Sandbox environment (for test purposes).
     * Set to **No** for Production environment.
-  * **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
+  * **Payment title** - fill in the name of the payment method, which will be presented for the customer on checkout.
   * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
- * **Apple merchant ID**  - unique identifier provided by Apple using an Apple Developer Account.
- * **Payment processing certificate**  - Certificate Signing Request (CSR) required to encrypt transaction data. File in .pem format is required. Certificate provided by Apple using an Apple Developer Account (how to make certificate see [here](https://integration.unlimit.com/doc-guides/lznqjw351z86e-card-methods#applepay)).
+ * **Apple merchant ID** - unique identifier provided by Apple using an Apple Developer Account.
+ * **Payment processing certificate** - Certificate Signing Request (CSR) required to encrypt transaction data. File in .pem format is required. Certificate provided by Apple using an Apple Developer Account (how to make certificate see [here](https://integration.unlimit.com/doc-guides/lznqjw351z86e-card-methods#applepay)).
  * **Merchant identity certificate** - Transport Layer Security (TLS) certificate associated with your merchant ID, used to authenticate your sessions with the Apple Pay servers [here](https://integration.unlimit.com/doc-guides/lznqjw351z86e-card-methods#applepay)).
  
 ### Boleto
@@ -211,7 +230,7 @@ To enable payments via **Boleto** complete the following steps:
 * **Test environment**:
     * Set to **Yes** for Sandbox environment (for test purposes).
     * Set to **No** for Production environment.
-* **Payment title** - fill in the name of the payment method, will be presented for the customer in checkout.
+* **Payment title** - fill in the name of the payment method, will be presented for the customer on checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
 #### Google Pay
@@ -224,7 +243,7 @@ To enable payments via **Google Pay** complete the following steps:
 * **Test environment:**
     * Set to **Yes** for Sandbox environment (for test purposes).
     * Set to **No** for Production environment.
-* **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
+* **Payment title** - fill in the name of the payment method, which will be presented for the customer on checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 * **Google merchant ID** - Merchant ID, provided by Google.
 
@@ -235,13 +254,13 @@ To enable payments via **MB WAY** complete the following steps:
 
 * **API access mode:**
     * Set to **Payment page** for cases when payment page by Unlimit in iFrame is used for customer data collecting.
-    * Set to **Gateway** for cases when embedded payment form in plugin is used for customer data collecting.
+    * Set to **Gateway** for cases when an embedded payment form in plugin is used for customer data collecting.
 * Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in
   Unlimit APIv3 for this payment method (how to obtain credentials see [here](https://www.unlimit.com/integration/))
 * **Test environment:**
     * Set to **Yes** for Sandbox environment (for test purposes).
     * Set to **No** for Production environment.
-* **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
+* **Payment title** - fill in the name of the payment method, which will be presented for the customer on checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
 #### Multibanco
@@ -251,13 +270,13 @@ To enable payments via **Multibanco** complete the following steps:
 
 * **API access mode:**
     * Set to **Payment page** for cases when payment page by Unlimit in iFrame is used for customer data collecting.
-    * Set to **Gateway** for cases when embedded payment form in plugin is used for customer data collecting.
+    * Set to **Gateway** for cases when an embedded payment form in plugin is used for customer data collecting.
 * Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in
   Unlimit APIv3 for this payment method (how to obtain credentials see [here](https://www.unlimit.com/integration/))
 * **Test environment:**
     * Set to **Yes** for Sandbox environment (for test purposes).
     * Set to **No** for Production environment.
-* **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
+* **Payment title** - fill in the name of the payment method, which will be presented for the customer on checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
 ### OXXO
@@ -268,12 +287,12 @@ To enable payments via **OXXO** complete the following steps:
 
 * **API access mode:**
     * Set to **Payment page** for cases when payment page by Unlimit in iFrame is used for customer data collecting.
-    * Set to **Gateway** for cases when embedded payment form in plugin is used for customer data collecting.
+    * Set to **Gateway** for cases when an embedded payment form in plugin is used for customer data collecting.
 * Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in Unlimit API v3 for this payment method (how to obtain credentials see [here](https://www.unlimit.com/integration/)).
 * **Test environment**:
     * Set to **Yes** for Sandbox environment (for test purposes).
     * Set to **No** for Production environment.
-* **Payment title** - fill in the name of the payment method, will be presented for the customer in checkout.
+* **Payment title** - fill in the name of the payment method, will be presented for the customer on checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
 
@@ -284,13 +303,13 @@ To enable payments via **PayPal** complete the following steps:
 
 * **API access mode:**
     * Set to **Payment page** for cases when payment page by Unlimit in iFrame is used for customer data collecting.
-    * Set to **Gateway** for cases when embedded payment form in plugin is used for customer data collecting.
+    * Set to **Gateway** for cases when an embedded payment form in plugin is used for customer data collecting.
 * Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in
   Unlimit APIv3 for this payment method (how to obtain credentials see [here](https://www.unlimit.com/integration/))
 * **Test environment:**
     * Set to **Yes** for Sandbox environment (for test purposes).
     * Set to **No** for Production environment.
-* **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
+* **Payment title** - fill in the name of the payment method, which will be presented for the customer on checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
 #### Pix
@@ -303,7 +322,7 @@ To enable payments via **Pix** complete the following steps:
 * **Test environment:**
     * Set to **Yes** for Sandbox environment (for test purposes).
     * Set to **No** for Production environment.
-* **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
+* **Payment title** - fill in the name of the payment method, which will be presented for the customer on checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
 #### SEPA Instant
@@ -313,13 +332,13 @@ To enable payments via **SEPA Instant** complete the following steps:
 
 * **API access mode:**
     * Set to **Payment page** for cases when payment page by Unlimit in iFrame is used for customer data collecting.
-    * Set to **Gateway** for cases when embedded payment form in plugin is used for customer data collecting.
+    * Set to **Gateway** for cases when an embedded payment form in plugin is used for customer data collecting.
 * Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in
   Unlimit APIv3 for this payment method (how to obtain credentials see [here](https://www.unlimit.com/integration/))
 * **Test environment:**
     * Set to **Yes** for Sandbox environment (for test purposes).
     * Set to **No** for Production environment.
-* **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
+* **Payment title** - fill in the name of the payment method, which will be presented for the customer on checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
 #### SPEI
@@ -329,13 +348,13 @@ To enable payments via **SPEI** complete the following steps:
 
 * **API access mode:**
     * Set to **Payment page** for cases when payment page by Unlimit in iFrame is used for customer data collecting.
-    * Set to **Gateway** for cases when embedded payment form in plugin is used for customer data collecting.
+    * Set to **Gateway** for cases when an embedded payment form in plugin is used for customer data collecting.
 * Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in
   Unlimit APIv3 for this payment method (how to obtain credentials see [here](https://www.unlimit.com/integration/))
 * **Test environment:**
     * Set to **Yes** for Sandbox environment (for test purposes).
     * Set to **No** for Production environment.
-* **Payment title** - fill in the name of the payment method, which will be presented for the customer in checkout.
+* **Payment title** - fill in the name of the payment method, which will be presented for the customer on checkout.
 * **Log to file** - enables saving payment method messages to WooCommerce plugin system log.
 
 That's it! The selected payment methods are successfully enabled in the checkout.
@@ -368,7 +387,7 @@ It's available only for orders which were processed by a certain payment method 
 If **Capture payment** is set to **Yes** - an order will be completed without any user actions in WooCommerce Admin Panel.
 
 #### Capture of the payment
-To Capture of the preathorized payment, navigate to **Orders** and choose the **Order** in **On Hold** status for capture payment.
+To Capture the preathorized payment, navigate to **Orders** and choose the **Order** in **On Hold** status for capture payment.
 
 ![](readme_images/order_on_hold.png)
 
@@ -399,7 +418,7 @@ Order status is changed to **Cancelled**.
 
 ### Refund online
 
-**Refund** operation is supported only for following payment methods:
+**Refund** operation is supported only for the following payment methods:
 * Credit card (payments, "Issuer financed" installment payments, and one-click payments)
 * Apple Pay
 * Google Pay
@@ -420,15 +439,15 @@ Click the **Refund via Credit card - Unlimit** button after the refund amount ca
 
 Click **Yes** in the presented refund confirmation pop-up window.
 
-After successful full refund, the status of the order is changed to **Refunded**.
+After a successful full refund, the status of the order is changed to **Refunded**.
 
 ![](readme_images/order_refunded.png)
 
 
 ### Refund offline
 
-**Refund offline** is the operation when refund is created offline and amount of order should be returned manually in offline with cash only.
+**Refund offline** is the operation when refund is created offline and the amount of order should be returned manually in offline with cash only.
 
 **Refund offline** is possible for all supported payment methods in WooCommerce plugin.
 
-Refer to [official WooCommerce documentation](https://woocommerce.com/document/woocommerce-refunds/#section-4) in order to see the detailed information regarding refund offline operation.
+Refer to [official WooCommerce documentation](https://woocommerce.com/document/woocommerce-refunds/#section-4) to view the detailed information regarding refund offline operation.

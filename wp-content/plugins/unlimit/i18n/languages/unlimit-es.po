@@ -801,3 +801,19 @@ msgstr "Tu tarjeta ha sido eliminada."
 
 msgid "Save the card that will be entered next"
 msgstr "Guarde la tarjeta que se ingresará a continuación"
+
+msgid "Airtel TZ phone number"
+msgstr "Número de teléfono Airtel TZ"
+
+
+msgid "Please fill out an Airtel TZ phone number"
+msgstr "Por favor, complete un número de teléfono Airtel TZ"
+
+
+msgid "Airtel TZ phone number is invalid"
+msgstr "El número de teléfono Airtel TZ no es válido"
+
+
+msgid "Airtel TZ payment method"
+msgstr "Método de pago Airtel TZ"
+

@@ -113,7 +113,7 @@ abstract class WC_Unlimit_Module_Abstract extends WC_Payment_Gateway {
 			],
 			'merchant_order' => [
 				'id'               => $order_id,
-				'description'      => "Order #$order_id",
+				'description'      => "Order $order_id",
 				'shipping_address' => [
 					'country'     => $customer->get_shipping_country(),
 					'state'       => $customer->get_shipping_state(),
@@ -197,7 +197,7 @@ abstract class WC_Unlimit_Module_Abstract extends WC_Payment_Gateway {
 		foreach ( $this->order->get_items() as $item ) {
 			$items[] = [
 				'name'        => $item->get_name(),
-				'description' => 'Item #' . $item->get_id(),
+				'description' => "Item #{$item->get_id()}",
 				'count'       => $item->get_quantity(),
 				'price'       => $item->get_total()
 			];

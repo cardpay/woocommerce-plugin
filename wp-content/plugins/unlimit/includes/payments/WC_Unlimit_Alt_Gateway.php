@@ -129,93 +129,123 @@ class WC_Unlimit_Alt_Gateway extends WC_Unlimit_Gateway_Abstract {
 	 */
 	public function payment_fields() {
 		$amount = $this->get_order_total();
+		$user   = wp_get_current_user();
 
-		$logged_user_email = ( 0 !== wp_get_current_user()->ID ) ? wp_get_current_user()->user_email : null;
-		$address           = get_user_meta( wp_get_current_user()->ID, 'billing_address_1', true );
-		$address_2         = get_user_meta( wp_get_current_user()->ID, 'billing_address_2', true );
-		$address           .= ( ! empty( $address_2 ) ? ' - ' . $address_2 : '' );
-		$country           = get_user_meta( wp_get_current_user()->ID, 'billing_country', true );
-		$address           .= ( ! empty( $country ) ? ' - ' . $country : '' );
+		$logged_user_email = $user->ID ? $user->user_email : null;
+
+		$address_parts = [
+			get_user_meta( $user->ID, 'billing_address_1', true ),
+			get_user_meta( $user->ID, 'billing_address_2', true ),
+			get_user_meta( $user->ID, 'billing_country', true ),
+		];
+		$address       = implode( ' - ', array_filter( $address_parts ) );
 
 		$parameters = [
 			'amount'               => $amount,
 			'payer_email'          => esc_js( $logged_user_email ),
 			'woocommerce_currency' => get_woocommerce_currency(),
-			'febraban'             => ( 0 !== wp_get_current_user()->ID ) ?
-				[
-					'firstname' => esc_js( wp_get_current_user()->user_firstname ),
-					'lastname'  => esc_js( wp_get_current_user()->user_lastname ),
-					'docNumber' => '',
-					'address'   => esc_js( $address ),
-					'number'    => '',
-					'city'      => esc_js( get_user_meta( wp_get_current_user()->ID, 'billing_city', true ) ),
-					'state'     => esc_js( get_user_meta( wp_get_current_user()->ID, 'billing_state', true ) ),
-					'zipcode'   => esc_js( get_user_meta( wp_get_current_user()->ID, 'billing_postcode', true ) ),
-				] :
-				[
-					'firstname' => '',
-					'lastname'  => '',
-					'docNumber' => '',
-					'address'   => '',
-					'number'    => '',
-					'city'      => '',
-					'state'     => '',
-					'zipcode'   => '',
-				],
-			'images_path'          => plugins_url( '../assets/images/', plugin_dir_path( __FILE__ ) ),
+			'febraban'             => $this->get_febraban_data( $user,
+				$address ),
+			'images_path'          => plugins_url( '../assets/images/',
+				plugin_dir_path( __FILE__ ) ),
 		];
 
-		if ( $this->id == 'woo-unlimit-gpay' ) {
-			$parameters['google_merchant_id'] =
-				get_option( WC_Unlimit_Admin_Gpay_Fields::GPAY_GOOGLE_MERCHANT_ID ) . ' ' . get_woocommerce_currency();
-		}
+		$payment_pages = [
+			'woo-unlimit-gpay'       => [
+				'google_merchant_id',
+				get_option( WC_Unlimit_Admin_Gpay_Fields::GPAY_GOOGLE_MERCHANT_ID ) . ' ' . get_woocommerce_currency(),
+			],
+			'woo-unlimit-airteltz'     => [
+				'is_airteltz_payment_page_required',
+				'payment_page',
+			],
+			'woo-unlimit-mbway'      => [
+				'is_mbway_payment_page_required',
+				'payment_page',
+			],
+			'woo-unlimit-paypal'     => [
+				'is_paypal_payment_page_required',
+				'payment_page',
+			],
+			'woo-unlimit-spei'       => [
+				'is_spei_payment_page_required',
+				'payment_page',
+			],
+			'woo-unlimit-oxxo'       => [
+				'is_oxxo_payment_page_required',
+				'payment_page',
+			],
+			'woo-unlimit-sepa'       => [
+				'is_sepa_payment_page_required',
+				'payment_page',
+			],
+			'woo-unlimit-multibanco' => [
+				'is_multibanco_payment_page_required',
+				'payment_page',
+			],
+		];
 
-		if ( $this->id == 'woo-unlimit-mbway' ) {
-			$parameters['is_mbway_payment_page_required'] = ( 'payment_page' === get_option(
-					WC_Unlimit_Admin_Mbway_Fields::FIELDNAME_PREFIX . WC_Unlimit_Admin_Fields::FIELD_API_ACCESS_MODE
-				) );
-		}
-
-		if ( $this->id == 'woo-unlimit-paypal' ) {
-			$parameters['is_paypal_payment_page_required'] = ( 'payment_page' === get_option(
-					WC_Unlimit_Admin_Paypal_Fields::FIELDNAME_PREFIX . WC_Unlimit_Admin_Fields::FIELD_API_ACCESS_MODE
-				) );
-		}
-
-		if ( $this->id == 'woo-unlimit-spei' ) {
-			$parameters['is_spei_payment_page_required'] = (
-				'payment_page' === get_option(
-					WC_Unlimit_Admin_Spei_Fields::FIELDNAME_PREFIX . WC_Unlimit_Admin_Fields::FIELD_API_ACCESS_MODE
+		if ( isset( $payment_pages[ $this->id ] ) ) {
+			[ $param_key, $option_suffix ] = $payment_pages[ $this->id ];
+			$parameters[ $param_key ] = $option_suffix === 'payment_page'
+				? 'payment_page' === get_option(
+					$this->get_field_prefix( $this->id ) . WC_Unlimit_Admin_Fields::FIELD_API_ACCESS_MODE
 				)
-			);
+				: $option_suffix;
 		}
 
-		if ( $this->id == 'woo-unlimit-oxxo' ) {
-			$parameters['is_oxxo_payment_page_required'] = (
-				'payment_page' === get_option(
-					WC_Unlimit_Admin_Oxxo_Fields::FIELDNAME_PREFIX . WC_Unlimit_Admin_Fields::FIELD_API_ACCESS_MODE
-				)
-			);
+		wc_get_template(
+			'checkout/' . $this->short_gateway_id . '-checkout.php',
+			$parameters,
+			'woo/unlimit/module/',
+			WC_Unlimit_Module::get_templates_path()
+		);
+	}
+
+	private function get_febraban_data( $user, $address ) {
+		if ( ! $user->ID ) {
+			return [
+				'firstname' => '',
+				'lastname'  => '',
+				'docNumber' => '',
+				'address'   => '',
+				'number'    => '',
+				'city'      => '',
+				'state'     => '',
+				'zipcode'   => '',
+			];
 		}
 
-		if ( $this->id == 'woo-unlimit-sepa' ) {
-			$parameters['is_sepa_payment_page_required'] = (
-				'payment_page' === get_option(
-					WC_Unlimit_Admin_Sepa_Fields::FIELDNAME_PREFIX . WC_Unlimit_Admin_Fields::FIELD_API_ACCESS_MODE
-				)
-			);
-		}
+		return [
+			'firstname' => esc_js( $user->user_firstname ),
+			'lastname'  => esc_js( $user->user_lastname ),
+			'docNumber' => '',
+			'address'   => esc_js( $address ),
+			'number'    => '',
+			'city'      => esc_js( get_user_meta( $user->ID,
+				'billing_city',
+				true ) ),
+			'state'     => esc_js( get_user_meta( $user->ID,
+				'billing_state',
+				true ) ),
+			'zipcode'   => esc_js( get_user_meta( $user->ID,
+				'billing_postcode',
+				true ) ),
+		];
+	}
 
-		if ( $this->id == 'woo-unlimit-multibanco' ) {
-			$parameters['is_multibanco_payment_page_required'] = (
-				'payment_page' === get_option(
-					WC_Unlimit_Admin_Multibanco_Fields::FIELDNAME_PREFIX . WC_Unlimit_Admin_Fields::FIELD_API_ACCESS_MODE
-				)
-			);
-		}
+	private function get_field_prefix( $gateway_id ) {
+		$prefix_map = [
+			'woo-unlimit-airteltz'     => WC_Unlimit_Admin_Airteltz_Fields::FIELDNAME_PREFIX,
+			'woo-unlimit-mbway'      => WC_Unlimit_Admin_Mbway_Fields::FIELDNAME_PREFIX,
+			'woo-unlimit-paypal'     => WC_Unlimit_Admin_Paypal_Fields::FIELDNAME_PREFIX,
+			'woo-unlimit-spei'       => WC_Unlimit_Admin_Spei_Fields::FIELDNAME_PREFIX,
+			'woo-unlimit-oxxo'       => WC_Unlimit_Admin_Oxxo_Fields::FIELDNAME_PREFIX,
+			'woo-unlimit-sepa'       => WC_Unlimit_Admin_Sepa_Fields::FIELDNAME_PREFIX,
+			'woo-unlimit-multibanco' => WC_Unlimit_Admin_Multibanco_Fields::FIELDNAME_PREFIX,
+		];
 
-		wc_get_template( 'checkout/' . $this->short_gateway_id . '-checkout.php', $parameters, 'woo/unlimit/module/',
-			WC_Unlimit_Module::get_templates_path() );
+		return $prefix_map[ $gateway_id ] ?? '';
 	}
 
 	/**

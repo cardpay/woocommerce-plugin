@@ -76,6 +76,9 @@ class WC_Unlimit_Logger {
 			case 'woo-unlimit-oxxo':
 				$logger_enabled = get_option( 'woocommerce_unlimit_oxxo_log_to_file' );
 				break;
+			case 'woo-unlimit-airteltz':
+				$logger_enabled = get_option( 'woocommerce_unlimit_airteltz_log_to_file' );
+				break;
 			default:
 				$logger_enabled = false;
 				break;

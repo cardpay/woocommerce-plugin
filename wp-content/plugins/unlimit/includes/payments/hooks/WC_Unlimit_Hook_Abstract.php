@@ -81,6 +81,16 @@ abstract class WC_Unlimit_Hook_Abstract {
 			WC_Unlimit_Constants::VERSION
 		);
 
+		$valid_gateways = [ 'woo-unlimit-airteltz', 'woo-unlimit-mbway' ];
+		if ( in_array( $this->gateway->id, $valid_gateways ) ) {
+			wp_enqueue_script(
+				'phone-validation',
+				plugins_url( '../../assets/js/phone-validation.js', plugin_dir_path( __FILE__ ) ),
+				[ 'jquery' ],
+				WC_Unlimit_Constants::VERSION
+			);
+		}
+
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->gateway->id, [
 			$this,
 			'custom_process_admin_options'

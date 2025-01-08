@@ -103,6 +103,7 @@ class WC_Unlimit_Configs {
 	 */
 	public function set_payment_gateway( $methods = null ) {
 		$methods[] = WC_Unlimit_Constants::BANKCARD_GATEWAY;
+		$methods[] = WC_Unlimit_Constants::AIRTELTZ_GATEWAY;
 		$methods[] = WC_Unlimit_Constants::APAY_GATEWAY;
 		$methods[] = WC_Unlimit_Constants::BOLETO_GATEWAY;
 		$methods[] = WC_Unlimit_Constants::GPAY_GATEWAY;

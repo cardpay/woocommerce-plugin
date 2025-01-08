@@ -810,3 +810,18 @@ msgstr "Seu cartão foi excluído."
 
 msgid "Save the card that will be entered next"
 msgstr "Salve o cartão que será inserido a seguir"
+
+msgid "Airtel TZ phone number"
+msgstr "Número de telefone Airtel TZ"
+
+
+msgid "Please fill out an Airtel TZ phone number"
+msgstr "Por favor, preencha um número de telefone Airtel TZ"
+
+
+msgid "Airtel TZ phone number is invalid"
+msgstr "O número de telefone Airtel TZ é inválido"
+
+
+msgid "Airtel TZ payment method"
+msgstr "Método de pagamento Airtel TZ"

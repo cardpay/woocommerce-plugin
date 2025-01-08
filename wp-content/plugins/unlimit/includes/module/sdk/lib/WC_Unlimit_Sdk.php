@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/rest-client/WC_Unlimit_Rest_Client_Abstract.php';
 require_once __DIR__ . '/rest-client/WC_Unlimit_Rest_Client.php';
+require_once __DIR__ . '/../../../payments/form_fields/WC_Unlimit_Admin_Airteltz_Fields.php';
 require_once __DIR__ . '/../../../payments/form_fields/WC_Unlimit_Admin_Apay_Fields.php';
 require_once __DIR__ . '/../../../payments/form_fields/WC_Unlimit_Admin_BankCard_Fields.php';
 require_once __DIR__ . '/../../../payments/form_fields/WC_Unlimit_Admin_Boleto_Fields.php';
@@ -348,6 +349,10 @@ class WC_Unlimit_Sdk {
 
 			case WC_Unlimit_Oxxo_Gateway::GATEWAY_ID:
 				$prefix = WC_Unlimit_Admin_Oxxo_Fields::FIELDNAME_PREFIX;
+				break;
+
+			case WC_Unlimit_Airteltz_Gateway::GATEWAY_ID:
+				$prefix = WC_Unlimit_Admin_Airteltz_Fields::FIELDNAME_PREFIX;
 				break;
 
 			default:

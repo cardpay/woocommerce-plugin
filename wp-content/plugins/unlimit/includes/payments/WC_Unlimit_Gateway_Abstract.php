@@ -9,6 +9,7 @@ require_once __DIR__ . '/../notification/WC_Unlimit_Notification_Webhook.php';
 require_once __DIR__ . '/WC_Unlimit_Subsections.php';
 require_once __DIR__ . '/WC_Unlimit_Callback.php';
 require_once __DIR__ . '/WC_Unlimit_Refund.php';
+require_once __DIR__ . '/WC_Unlimit_Airteltz_Gateway.php';
 require_once __DIR__ . '/WC_Unlimit_Apay_Gateway.php';
 require_once __DIR__ . '/WC_Unlimit_Ticket_Gateway.php';
 require_once __DIR__ . '/WC_Unlimit_Gpay_Gateway.php';
@@ -40,6 +41,7 @@ class WC_Unlimit_Gateway_Abstract extends WC_Payment_Gateway {
 
 	public const ALLOWED_SECTIONS = [
 		'woo-unlimit-custom',
+		'woo-unlimit-airteltz',
 		'woo-unlimit-apay',
 		'woo-unlimit-ticket',
 		'woo-unlimit-pix',

@@ -199,6 +199,7 @@ abstract class WC_Unlimit_Notification_Abstract {
 					}
 					break;
 
+				case WC_Unlimit_Constants::AIRTELTZ_GATEWAY:
 				case WC_Unlimit_Constants::APAY_GATEWAY:
 				case WC_Unlimit_Constants::BOLETO_GATEWAY:
 				case WC_Unlimit_Constants::PAYPAL_GATEWAY:

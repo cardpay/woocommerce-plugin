@@ -66,6 +66,7 @@ const unlimitIframeProcessor = {
     iframePadding: 80,
     spinner: '.woocommerce-checkout-payment, .woocommerce-checkout-review-order-table',
     beforeSubmit: function () {
+        unlimitFormCheckout.addClass('processing');
         jQuery(this.spinner).block({
             message: null,
             overlayCSS: {
@@ -83,6 +84,7 @@ const unlimitIframeProcessor = {
         const isMbway = jQuery('#payment_method_woo-unlimit-mbway').is(':checked');
         const isMultibanco = jQuery('#payment_method_woo-unlimit-multibanco').is(':checked');
         const isOxxo = jQuery('#payment_method_woo-unlimit-oxxo').is(':checked');
+        const isAirteltz = jQuery('#payment_method_woo-unlimit-airteltz').is(':checked');
         const isPaypal = jQuery('#payment_method_woo-unlimit-paypal').is(':checked');
         const isSpei = jQuery('#payment_method_woo-unlimit-spei').is(':checked');
         const isSepa = jQuery('#payment_method_woo-unlimit-sepa').is(':checked');
@@ -92,6 +94,7 @@ const unlimitIframeProcessor = {
             (isMbway && !unlimitIframePaymentMethods.includes('mbway')) ||
             (isMultibanco && !unlimitIframePaymentMethods.includes('multibanco')) ||
             (isOxxo && !unlimitIframePaymentMethods.includes('oxxo')) ||
+            (isAirteltz && !unlimitIframePaymentMethods.includes('airteltz')) ||
             (isPaypal && !unlimitIframePaymentMethods.includes('paypal')) ||
             (isSpei && !unlimitIframePaymentMethods.includes('spei')) ||
             (isSepa && !unlimitIframePaymentMethods.includes('sepa'))
@@ -100,7 +103,7 @@ const unlimitIframeProcessor = {
             return;
         }
 
-        if (!isMbway && !isCreditCard && !isMultibanco && !isOxxo && !isPaypal && !isSpei && !isSepa && unlimitIframeProcessor.oldEvents !== false) {
+        if (!isMbway && !isCreditCard && !isAirteltz && !isMultibanco && !isOxxo && !isPaypal && !isSpei && !isSepa && unlimitIframeProcessor.oldEvents !== false) {
             unlimitFormCheckout.unbind('submit');
             const events = unlimitIframeProcessor.oldEvents;
             for (const type in events) {
@@ -115,7 +118,7 @@ const unlimitIframeProcessor = {
             unlimitIframeProcessor.oldEvents = false;
             return;
         }
-        if ((isMbway || isCreditCard || isMultibanco || isOxxo || isPaypal || isSpei || isSepa) && unlimitIframeProcessor.oldEvents === false) {
+        if ((isMbway || isCreditCard || isAirteltz || isMultibanco || isOxxo || isPaypal || isSpei || isSepa) && unlimitIframeProcessor.oldEvents === false) {
             unlimitIframeProcessor.oldEvents = unlimitFormCheckout.data('events',
                 'submit');
             unlimitFormCheckout.unbind('submit').submit(function (event) {
