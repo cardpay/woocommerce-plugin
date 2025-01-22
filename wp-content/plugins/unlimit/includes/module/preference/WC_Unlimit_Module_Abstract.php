@@ -113,7 +113,7 @@ abstract class WC_Unlimit_Module_Abstract extends WC_Payment_Gateway {
 			],
 			'merchant_order' => [
 				'id'               => $order_id,
-				'description'      => "Order $order_id",
+				'description'      => "Order-$order_id",
 				'shipping_address' => [
 					'country'     => $customer->get_shipping_country(),
 					'state'       => $customer->get_shipping_state(),
