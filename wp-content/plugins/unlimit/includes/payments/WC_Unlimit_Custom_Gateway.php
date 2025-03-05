@@ -134,6 +134,12 @@ class WC_Unlimit_Custom_Gateway extends WC_Unlimit_Gateway_Abstract {
 				WC_Unlimit_Admin_BankCard_Fields::FIELD_API_ACCESS_MODE
 			)
 		);
+		$is_payment_mode_embedded = (
+            'embedded' === get_option(
+                $fieldname_prefix .
+                WC_Unlimit_Admin_BankCard_Fields::FIELD_PAYMENT_MODE
+            )
+        );
 		$is_recurring_enabled     = (
 			'yes' === get_option(
 				$fieldname_prefix .
@@ -176,6 +182,7 @@ class WC_Unlimit_Custom_Gateway extends WC_Unlimit_Gateway_Abstract {
 			'existing_filing_ids'      => $existing_filing_ids,
 			'is_cpf_required'          => $is_cpf_required,
 			'is_payment_page_required' => $is_payment_page_required,
+			'is_payment_mode_embedded' => $is_payment_mode_embedded,
 		];
 
 		wc_get_template(

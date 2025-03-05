@@ -3,7 +3,7 @@
 defined( 'ABSPATH' ) || exit;
 
 class WC_Unlimit_Constants {
-	public const VERSION = '1.5.52';
+	public const VERSION = '1.5.55';
 
 	public const API_UL_BASE_URL = 'https://cardpay.com/api';
 	public const API_UL_SANDBOX_URL = 'https://sandbox.cardpay.com/api';

@@ -825,3 +825,24 @@ msgstr "O número de telefone Airtel TZ é inválido"
 
 msgid "Airtel TZ payment method"
 msgstr "Método de pagamento Airtel TZ"
+
+msgid "Payment mode"
+msgstr "Modo de pagamento"
+
+msgid "Embedded"
+msgstr "Integrado"
+
+msgid "Redirect"
+msgstr "Redirecionar"
+
+msgid "Payment Page Mode: In this mode, customers are redirected to a secure payment page hosted by Unlimit, where the payment process is completed outside of your website."
+msgstr "Modo Página de Pagamento: Neste modo, os clientes são redirecionados para uma página de pagamento segura hospedada pela Unlimit, onde o processo de pagamento é concluído fora do seu site."
+
+msgid "Gateway Mode: This mode uses an embedded payment form within the plugin for collecting customer data. The merchant must be PCI DSS compliant."
+msgstr "Modo "Porta de entrada" : Este modo usa um formulário de pagamento incorporado no plug-in para coletar os dados do cliente. O comerciante deve estar em conformidade com o PCI DSS."
+
+msgid "Embedded Mode: A pop-up window will open on top, displaying the payment page."
+msgstr "Modo integrado: Uma janela pop-up será aberta na parte superior, exibindo a página de pagamento."
+
+msgid "Redirect Mode: The current window will fully reload with the payment form URL."
+msgstr "Modo de redirecionar: A janela atual será totalmente recarregada com o URL do formulário de pagamento."

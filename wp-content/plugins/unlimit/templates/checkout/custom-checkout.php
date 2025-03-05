@@ -390,7 +390,7 @@ if ( $display_form === 'none' ) {
         </div>
     </div>
 <?php
-if ( $is_payment_page_required ) { ?>
+if ( $is_payment_page_required && $is_payment_mode_embedded ) { ?>
     <script>
         unlimitIframePaymentMethods.push("creditcard");
     </script>

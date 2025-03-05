@@ -15,6 +15,7 @@ const unlimitSettingsEvent = {
     ],
     init: function () {
         this.selPaymentPage = jQuery(`#${this.prefix}payment_page`);
+        this.selPaymentMode = jQuery(`#${this.prefix}payment_mode`);
         this.selInstType = jQuery(`#${this.prefix}installment_type`);
         this.selInstAmount = jQuery(`#${this.prefix}minimum_installment_amount`);
         this.selInstEnabled = jQuery(`#${this.prefix}installment_enabled`);
@@ -31,6 +32,7 @@ const unlimitSettingsEvent = {
         this.toggleSettings();
         this.selectPpAndInstType();
         this.processInstallmentSettings();
+        this.processPaymentModeSettings();
         this.setupListeners();
         this.twoPrefix();
     },
@@ -42,6 +44,7 @@ const unlimitSettingsEvent = {
 
         jQuery(obj.selPaymentPage).change(function () {
             obj.toggleSettings();
+            obj.processPaymentModeSettings();
 
             alert(unlimit_vars.bankcard_translations.api_mode_change_warning)
 
@@ -130,6 +133,18 @@ const unlimitSettingsEvent = {
             }
         });
         obj.processRecurringSettings();
+    },
+    processPaymentModeSettings: function () {
+        const obj = this;
+        const show = (
+            obj.selPaymentPage.val() === 'payment_page'
+        );
+        const el = obj.selPaymentMode.parent().parent().parent();
+        if (show) {
+            el.show('slow');
+        } else {
+            el.hide();
+        }
     },
     processRecurringSettings: function () {
         const obj = this;

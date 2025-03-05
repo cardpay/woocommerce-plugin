@@ -165,8 +165,11 @@ To enable payments via **Credit card** complete the following steps:
 ![](readme_images/credit_card.png)
 
  * **API access mode:**
-    * Set to **Payment page** for cases when payment page by Unlimit in iFrame is used for customer data collecting.
-    * Set to **Gateway** for cases when an embedded payment form in plugin is used for customer data collecting.
+    * **Payment page**: in this mode, customers are redirected to a secure payment page hosted by Unlimit, where the payment process is completed outside of your website.
+    * **Gateway**: this mode uses an embedded payment form within the plugin for collecting customer data. The merchant must be PCI DSS compliant.
+ * **Payment mode:**
+    * Set to **Redirect** when the current window needs to be fully reloaded with the payment form URL. 
+    * Set to **Embedded** when a pop-up window needs to be opened on top, displaying the payment page. 
  * Set **API access mode** to either select using the **Payment page** or process payments directly by **Gateway**.
  * Set **Terminal code**, **Terminal password**, **Callback secret** values - it should be merchant credentials in Unlimit APIv3 for this payment method (how to obtain credentials see [here](https://www.unlimit.com/integration/)).
  * Test environment:

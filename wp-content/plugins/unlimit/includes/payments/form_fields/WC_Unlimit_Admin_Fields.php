@@ -135,6 +135,29 @@ class WC_Unlimit_Admin_Fields {
 		];
 	}
 
+	/**
+	 * @return array
+	 */
+	public function field_payment_mode() {
+		return [
+			'title'       => __( 'Payment mode', 'unlimit' ),
+			'type'        => 'select',
+			'description' => __(
+                "Embedded Mode: A pop-up window will open on top, displaying the payment page.",
+                'unlimit'
+            ) . '<br>' .
+			__(
+                "Redirect Mode: The current window will fully reload with the payment form URL.",
+                'unlimit'
+            ),
+			'default'     => 'Embedded',
+			'options'     => [
+				'embedded' => __( 'Embedded', 'unlimit' ),
+				'redirect'      => __( 'Redirect', 'unlimit' ),
+			]
+		];
+	}
+
 	public function get_custom_attributes( $title ) {
 		return [
 			'data-empty-error' => sprintf(__('Empty %s', 'unlimit'), $title),

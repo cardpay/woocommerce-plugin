@@ -9,6 +9,7 @@ class WC_Unlimit_Admin_BankCard_Fields extends WC_Unlimit_Admin_Fields {
 	public const FIELDNAME_PREFIX = 'woocommerce_unlimit_bankcard_';
 	public const FIELD_CAPTURE_PAYMENT = 'capture_payment';
 	public const FIELD_API_ACCESS_MODE = 'payment_page';
+	public const FIELD_PAYMENT_MODE = 'payment_mode';
 	public const FIELD_INSTALLMENT_ENABLED = 'installment_enabled';
 	public const FIELD_RECURRING_ENABLED = 'recurring_enabled';
 	public const FIELD_INSTALLMENT_TYPE = 'installment_type';
@@ -24,6 +25,8 @@ class WC_Unlimit_Admin_BankCard_Fields extends WC_Unlimit_Admin_Fields {
 		$form_fields                                                                              = [];
 		$form_fields[ self::FIELDNAME_PREFIX . self::FIELD_API_ACCESS_MODE ]                      =
 			$this->field_api_access_mode();
+		$form_fields[ self::FIELDNAME_PREFIX . self::FIELD_PAYMENT_MODE ]                      =
+			$this->field_payment_mode();
 		$form_fields[ self::FIELDNAME_PREFIX . WC_Unlimit_Admin_Fields::FIELD_TERMINAL_CODE ]     =
 			$this->field_terminal_code();
 		$form_fields[ self::FIELDNAME_PREFIX . WC_Unlimit_Admin_Fields::FIELD_TERMINAL_PASSWORD ] =
@@ -243,7 +246,29 @@ class WC_Unlimit_Admin_BankCard_Fields extends WC_Unlimit_Admin_Fields {
 		];
 	}
 
+	/**
+	 * @return array
+	 */
 	public function field_api_access_mode() {
-		return parent::field_api_access_mode();
+		return [
+			'title'       => __( 'API access mode', 'unlimit' ),
+			'type'        => 'select',
+			'description' => __(
+                "Payment Page Mode: In this mode, customers are redirected to a secure payment page hosted by Unlimit,".
+                 " where the payment process is completed outside of your website.",
+                'unlimit'
+            ) . '<br>' .
+			__(
+                "Gateway Mode: This mode uses an embedded payment form within the plugin for collecting customer data.".
+                 " The merchant must be PCI DSS compliant.",
+                'unlimit'
+            ),
+			'default'     => 'Payment page',
+			'options'     => [
+				'payment_page' => __( 'Payment page', 'unlimit' ),
+				'gateway'      => __( 'Gateway', 'unlimit' ),
+			],
+			'onkeyup'     => "formatUlCardField(this.id);",
+		];
 	}
 }
